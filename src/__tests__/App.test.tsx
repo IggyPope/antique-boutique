@@ -2,8 +2,8 @@ import { render, screen } from '@testing-library/react';
 
 import App from '@/App';
 
-it('renders "Press me" button', () => {
+it('renders simple button', () => {
   render(<App />);
-  const buttonElement = screen.getByText(/Press me/i);
+  const buttonElement = screen.getByText(/Simple button/i);
   expect(buttonElement).toBeInTheDocument();
 });
