@@ -1,12 +1,12 @@
-import viteLogo from '/favicon.svg';
 import './App.css';
+import logo from '/favicon.svg';
 
 function App() {
   return (
     <>
       <div>
         <a href="#" target="_blank">
-          <img src={viteLogo} className="logo" alt="Antique Boutique logo" />
+          <img src={logo} className="logo" alt="Antique Boutique logo" />
         </a>
       </div>
       <h1>Antique Boutique</h1>
