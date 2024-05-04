@@ -4,6 +4,5 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   plugins: [react(), tsconfigPaths()],
 });
