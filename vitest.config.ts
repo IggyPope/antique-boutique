@@ -9,8 +9,7 @@ export default mergeConfig(
   viteConfig,
   defineConfig({
     test: {
-      include: ['src/**/*.test.{ts,tsx}'],
-      exclude: ['**/node_modules/**', '**/dist/**'],
+      include: ['./src/**/*.test.{ts,tsx}'],
       environment: 'jsdom',
       setupFiles: ['./src/__tests__/setupTests.ts'],
       globals: true,
