@@ -14,7 +14,8 @@
     "lint:fix": "eslint . --ext ts,tsx --fix",
     "lint:all": "stylelint ./src/**/*.{css,scss} && prettier --check . && eslint . --ext ts,tsx",
     "preview": "vite preview",
-    "test": "vitest",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
     "test:coverage": "vitest run --coverage",
     "prepare": "husky"
   },
