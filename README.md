@@ -42,7 +42,7 @@ Before you start, ensure you have [Node.js](https://nodejs.org/en/download/) ins
    To clone the repository you can use the following command
 
    ```shell
-   git clone https://github.com/turn2river/eCommerce-Application.git
+   git clone https://github.com/IggyPope/antique-boutique.git
    ```
 
    or the interface of your IDE.
