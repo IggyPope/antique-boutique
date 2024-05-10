@@ -16,7 +16,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import {countries} from './countries';
+import { countries } from './countries';
 import { schema, FormValues } from './schema';
 
 export function RegistrationForm() {
@@ -34,7 +34,7 @@ export function RegistrationForm() {
       age: new Date(),
       email: '',
       password: '',
-      country: 'Åland Islands',
+      country: '',
     },
   });
 
@@ -50,7 +50,7 @@ export function RegistrationForm() {
     <form onSubmit={handleSubmit(onSubmit)}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
         <Stack direction="column" gap={3} width="40%">
-          <Typography component={'p'}> Your credentials</Typography>
+          <Typography component={'p'}>Your credentials</Typography>
           <Controller
             name="email"
             control={control}
@@ -83,7 +83,7 @@ export function RegistrationForm() {
           />
         </Stack>
         <Stack direction="column" gap={3} width="40%">
-          <Typography component={'p'}> Your personal information</Typography>
+          <Typography component={'p'}>Your personal information</Typography>
           <Controller
             name="firstName"
             control={control}
@@ -134,23 +134,24 @@ export function RegistrationForm() {
             control={control}
             rules={{ required: true }}
             render={({ field }) => (
-              
-                <Autocomplete
-                  {...field}
-                  options={countries}
-                  getOptionLabel={(option) => option}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Country" />
-                  )}
-                  onChange={(_event, newValue) => {
-                    field.onChange(newValue ? newValue : '');
-                  }}
-                  onBlur={field.onBlur}
-                  disabled={field.disabled}
-                  isOptionEqualToValue={(option, value) => option === value}
-                 
-                {...errors.country && <FormHelperText>{errors.country.message}</FormHelperText>}
-                /> 
+              <Autocomplete
+                {...field}
+                options={countries}
+                getOptionLabel={(option) => option}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Country"
+                    inputProps={{ ...params.inputProps, autoComplete: 'none' }}
+                    error={!!errors.country}
+                    helperText={errors.country?.message}
+                  />
+                )}
+                onChange={(_, newValue) => {
+                  field.onChange(newValue ?? '');
+                }}
+                isOptionEqualToValue={(option, value) => option === value}
+              />
             )}
           />
 
