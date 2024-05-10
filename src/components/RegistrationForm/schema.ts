@@ -36,8 +36,7 @@ export const schema = yup.object<FormValues>().shape({
     .matches(/(?=.*[a-z])/g, 'Password must contain at least one lowercase letter')
     .matches(/(?=.*[A-Z])/g, 'Password must contain at least one uppercase letter')
     .matches(/(?=.*\d)/g, 'Password must contain at least one digit')
-    .matches(/(?=.*[@$%*?&!])/g, 'Password must contain at least one special character')
+    .matches(/(?=.*[@#$%^&*?!])/g, 'Password must contain at least one special character')
     .trim(),
-
   country: yup.string().required('You should choose a country'),
 });
