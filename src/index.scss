@@ -8,6 +8,9 @@
 
 :root {
   font-family: Poppins, Helvetica, Arial, sans-serif;
+  @media (width <= 768px) {
+    font-size: 14px;
+  }
 }
 
 body {
