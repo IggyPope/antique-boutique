@@ -3,7 +3,7 @@ import { Typography } from '@mui/material';
 const Main = () => {
   return (
     <>
-      <Typography variant="h1">Main</Typography>
+      <Typography variant="h3">Main</Typography>
     </>
   );
 };

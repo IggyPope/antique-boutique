@@ -5,7 +5,7 @@ import { LoginForm } from '@/components/LoginForm/LoginForm';
 const Login = () => {
   return (
     <>
-      <Typography variant="h1">Login</Typography>
+      <Typography variant="h3">Sign in</Typography>
       <LoginForm />
     </>
   );

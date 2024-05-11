@@ -5,7 +5,7 @@ import { RegistrationForm } from '../components/RegistrationForm/RegistrationFor
 const Register = () => {
   return (
     <>
-      <Typography variant="h1">Register</Typography>
+      <Typography variant="h3">Sign Up</Typography>
       <RegistrationForm />
     </>
   );

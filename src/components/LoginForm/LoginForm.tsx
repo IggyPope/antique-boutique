@@ -1,7 +1,10 @@
+import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { Box, Button, Stack, Typography } from '@mui/material';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { Box, Button, Stack, Typography, IconButton } from '@mui/material';
 import TextField from '@mui/material/TextField';
 
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -24,7 +27,7 @@ export function LoginForm() {
   });
 
   const navigate = useNavigate();
-
+  const [showPassword, setShowPassword] = useState(false);
   const onSubmit = (data: LoginFormValues) => {
     console.log(data);
 
@@ -58,11 +61,18 @@ export function LoginForm() {
             render={({ field }) => (
               <TextField
                 {...field}
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 label="Password"
                 placeholder="Password"
                 error={!!errors.password}
                 helperText={errors.password?.message || ' '}
+                InputProps={{
+                  endAdornment: (
+                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  ),
+                }}
               />
             )}
           />
