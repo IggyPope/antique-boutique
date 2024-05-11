@@ -1,8 +1,13 @@
+import { Typography } from '@mui/material';
+
+import { RegistrationForm } from '../components/RegistrationForm/RegistrationForm';
+
 const Register = () => {
   return (
-    <div>
-      <h1>Register</h1>
-    </div>
+    <>
+      <Typography variant="h3">Sign Up</Typography>
+      <RegistrationForm />
+    </>
   );
 };
 

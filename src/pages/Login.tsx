@@ -1,8 +1,13 @@
+import { Typography } from '@mui/material';
+
+import { LoginForm } from '@/components/LoginForm/LoginForm';
+
 const Login = () => {
   return (
-    <div>
-      <h1>Login</h1>
-    </div>
+    <>
+      <Typography variant="h3">Sign in</Typography>
+      <LoginForm />
+    </>
   );
 };
 

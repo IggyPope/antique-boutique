@@ -9,7 +9,14 @@ const Layout = () => {
   return (
     <>
       <Header />
-      <Container maxWidth="lg">
+      <Container
+        component="main"
+        maxWidth="lg"
+        sx={{
+          flex: 1,
+          padding: 2,
+        }}
+      >
         <Outlet />
       </Container>
       <Footer />

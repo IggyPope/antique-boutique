@@ -14,7 +14,7 @@ const Footer = () => {
       justifyContent="center"
       alignItems="center"
       sx={{
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.primary.dark,
         color: theme.palette.secondary.contrastText,
         width: '100%',
         height: '130px',
