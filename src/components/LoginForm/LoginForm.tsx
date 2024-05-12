@@ -1,13 +1,16 @@
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { Box, Button, Stack, Typography, IconButton } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import { Box, Stack, Typography, IconButton } from '@mui/material';
 import TextField from '@mui/material/TextField';
 
 import { yupResolver } from '@hookform/resolvers/yup';
+
+import { useAppSelector } from '@/hooks';
+import { useAuth } from '@/hooks/useAuth';
 
 import { schema, LoginFormValues } from './schema';
 
@@ -26,14 +29,14 @@ export function LoginForm() {
     },
   });
 
-  const navigate = useNavigate();
+  const { signIn } = useAuth();
+
+  const isLoading = useAppSelector((state) => state.user.isLoading);
+
   const [showPassword, setShowPassword] = useState(false);
   const onSubmit = (data: LoginFormValues) => {
-    console.log(data);
-
-    navigate('/');
+    signIn(data.username, data.password);
   };
-  // const theme = useTheme();
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
@@ -76,8 +79,9 @@ export function LoginForm() {
               />
             )}
           />
-          <Button
+          <LoadingButton
             type="submit"
+            loading={isLoading}
             disabled={!isDirty || !isValid}
             variant="contained"
             color="secondary"
@@ -89,7 +93,7 @@ export function LoginForm() {
             }}
           >
             Submit
-          </Button>
+          </LoadingButton>
         </Stack>
       </Box>
     </form>

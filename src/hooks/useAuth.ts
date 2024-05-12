@@ -12,35 +12,35 @@ export const useAuth = () => {
 
   return {
     signIn: (username: string, password: string) => {
-      dispatch({ type: 'loginStart' });
+      dispatch({ type: 'user/loginStart' });
 
       authService
         .signIn(username, password)
         .then(() => {
-          dispatch({ type: 'loginSuccess' });
+          dispatch({ type: 'user/loginSuccess' });
           navigate('/');
         })
         .catch((error: Error) => {
-          dispatch({ type: 'loginError', payload: error.message });
+          dispatch({ type: 'user/loginError', payload: error.message });
         });
     },
     signUp: (username: string, password: string) => {
-      dispatch({ type: 'loginStart' });
+      dispatch({ type: 'user/loginStart' });
 
       authService
         .signUp(username, password)
         .then(() => {
-          dispatch({ type: 'loginSuccess' });
+          dispatch({ type: 'user/loginSuccess' });
           navigate('/');
         })
         .catch((error: Error) => {
-          dispatch({ type: 'loginError', payload: error.message });
+          dispatch({ type: 'user/loginError', payload: error.message });
         });
     },
     signOut: () => {
       authService.signOut();
 
-      dispatch({ type: 'logout' });
+      dispatch({ type: 'user/logout' });
     },
   };
 };

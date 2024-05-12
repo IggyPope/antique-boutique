@@ -18,14 +18,17 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     loginStart: (state) => {
+      console.log('loginStart');
       state.isLoading = true;
       state.error = null;
     },
     loginSuccess: (state) => {
+      console.log('loginSuccess');
       state.isLoading = false;
       state.isAuthenticated = true;
     },
     loginError: (state, action: PayloadAction<string>) => {
+      console.log('loginError');
       state.isLoading = false;
       state.error = action.payload;
     },
