@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,7 +8,9 @@ import {
   Stack,
   Typography,
   FormHelperText,
-  Autocomplete, // useTheme,
+  Autocomplete,
+  Checkbox,
+  FormControlLabel,
 } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
@@ -23,6 +26,8 @@ export function RegistrationForm() {
   const {
     handleSubmit,
     control,
+    setValue,
+    getValues,
     trigger,
     formState: { errors, isDirty, isValid },
   } = useForm<FormValues>({
@@ -32,7 +37,7 @@ export function RegistrationForm() {
     defaultValues: {
       firstName: '',
       lastName: '',
-      dateOfBirth: new Date(),
+      dateOfBirth: new Date(2000, 0, 1),
       email: '',
       password: '',
       billing_zipCode: '',
@@ -48,12 +53,58 @@ export function RegistrationForm() {
 
   const navigate = useNavigate();
 
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
+  const [useAsDefaultShipping, setUseAsDefaultShipping] = useState(false);
+  const [useAsDefaultBilling, setUseAsDefaultBilling] = useState(false);
+  const [useAsBillingAddress, setUseAsBillingAddress] = useState(false);
 
+  const copyShippingToBilling = () => {
+    if (useAsBillingAddress) {
+      setValue('billing_street', getValues('shipping_street'));
+      setValue('billing_city', getValues('shipping_city'));
+      setValue('billing_zipCode', getValues('shipping_zipCode'));
+      setValue('billing_country', getValues('shipping_country'));
+    }
+    if (!useAsBillingAddress) {
+      setValue('billing_street', '');
+      setValue('billing_city', '');
+      setValue('billing_zipCode', '');
+      setValue('billing_country', '');
+    }
+  };
+
+  const syncStreetFields = (value: string) => {
+    if (useAsBillingAddress) {
+      setValue('billing_street', value);
+    }
+  };
+
+  const syncCityFields = (value: string) => {
+    if (useAsBillingAddress) {
+      setValue('billing_city', value);
+    }
+  };
+
+  const syncZipCodeFields = (value: string) => {
+    if (useAsBillingAddress) {
+      setValue('billing_zipCode', value);
+    }
+  };
+
+  const syncCountryFields = (value: string | null) => {
+    if (useAsBillingAddress && typeof value === 'string') {
+      setValue('billing_country', value);
+    }
+  };
+
+  useEffect(() => {
+    copyShippingToBilling();
+  }, [useAsBillingAddress]);
+
+  const onSubmit = (data: FormValues) => {
+    console.log(data, useAsDefaultShipping, useAsDefaultBilling);
     navigate('/');
   };
-  // const theme = useTheme();
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack direction="column" gap={2} width="100%">
@@ -152,7 +203,112 @@ export function RegistrationForm() {
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
           <Stack direction="column" gap={1} width="40%">
+            <Typography component={'p'}>Your Shipping Address</Typography>
+            <Controller
+              name="shipping_country"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <Autocomplete
+                  {...field}
+                  options={countriesArr}
+                  getOptionLabel={(option) => option}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Country"
+                      inputProps={{ ...params.inputProps, autoComplete: 'none' }}
+                      error={!!errors.shipping_country}
+                      helperText={errors.shipping_country?.message || ' '}
+                    />
+                  )}
+                  onChange={async (_, newValue) => {
+                    field.onChange(newValue ?? '');
+                    await trigger(`shipping_zipCode`);
+                    syncCountryFields(newValue);
+                  }}
+                  isOptionEqualToValue={(option, value) => option === value}
+                />
+              )}
+            />
+            <Controller
+              name="shipping_zipCode"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Zip Code"
+                  placeholder="Zip Code"
+                  error={!!errors.shipping_zipCode}
+                  helperText={errors.shipping_zipCode?.message || ' '}
+                  onChange={(e) => {
+                    field.onChange(e.target.value);
+                    syncZipCodeFields(e.target.value);
+                  }}
+                />
+              )}
+            />
+            <Controller
+              name="shipping_street"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Street"
+                  placeholder="Street"
+                  error={!!errors.shipping_street}
+                  helperText={errors.shipping_street?.message || ' '}
+                  onChange={(e) => {
+                    field.onChange(e.target.value);
+                    syncStreetFields(e.target.value);
+                  }}
+                />
+              )}
+            />
+            <Controller
+              name="shipping_city"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="City"
+                  placeholder="City"
+                  error={!!errors.shipping_city}
+                  helperText={errors.shipping_city?.message || ' '}
+                  onChange={(e) => {
+                    field.onChange(e.target.value);
+                    syncCityFields(e.target.value);
+                  }}
+                />
+              )}
+            />
+            <Stack direction="column">
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={useAsDefaultShipping}
+                    onChange={() => setUseAsDefaultShipping(!useAsDefaultShipping)}
+                  />
+                }
+                label="Use as default shipping address"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={useAsBillingAddress}
+                    onChange={() => setUseAsBillingAddress(!useAsBillingAddress)}
+                  />
+                }
+                label="Use as billing address"
+              />
+            </Stack>
+          </Stack>
+          <Stack direction="column" gap={1} width="40%">
             <Typography component={'p'}>Your Billing Address</Typography>
+
             <Controller
               name="billing_country"
               control={control}
@@ -221,76 +377,14 @@ export function RegistrationForm() {
                 />
               )}
             />
-          </Stack>
-          <Stack direction="column" gap={1} width="40%">
-            <Typography component={'p'}>Your Shipping Address</Typography>
-            <Controller
-              name="shipping_country"
-              control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <Autocomplete
-                  {...field}
-                  options={countriesArr}
-                  getOptionLabel={(option) => option}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Country"
-                      inputProps={{ ...params.inputProps, autoComplete: 'none' }}
-                      error={!!errors.shipping_country}
-                      helperText={errors.shipping_country?.message || ' '}
-                    />
-                  )}
-                  onChange={async (_, newValue) => {
-                    field.onChange(newValue ?? '');
-                    await trigger(`shipping_zipCode`);
-                  }}
-                  isOptionEqualToValue={(option, value) => option === value}
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={useAsDefaultBilling}
+                  onChange={() => setUseAsDefaultBilling(!useAsDefaultBilling)}
                 />
-              )}
-            />
-            <Controller
-              name="shipping_zipCode"
-              control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Zip Code"
-                  placeholder="Zip Code"
-                  error={!!errors.shipping_zipCode}
-                  helperText={errors.shipping_zipCode?.message || ' '}
-                />
-              )}
-            />
-            <Controller
-              name="shipping_street"
-              control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Street"
-                  placeholder="Street"
-                  error={!!errors.shipping_street}
-                  helperText={errors.shipping_street?.message || ' '}
-                />
-              )}
-            />
-            <Controller
-              name="shipping_city"
-              control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="City"
-                  placeholder="City"
-                  error={!!errors.shipping_city}
-                  helperText={errors.shipping_city?.message || ' '}
-                />
-              )}
+              }
+              label="Use as default billing address"
             />
             <Button
               type="submit"
