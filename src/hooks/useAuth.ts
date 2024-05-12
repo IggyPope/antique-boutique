@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
 import { AuthService } from '@/api/services/AuthService';
-import { useAppDispatch } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@/hooks';
 
 export const useAuth = () => {
   const authService = AuthService.getInstance();
@@ -9,6 +9,8 @@ export const useAuth = () => {
   const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
+
+  const { isAuthenticated, isLoading, errorMessage } = useAppSelector((state) => state.user);
 
   return {
     signIn: (username: string, password: string) => {
@@ -42,5 +44,8 @@ export const useAuth = () => {
 
       dispatch({ type: 'user/logout' });
     },
+    isAuthenticated,
+    isLoading,
+    errorMessage,
   };
 };

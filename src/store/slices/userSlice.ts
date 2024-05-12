@@ -4,13 +4,13 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 export interface UserState {
   isLoading: boolean;
   isAuthenticated: boolean;
-  error: string | null;
+  errorMessage: string | null;
 }
 
 const initialState: UserState = {
   isLoading: false,
   isAuthenticated: false,
-  error: null,
+  errorMessage: null,
 };
 
 export const userSlice = createSlice({
@@ -20,7 +20,7 @@ export const userSlice = createSlice({
     loginStart: (state) => {
       console.log('loginStart');
       state.isLoading = true;
-      state.error = null;
+      state.errorMessage = null;
     },
     loginSuccess: (state) => {
       console.log('loginSuccess');
@@ -30,7 +30,7 @@ export const userSlice = createSlice({
     loginError: (state, action: PayloadAction<string>) => {
       console.log('loginError');
       state.isLoading = false;
-      state.error = action.payload;
+      state.errorMessage = action.payload;
     },
     logout: (state) => {
       state.isAuthenticated = false;
@@ -38,6 +38,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { loginStart, loginSuccess, loginError } = userSlice.actions;
+export const { loginStart, loginSuccess, loginError, logout } = userSlice.actions;
 
 export default userSlice.reducer;

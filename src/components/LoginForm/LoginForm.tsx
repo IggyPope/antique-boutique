@@ -9,7 +9,6 @@ import TextField from '@mui/material/TextField';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { useAppSelector } from '@/hooks';
 import { useAuth } from '@/hooks/useAuth';
 
 import { schema, LoginFormValues } from './schema';
@@ -29,9 +28,7 @@ export function LoginForm() {
     },
   });
 
-  const { signIn } = useAuth();
-
-  const isLoading = useAppSelector((state) => state.user.isLoading);
+  const { signIn, isLoading } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
   const onSubmit = (data: LoginFormValues) => {
