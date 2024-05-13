@@ -90,7 +90,7 @@ export const schema = yup.object<FormValues>().shape({
       const countryCode = getCountryCode(billing_country);
       let result: boolean = false;
       if (!postcodeValidatorExistsForCountry(countryCode || billing_country)) {
-        return false; // Skip validation if the country is not supported
+        return false;
       }
       if (value && countryCode) {
         result = postcodeValidator(value, countryCode);
