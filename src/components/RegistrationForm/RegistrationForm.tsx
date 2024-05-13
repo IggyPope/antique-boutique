@@ -21,6 +21,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 import { countriesArr } from './countries';
 import { schema, FormValues } from './schema';
+import { copyShippingToBilling } from './utils';
 
 export function RegistrationForm() {
   const {
@@ -57,20 +58,9 @@ export function RegistrationForm() {
   const [useAsDefaultBilling, setUseAsDefaultBilling] = useState(false);
   const [useAsBillingAddress, setUseAsBillingAddress] = useState(false);
 
-  const copyShippingToBilling = () => {
-    if (useAsBillingAddress) {
-      setValue('billing_street', getValues('shipping_street'));
-      setValue('billing_city', getValues('shipping_city'));
-      setValue('billing_zipCode', getValues('shipping_zipCode'));
-      setValue('billing_country', getValues('shipping_country'));
-    }
-    if (!useAsBillingAddress) {
-      setValue('billing_street', '');
-      setValue('billing_city', '');
-      setValue('billing_zipCode', '');
-      setValue('billing_country', '');
-    }
-  };
+  useEffect(() => {
+    copyShippingToBilling(getValues, setValue, useAsBillingAddress);
+  }, [getValues, setValue, useAsBillingAddress]);
 
   const syncStreetFields = (value: string) => {
     if (useAsBillingAddress) {
@@ -96,10 +86,6 @@ export function RegistrationForm() {
     }
   };
 
-  useEffect(() => {
-    copyShippingToBilling();
-  }, [useAsBillingAddress]);
-
   const onSubmit = (data: FormValues) => {
     console.log(data, useAsDefaultShipping, useAsDefaultBilling);
     navigate('/');
@@ -108,8 +94,28 @@ export function RegistrationForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack direction="column" gap={2} width="100%">
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-          <Stack direction="column" gap={1} width="40%">
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            flexDirection: { xs: 'column', sm: 'row' },
+            width: '100%',
+          }}
+        >
+          <Stack
+            direction="column"
+            gap={1}
+            justifyContent="center"
+            sx={{
+              width: {
+                sm: '40%',
+              },
+              padding: {
+                xs: '5%',
+                sm: '0',
+              },
+            }}
+          >
             <Typography component={'p'}>Your credentials</Typography>
             <Controller
               name="email"
@@ -142,7 +148,20 @@ export function RegistrationForm() {
               )}
             />
           </Stack>
-          <Stack direction="column" gap={1} width="40%">
+          <Stack
+            direction="column"
+            gap={1}
+            justifyContent="center"
+            sx={{
+              width: {
+                sm: '40%',
+              },
+              padding: {
+                xs: '5%',
+                sm: '0',
+              },
+            }}
+          >
             <Typography component={'p'}>Your personal information</Typography>
             <Controller
               name="firstName"
@@ -201,8 +220,28 @@ export function RegistrationForm() {
             />
           </Stack>
         </Box>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-          <Stack direction="column" gap={1} width="40%">
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            flexDirection: { xs: 'column', sm: 'row' },
+            width: '100%',
+          }}
+        >
+          <Stack
+            direction="column"
+            justifyContent="center"
+            gap={1}
+            sx={{
+              width: {
+                sm: '40%',
+              },
+              padding: {
+                xs: '5%',
+                sm: '0',
+              },
+            }}
+          >
             <Typography component={'p'}>Your Shipping Address</Typography>
             <Controller
               name="shipping_country"
@@ -306,7 +345,20 @@ export function RegistrationForm() {
               />
             </Stack>
           </Stack>
-          <Stack direction="column" gap={1} width="40%">
+          <Stack
+            direction="column"
+            justifyContent="center"
+            gap={1}
+            sx={{
+              width: {
+                sm: '40%',
+              },
+              padding: {
+                xs: '5%',
+                sm: '0',
+              },
+            }}
+          >
             <Typography component={'p'}>Your Billing Address</Typography>
 
             <Controller

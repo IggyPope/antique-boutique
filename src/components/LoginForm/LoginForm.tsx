@@ -37,7 +37,21 @@ export function LoginForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
-        <Stack direction="column" gap={1} width="50%">
+        <Stack
+          direction="column"
+          gap={1}
+          sx={{
+            width: {
+              xs: '80%',
+              md: '40%',
+              sm: '50%',
+            },
+            padding: {
+              xs: '5%',
+              sm: '0',
+            },
+          }}
+        >
           <Typography component={'p'}>Your credentials</Typography>
           <Controller
             name="username"
