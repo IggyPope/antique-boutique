@@ -1,16 +1,14 @@
-import { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { LoadingButton } from '@mui/lab';
-import { Box, Stack, Typography, IconButton } from '@mui/material';
-import TextField from '@mui/material/TextField';
+import { Box, Stack, Typography } from '@mui/material';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { useAuth } from '@/hooks/useAuth';
 
+import { Password } from './Password';
+import { UserName } from './UserName';
 import { schema, LoginFormValues } from './schema';
 
 export function LoginForm() {
@@ -23,16 +21,15 @@ export function LoginForm() {
     mode: 'onChange',
     reValidateMode: 'onChange',
     defaultValues: {
-      username: '',
+      email: '',
       password: '',
     },
   });
 
   const { signIn, isLoading } = useAuth();
 
-  const [showPassword, setShowPassword] = useState(false);
   const onSubmit = (data: LoginFormValues) => {
-    signIn(data.username, data.password);
+    signIn(data.email, data.password);
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -53,43 +50,9 @@ export function LoginForm() {
           }}
         >
           <Typography component={'p'}>Your credentials</Typography>
-          <Controller
-            name="username"
-            control={control}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="Email"
-                placeholder="Email"
-                error={!!errors.username}
-                helperText={errors.username?.message || ' '}
-              />
-            )}
-          />
+          <UserName name="email" control={control} errors={errors} />
+          <Password name="password" control={control} errors={errors} />
 
-          <Controller
-            name="password"
-            control={control}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                type={showPassword ? 'text' : 'password'}
-                label="Password"
-                placeholder="Password"
-                error={!!errors.password}
-                helperText={errors.password?.message || ' '}
-                InputProps={{
-                  endAdornment: (
-                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  ),
-                }}
-              />
-            )}
-          />
           <LoadingButton
             type="submit"
             loading={isLoading}

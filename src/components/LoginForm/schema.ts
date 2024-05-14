@@ -1,12 +1,12 @@
 import * as yup from 'yup';
 
 export interface LoginFormValues {
-  username: string;
+  email: string;
   password: string;
 }
 
 export const schema = yup.object<LoginFormValues>().shape({
-  username: yup
+  email: yup
     .string()
     .required('Please, enter your e-mail address')
     .email('Please, enter a valid e-mail address')
