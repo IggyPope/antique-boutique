@@ -1,18 +1,33 @@
-import { Link } from 'react-router-dom';
-
-import { Container } from '@mui/material';
+import { useTheme } from '@mui/material';
+import { Stack } from '@mui/material';
 import { AppBar } from '@mui/material';
 
-import styles from './Header.module.scss';
+import { NavLink } from '@/components/UI/NavLink/NavLink';
+import { useAuth } from '@/hooks/useAuth';
 
 const Header = () => {
+  const { isAuthenticated } = useAuth();
+  const theme = useTheme();
+
   return (
-    <AppBar className={styles.header} position="static">
-      <Container maxWidth="xl">
-        <Link to="/">Home</Link>
-        <Link to="/login">Login</Link>
-        <Link to="/register">Register</Link>
-      </Container>
+    <AppBar
+      position="static"
+      sx={{
+        backgroundColor: theme.palette.primary.dark,
+        padding: 2,
+      }}
+    >
+      <Stack direction="row" gap={2} justifyContent="center">
+        <NavLink to="/">Home</NavLink>
+        {isAuthenticated ? (
+          <NavLink to="/signout">Sign out</NavLink>
+        ) : (
+          <>
+            <NavLink to="/signin">Sign in</NavLink>
+            <NavLink to="/signup">Sign up</NavLink>
+          </>
+        )}
+      </Stack>
     </AppBar>
   );
 };

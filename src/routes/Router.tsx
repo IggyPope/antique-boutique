@@ -1,33 +1,27 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { Route, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
 
 import Layout from '@/layouts/Layout';
-import Login from '@/pages/Login';
 import Main from '@/pages/Main';
 import NotFound from '@/pages/NotFound';
-import Register from '@/pages/Register';
+import SignIn from '@/pages/SignIn';
+import SignUp from '@/pages/SignUp';
+import { RequireAuth, RequireNoAuth } from '@/routes/auth/RouteGuards';
+import SignOut from '@/routes/auth/SignOut';
 
-const router = createBrowserRouter([
-  {
-    element: <Layout />,
-    children: [
-      {
-        path: '/',
-        element: <Main />,
-      },
-      {
-        path: '/register',
-        element: <Register />,
-      },
-      {
-        path: '/login',
-        element: <Login />,
-      },
-      {
-        path: '*',
-        element: <NotFound />,
-      },
-    ],
-  },
-]);
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/" element={<Layout />}>
+      <Route index element={<Main />} />
+      <Route path="*" element={<NotFound />} />
+      <Route element={<RequireNoAuth />}>
+        <Route path="signin" element={<SignIn />} />
+        <Route path="signup" element={<SignUp />} />
+      </Route>
+      <Route element={<RequireAuth />}>
+        <Route path="signout" element={<SignOut />} />
+      </Route>
+    </Route>,
+  ),
+);
 
 export default router;

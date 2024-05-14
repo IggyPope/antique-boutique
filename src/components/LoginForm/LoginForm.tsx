@@ -1,12 +1,13 @@
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 
 import { Box, Button, Stack, Typography } from '@mui/material';
-
+import { LoadingButton } from '@mui/lab';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { Password } from './Password';
 import { UserName } from './UserName';
+
 import { schema, LoginFormValues } from './schema';
 
 export function LoginForm() {
@@ -24,11 +25,13 @@ export function LoginForm() {
     },
   });
 
-  const navigate = useNavigate();
-  const onSubmit = (data: LoginFormValues) => {
-    console.log(data);
 
-    navigate('/');
+  const { signIn, isLoading } = useAuth();
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const onSubmit = (data: LoginFormValues) => {
+    signIn(data.username, data.password);
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -52,8 +55,10 @@ export function LoginForm() {
           <UserName name="email" control={control} errors={errors} />
           <Password name="password" control={control} errors={errors} />
 
-          <Button
+           <LoadingButton
+
             type="submit"
+            loading={isLoading}
             disabled={!isDirty || !isValid}
             variant="contained"
             color="secondary"
@@ -65,7 +70,7 @@ export function LoginForm() {
             }}
           >
             Submit
-          </Button>
+          </LoadingButton>
         </Stack>
       </Box>
     </form>
