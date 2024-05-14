@@ -14,11 +14,10 @@ export function getCountryByCode(countryCode: string | undefined): string | null
 
 export function getCountryCode(countryName: string | undefined): string | null {
   const countryNameInLowerCase = countryName?.toLowerCase();
-  return countriesList
-    .map((country): string | null => {
-      return country.label.toLowerCase() === countryNameInLowerCase ? country.code : null;
-    })
-    .join('');
+  return (
+    countriesList.find((country) => country.label.toLowerCase() === countryNameInLowerCase)?.code ||
+    null
+  );
 }
 
 export const copyShippingToBilling = (
