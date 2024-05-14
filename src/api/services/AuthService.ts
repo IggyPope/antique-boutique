@@ -1,4 +1,8 @@
-import { ClientResponse, CustomerSignInResult } from '@commercetools/platform-sdk';
+import {
+  type CustomerDraft,
+  ClientResponse,
+  CustomerSignInResult,
+} from '@commercetools/platform-sdk';
 
 import { ApiClientBuilder } from '../client/ApiClientBuilder';
 
@@ -42,22 +46,24 @@ export class AuthService {
   }
 
   public async signUp(
-    username: string,
-    password: string,
+    customerDraft: CustomerDraft & { password: string },
   ): Promise<ClientResponse<CustomerSignInResult>> {
-    this.apiRoot = this.apiBuilder.getApiRoot({ username, password });
-
-    return this.apiRoot
+    const response = await this.apiRoot
       .me()
       .signup()
       .post({
         body: {
-          email: username,
-          password: password,
-          // TODO: Add CustomerDraft fields when we have signup functionality
+          ...customerDraft,
         },
       })
       .execute();
+
+    this.apiRoot = this.apiBuilder.getApiRoot({
+      username: customerDraft.email,
+      password: customerDraft.password,
+    });
+
+    return response;
   }
 
   public signOut() {

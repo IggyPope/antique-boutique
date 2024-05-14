@@ -1,3 +1,5 @@
+import type { CustomerDraft } from '@commercetools/platform-sdk';
+
 import { AuthService } from '@/api/services/AuthService';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 
@@ -21,11 +23,11 @@ export const useAuth = () => {
           dispatch({ type: 'user/signInError', payload: error.message });
         });
     },
-    signUp: (username: string, password: string) => {
+    signUp: (customerDraft: CustomerDraft & { password: string }) => {
       dispatch({ type: 'user/signInStart' });
 
       authService
-        .signUp(username, password)
+        .signUp(customerDraft)
         .then(() => {
           dispatch({ type: 'user/signInSuccess' });
         })

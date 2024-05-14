@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 
 import {
   Box,
@@ -17,13 +16,16 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
+import { type CustomerDraft } from '@commercetools/platform-sdk';
 import { yupResolver } from '@hookform/resolvers/yup';
+
+import { useAuth } from '@/hooks/useAuth';
 
 import { ControlledTextField } from './ControlledTextField';
 import { Password } from './Password';
 import { countriesArr } from './countries';
 import { schema, FormValues } from './schema';
-import { copyShippingToBilling } from './utils';
+import { copyShippingToBilling, getCountryCode } from './utils';
 
 export function RegistrationForm() {
   const {
@@ -56,8 +58,6 @@ export function RegistrationForm() {
     },
   });
 
-  const navigate = useNavigate();
-
   const [useAsDefaultShipping, setUseAsDefaultShipping] = useState(false);
   const [useAsDefaultBilling, setUseAsDefaultBilling] = useState(false);
   const [useAsBillingAddress, setUseAsBillingAddress] = useState(false);
@@ -77,9 +77,37 @@ export function RegistrationForm() {
     }
   };
 
+  const { signUp } = useAuth();
+
   const onSubmit = (data: FormValues) => {
-    console.log(data);
-    navigate('/');
+    const billingAddressIndex = 0;
+    const shippingAddressIndex = 1;
+
+    const customerDraft: CustomerDraft & { password: string } = {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      dateOfBirth: new Date(data.dateOfBirth).toISOString().slice(0, 10),
+      email: data.email,
+      password: data.password,
+      addresses: [
+        {
+          country: getCountryCode(data.billing_country) ?? '',
+          city: data.billing_city,
+          streetName: data.billing_street,
+          postalCode: data.billing_zipCode,
+        },
+        {
+          country: getCountryCode(data.billing_country) ?? '',
+          city: data.shipping_city,
+          streetName: data.shipping_street,
+          postalCode: data.shipping_zipCode,
+        },
+      ],
+      defaultBillingAddress: data.useAsDefaultBillingAddress ? billingAddressIndex : undefined,
+      defaultShippingAddress: data.useAsDefaultShippingAddress ? shippingAddressIndex : undefined,
+    };
+
+    signUp(customerDraft);
   };
 
   return (
