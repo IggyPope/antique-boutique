@@ -1,13 +1,14 @@
 import { useForm } from 'react-hook-form';
-import { useAuth } from '@/hooks/useAuth';
 
-import { Box, Button, Stack, Typography } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { Box, Stack, Typography } from '@mui/material';
+
 import { yupResolver } from '@hookform/resolvers/yup';
+
+import { useAuth } from '@/hooks/useAuth';
 
 import { Password } from './Password';
 import { UserName } from './UserName';
-
 import { schema, LoginFormValues } from './schema';
 
 export function LoginForm() {
@@ -25,13 +26,10 @@ export function LoginForm() {
     },
   });
 
-
   const { signIn, isLoading } = useAuth();
 
-  const [showPassword, setShowPassword] = useState(false);
-
   const onSubmit = (data: LoginFormValues) => {
-    signIn(data.username, data.password);
+    signIn(data.email, data.password);
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -55,8 +53,7 @@ export function LoginForm() {
           <UserName name="email" control={control} errors={errors} />
           <Password name="password" control={control} errors={errors} />
 
-           <LoadingButton
-
+          <LoadingButton
             type="submit"
             loading={isLoading}
             disabled={!isDirty || !isValid}
