@@ -2,7 +2,7 @@ import { Typography } from '@mui/material';
 
 import { RegistrationForm } from '../components/RegistrationForm/RegistrationForm';
 
-const Register = () => {
+const SignUp = () => {
   return (
     <>
       <Typography variant="h3">Sign Up</Typography>
@@ -11,4 +11,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default SignUp;

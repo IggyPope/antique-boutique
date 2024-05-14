@@ -1,12 +1,8 @@
-import { useNavigate } from 'react-router-dom';
-
 import { AuthService } from '@/api/services/AuthService';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 
 export const useAuth = () => {
   const authService = AuthService.getInstance();
-
-  const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
 
@@ -14,35 +10,33 @@ export const useAuth = () => {
 
   return {
     signIn: (username: string, password: string) => {
-      dispatch({ type: 'user/loginStart' });
+      dispatch({ type: 'user/signInStart' });
 
       authService
         .signIn(username, password)
         .then(() => {
-          dispatch({ type: 'user/loginSuccess' });
-          navigate('/');
+          dispatch({ type: 'user/signInSuccess' });
         })
         .catch((error: Error) => {
-          dispatch({ type: 'user/loginError', payload: error.message });
+          dispatch({ type: 'user/signInError', payload: error.message });
         });
     },
     signUp: (username: string, password: string) => {
-      dispatch({ type: 'user/loginStart' });
+      dispatch({ type: 'user/signInStart' });
 
       authService
         .signUp(username, password)
         .then(() => {
-          dispatch({ type: 'user/loginSuccess' });
-          navigate('/');
+          dispatch({ type: 'user/signInSuccess' });
         })
         .catch((error: Error) => {
-          dispatch({ type: 'user/loginError', payload: error.message });
+          dispatch({ type: 'user/signInError', payload: error.message });
         });
     },
     signOut: () => {
       authService.signOut();
 
-      dispatch({ type: 'user/logout' });
+      dispatch({ type: 'user/signOut' });
     },
     isAuthenticated,
     isLoading,

@@ -17,24 +17,24 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    loginStart: (state) => {
+    signInStart: (state) => {
       state.isLoading = true;
       state.errorMessage = null;
     },
-    loginSuccess: (state) => {
+    signInSuccess: (state) => {
       state.isLoading = false;
       state.isAuthenticated = true;
     },
-    loginError: (state, action: PayloadAction<string>) => {
+    signInError: (state, action: PayloadAction<string>) => {
       state.isLoading = false;
       state.errorMessage = action.payload;
     },
-    logout: (state) => {
+    signOut: (state) => {
       state.isAuthenticated = false;
     },
   },
 });
 
-export const { loginStart, loginSuccess, loginError, logout } = userSlice.actions;
+export const { signInStart, signInSuccess, signInError, signOut } = userSlice.actions;
 
 export default userSlice.reducer;
