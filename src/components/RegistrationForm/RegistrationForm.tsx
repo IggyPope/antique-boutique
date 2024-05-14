@@ -19,6 +19,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 
+import { ControlledTextField } from './ControlledTextField';
+import { Password } from './Password';
 import { countriesArr } from './countries';
 import { schema, FormValues } from './schema';
 import { copyShippingToBilling } from './utils';
@@ -49,6 +51,8 @@ export function RegistrationForm() {
       shipping_city: '',
       shipping_country: '',
       shipping_street: '',
+      useAsDefaultShippingAddress: false,
+      useAsDefaultBillingAddress: false,
     },
   });
 
@@ -62,24 +66,11 @@ export function RegistrationForm() {
     copyShippingToBilling(getValues, setValue, useAsBillingAddress);
   }, [getValues, setValue, useAsBillingAddress]);
 
-  const syncStreetFields = (value: string) => {
+  const syncFields = (fieldName: keyof FormValues, value: string) => {
     if (useAsBillingAddress) {
-      setValue('billing_street', value);
+      setValue(fieldName, value);
     }
   };
-
-  const syncCityFields = (value: string) => {
-    if (useAsBillingAddress) {
-      setValue('billing_city', value);
-    }
-  };
-
-  const syncZipCodeFields = (value: string) => {
-    if (useAsBillingAddress) {
-      setValue('billing_zipCode', value);
-    }
-  };
-
   const syncCountryFields = (value: string | null) => {
     if (useAsBillingAddress && typeof value === 'string') {
       setValue('billing_country', value);
@@ -87,7 +78,7 @@ export function RegistrationForm() {
   };
 
   const onSubmit = (data: FormValues) => {
-    console.log(data, useAsDefaultShipping, useAsDefaultBilling);
+    console.log(data);
     navigate('/');
   };
 
@@ -117,36 +108,14 @@ export function RegistrationForm() {
             }}
           >
             <Typography component={'p'}>Your credentials</Typography>
-            <Controller
+            <ControlledTextField
               name="email"
               control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Email"
-                  placeholder="Email"
-                  error={!!errors.email}
-                  helperText={errors.email?.message || ' '}
-                />
-              )}
+              errors={errors}
+              label="email"
+              fieldName="Email"
             />
-
-            <Controller
-              name="password"
-              control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  type="password"
-                  label="Password"
-                  placeholder="Password"
-                  error={!!errors.password}
-                  helperText={errors.password?.message || ' '}
-                />
-              )}
-            />
+            <Password name="password" control={control} errors={errors} />
           </Stack>
           <Stack
             direction="column"
@@ -163,36 +132,20 @@ export function RegistrationForm() {
             }}
           >
             <Typography component={'p'}>Your personal information</Typography>
-            <Controller
+            <ControlledTextField
               name="firstName"
               control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="First Name"
-                  placeholder="First Name"
-                  error={!!errors.firstName}
-                  helperText={errors.firstName?.message || ' '}
-                />
-              )}
+              errors={errors}
+              label="firstName"
+              fieldName="Frist Name"
             />
-
-            <Controller
+            <ControlledTextField
               name="lastName"
               control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Last Name"
-                  placeholder="Last Name"
-                  error={!!errors.lastName}
-                  helperText={errors.lastName?.message || ' '}
-                />
-              )}
+              errors={errors}
+              label="lastName"
+              fieldName="Last Name"
             />
-
             <Controller
               name="dateOfBirth"
               control={control}
@@ -270,69 +223,54 @@ export function RegistrationForm() {
                 />
               )}
             />
-            <Controller
+            <ControlledTextField
               name="shipping_zipCode"
               control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Zip Code"
-                  placeholder="Zip Code"
-                  error={!!errors.shipping_zipCode}
-                  helperText={errors.shipping_zipCode?.message || ' '}
-                  onChange={(e) => {
-                    field.onChange(e.target.value);
-                    syncZipCodeFields(e.target.value);
-                  }}
-                />
-              )}
+              errors={errors}
+              label="shipping_zipCode"
+              fieldName="Zip Code"
+              nameToSync="billing_zipCode"
+              callback={syncFields}
             />
-            <Controller
+            <ControlledTextField
               name="shipping_street"
               control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Street"
-                  placeholder="Street"
-                  error={!!errors.shipping_street}
-                  helperText={errors.shipping_street?.message || ' '}
-                  onChange={(e) => {
-                    field.onChange(e.target.value);
-                    syncStreetFields(e.target.value);
-                  }}
-                />
-              )}
+              errors={errors}
+              label="shipping_street"
+              fieldName="Street"
+              nameToSync="billing_street"
+              callback={syncFields}
             />
-            <Controller
+            <ControlledTextField
               name="shipping_city"
               control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="City"
-                  placeholder="City"
-                  error={!!errors.shipping_city}
-                  helperText={errors.shipping_city?.message || ' '}
-                  onChange={(e) => {
-                    field.onChange(e.target.value);
-                    syncCityFields(e.target.value);
-                  }}
-                />
-              )}
+              errors={errors}
+              label="shipping_city"
+              fieldName="City"
+              nameToSync="billing_city"
+              callback={syncFields}
             />
+
             <Stack direction="column">
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={useAsDefaultShipping}
-                    onChange={() => setUseAsDefaultShipping(!useAsDefaultShipping)}
+              <Controller
+                name="useAsDefaultShippingAddress"
+                control={control}
+                defaultValue={false}
+                render={({ field }) => (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        {...field}
+                        checked={useAsDefaultShipping}
+                        onChange={() => {
+                          setUseAsDefaultShipping(!useAsDefaultShipping);
+                          field.onChange(!useAsDefaultShipping);
+                        }}
+                      />
+                    }
+                    label="Use as default shipping address"
                   />
-                }
-                label="Use as default shipping address"
+                )}
               />
               <FormControlLabel
                 control={
@@ -387,56 +325,48 @@ export function RegistrationForm() {
                 />
               )}
             />
-            <Controller
+            <ControlledTextField
               name="billing_zipCode"
               control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Zip Code"
-                  placeholder="Zip Code"
-                  error={!!errors.billing_zipCode}
-                  helperText={errors.billing_zipCode?.message || ' '}
-                />
-              )}
+              errors={errors}
+              label="billing_zipCode"
+              fieldName="Zip Code"
             />
-            <Controller
+
+            <ControlledTextField
               name="billing_street"
               control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Street"
-                  placeholder="Street"
-                  error={!!errors.billing_street}
-                  helperText={errors.billing_street?.message || ' '}
-                />
-              )}
+              errors={errors}
+              label="billing_street"
+              fieldName="Street"
             />
-            <Controller
+
+            <ControlledTextField
               name="billing_city"
               control={control}
-              rules={{ required: true }}
+              errors={errors}
+              label="billing_city"
+              fieldName="City"
+            />
+            <Controller
+              name="useAsDefaultBillingAddress"
+              control={control}
+              defaultValue={false}
               render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="City"
-                  placeholder="City"
-                  error={!!errors.billing_city}
-                  helperText={errors.billing_city?.message || ' '}
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      {...field}
+                      checked={useAsDefaultBilling}
+                      onChange={() => {
+                        setUseAsDefaultBilling(!useAsDefaultBilling);
+                        field.onChange(!useAsDefaultBilling);
+                      }}
+                    />
+                  }
+                  label="Use as default billing address"
                 />
               )}
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={useAsDefaultBilling}
-                  onChange={() => setUseAsDefaultBilling(!useAsDefaultBilling)}
-                />
-              }
-              label="Use as default billing address"
             />
             <Button
               type="submit"

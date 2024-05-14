@@ -48,6 +48,19 @@ const theme = createTheme({
           backgroundColor: '#D6E4CB',
         },
       },
+      defaultProps: {
+        sx: {
+          '&.Mui-selected': {
+            backgroundColor: '#C37D92',
+            '&:focus': {
+              backgroundColor: '#C37D92',
+            },
+            '&:hover:focus': {
+              backgroundColor: '#C37D92',
+            },
+          },
+        },
+      },
     },
   },
   typography: {

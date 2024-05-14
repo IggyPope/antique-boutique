@@ -18,6 +18,8 @@ export interface FormValues {
   shipping_city: string;
   shipping_country: string;
   shipping_street: string;
+  useAsDefaultShippingAddress: boolean;
+  useAsDefaultBillingAddress: boolean;
 }
 
 export const schema = yup.object<FormValues>().shape({
@@ -123,11 +125,13 @@ export const schema = yup.object<FormValues>().shape({
       const countryCode = getCountryCode(shipping_country);
       let result: boolean = false;
       if (!postcodeValidatorExistsForCountry(countryCode || shipping_country)) {
-        return false; // Skip validation if the country is not supported
+        return false;
       }
       if (value && countryCode) {
         result = postcodeValidator(value, countryCode);
       }
       return result;
     }),
+  useAsDefaultShippingAddress: yup.boolean().required(),
+  useAsDefaultBillingAddress: yup.boolean().required(),
 });

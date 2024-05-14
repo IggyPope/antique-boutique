@@ -1,14 +1,12 @@
-import { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { Box, Button, Stack, Typography, IconButton } from '@mui/material';
-import TextField from '@mui/material/TextField';
+import { Box, Button, Stack, Typography } from '@mui/material';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 
+import { Password } from './Password';
+import { UserName } from './UserName';
 import { schema, LoginFormValues } from './schema';
 
 export function LoginForm() {
@@ -21,19 +19,17 @@ export function LoginForm() {
     mode: 'onChange',
     reValidateMode: 'onChange',
     defaultValues: {
-      username: '',
+      email: '',
       password: '',
     },
   });
 
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
   const onSubmit = (data: LoginFormValues) => {
     console.log(data);
 
     navigate('/');
   };
-  // const theme = useTheme();
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
@@ -53,43 +49,9 @@ export function LoginForm() {
           }}
         >
           <Typography component={'p'}>Your credentials</Typography>
-          <Controller
-            name="username"
-            control={control}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="Email"
-                placeholder="Email"
-                error={!!errors.username}
-                helperText={errors.username?.message || ' '}
-              />
-            )}
-          />
+          <UserName name="email" control={control} errors={errors} />
+          <Password name="password" control={control} errors={errors} />
 
-          <Controller
-            name="password"
-            control={control}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                type={showPassword ? 'text' : 'password'}
-                label="Password"
-                placeholder="Password"
-                error={!!errors.password}
-                helperText={errors.password?.message || ' '}
-                InputProps={{
-                  endAdornment: (
-                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  ),
-                }}
-              />
-            )}
-          />
           <Button
             type="submit"
             disabled={!isDirty || !isValid}
