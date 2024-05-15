@@ -53,7 +53,7 @@ Before you start, ensure you have [Node.js](https://nodejs.org/en/download/) ins
 
    ```shell
    git checkout develop
-   npm run install
+   npm install
    ```
 
 3. **Initialize** husky

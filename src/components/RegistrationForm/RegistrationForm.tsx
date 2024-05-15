@@ -340,7 +340,10 @@ export function RegistrationForm() {
                     <TextField
                       {...params}
                       label="Country"
-                      inputProps={{ ...params.inputProps, autoComplete: 'none' }}
+                      inputProps={{
+                        ...params.inputProps,
+                        autoComplete: 'none',
+                      }}
                       error={!!errors.billing_country}
                       helperText={errors.billing_country?.message || ' '}
                     />
@@ -350,6 +353,7 @@ export function RegistrationForm() {
                     await trigger(`billing_zipCode`);
                   }}
                   isOptionEqualToValue={(option, value) => option === value}
+                  disabled={useAsBillingAddress}
                 />
               )}
             />
@@ -359,6 +363,7 @@ export function RegistrationForm() {
               errors={errors}
               label="billing_zipCode"
               fieldName="Zip Code"
+              disabled={useAsBillingAddress}
             />
 
             <ControlledTextField
@@ -367,6 +372,7 @@ export function RegistrationForm() {
               errors={errors}
               label="billing_street"
               fieldName="Street"
+              disabled={useAsBillingAddress}
             />
 
             <ControlledTextField
@@ -375,6 +381,7 @@ export function RegistrationForm() {
               errors={errors}
               label="billing_city"
               fieldName="City"
+              disabled={useAsBillingAddress}
             />
             <Controller
               name="useAsDefaultBillingAddress"
