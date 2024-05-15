@@ -56,12 +56,15 @@ export class AuthService {
           ...customerDraft,
         },
       })
-      .execute();
+      .execute()
+      .then((res) => {
+        this.apiRoot = this.apiBuilder.getApiRoot({
+          username: customerDraft.email,
+          password: customerDraft.password,
+        });
 
-    this.apiRoot = this.apiBuilder.getApiRoot({
-      username: customerDraft.email,
-      password: customerDraft.password,
-    });
+        return res;
+      });
 
     return response;
   }

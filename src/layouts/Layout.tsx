@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 import { Container } from '@mui/material';
 
@@ -20,6 +21,7 @@ const Layout = () => {
         <Outlet />
       </Container>
       <Footer />
+      <ToastContainer />
     </>
   );
 };

@@ -26,10 +26,16 @@ export const copyShippingToBilling = (
   useAsBillingAddress: boolean,
 ) => {
   if (useAsBillingAddress) {
-    setValue('billing_street', getValues('shipping_street'));
-    setValue('billing_city', getValues('shipping_city'));
+    setValue('billing_street', getValues('shipping_street'), {
+      shouldValidate: true,
+    });
+    setValue('billing_city', getValues('shipping_city'), {
+      shouldValidate: true,
+    });
     setValue('billing_zipCode', getValues('shipping_zipCode'));
-    setValue('billing_country', getValues('shipping_country'));
+    setValue('billing_country', getValues('shipping_country'), {
+      shouldValidate: true,
+    });
   } else {
     setValue('billing_street', '');
     setValue('billing_city', '');

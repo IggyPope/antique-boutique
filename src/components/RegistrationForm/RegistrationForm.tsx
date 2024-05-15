@@ -245,6 +245,7 @@ export function RegistrationForm() {
                   onChange={async (_, newValue) => {
                     field.onChange(newValue ?? '');
                     await trigger(`shipping_zipCode`);
+
                     syncCountryFields(newValue);
                   }}
                   isOptionEqualToValue={(option, value) => option === value}
