@@ -62,10 +62,11 @@ export function RegistrationForm() {
   const [useAsDefaultShipping, setUseAsDefaultShipping] = useState(false);
   const [useAsDefaultBilling, setUseAsDefaultBilling] = useState(false);
   const [useAsBilling, setUseAsBilling] = useState(false);
+  const [isCleared, setIsCleared] = useState(false);
 
   useEffect(() => {
-    copyShippingToBilling(getValues, setValue, useAsBilling);
-  }, [getValues, setValue, useAsBilling]);
+    copyShippingToBilling(getValues, setValue, useAsBilling, isCleared);
+  }, [getValues, setValue, useAsBilling, isCleared]);
 
   const syncFields = async (fieldName: keyof FormValues, value: string) => {
     if (useAsBilling) {
@@ -73,15 +74,17 @@ export function RegistrationForm() {
       await trigger(fieldName);
     }
   };
-  const syncCountryFields = (value: string | null) => {
+  const syncCountryFields = async (value: string | null) => {
     if (useAsBilling && typeof value === 'string') {
       setValue('billing_country', value);
+      await trigger('billing_zipCode');
     }
   };
 
   const { signUp } = useAuth();
 
   const onSubmit = (data: FormValues) => {
+    console.log(data.useAsDefaultBillingAddress, data.useAsDefaultShippingAddress);
     const billingAddressIndex = 0;
     const shippingAddressIndex = 1;
 
@@ -247,8 +250,7 @@ export function RegistrationForm() {
                   onChange={async (_, newValue) => {
                     field.onChange(newValue ?? '');
                     await trigger(`shipping_zipCode`);
-
-                    syncCountryFields(newValue);
+                    await syncCountryFields(newValue);
                   }}
                   isOptionEqualToValue={(option, value) => option === value}
                 />
@@ -315,6 +317,8 @@ export function RegistrationForm() {
                         checked={useAsBilling}
                         onChange={() => {
                           setUseAsBilling(!useAsBilling);
+                          field.onChange(!useAsBilling);
+                          setIsCleared(!false);
                         }}
                       />
                     }
@@ -363,7 +367,9 @@ export function RegistrationForm() {
                   )}
                   onChange={async (_, newValue) => {
                     field.onChange(newValue ?? '');
-                    await trigger(`billing_zipCode`);
+                    if (!useAsBilling) {
+                      await trigger(`billing_zipCode`);
+                    }
                   }}
                   isOptionEqualToValue={(option, value) => option === value}
                   disabled={useAsBilling}
