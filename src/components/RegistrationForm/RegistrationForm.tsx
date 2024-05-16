@@ -55,25 +55,29 @@ export function RegistrationForm() {
       shipping_street: '',
       useAsDefaultShippingAddress: false,
       useAsDefaultBillingAddress: false,
+      useAsBillingAddress: false,
     },
   });
 
   const [useAsDefaultShipping, setUseAsDefaultShipping] = useState(false);
   const [useAsDefaultBilling, setUseAsDefaultBilling] = useState(false);
-  const [useAsBillingAddress, setUseAsBillingAddress] = useState(false);
+  const [useAsBilling, setUseAsBilling] = useState(false);
+  const [isCleared, setIsCleared] = useState(false);
 
   useEffect(() => {
-    copyShippingToBilling(getValues, setValue, useAsBillingAddress);
-  }, [getValues, setValue, useAsBillingAddress]);
+    copyShippingToBilling(getValues, setValue, useAsBilling, isCleared);
+  }, [getValues, setValue, useAsBilling, isCleared]);
 
-  const syncFields = (fieldName: keyof FormValues, value: string) => {
-    if (useAsBillingAddress) {
+  const syncFields = async (fieldName: keyof FormValues, value: string) => {
+    if (useAsBilling) {
       setValue(fieldName, value);
+      await trigger(fieldName);
     }
   };
-  const syncCountryFields = (value: string | null) => {
-    if (useAsBillingAddress && typeof value === 'string') {
+  const syncCountryFields = async (value: string | null) => {
+    if (useAsBilling && typeof value === 'string') {
       setValue('billing_country', value);
+      await trigger('billing_zipCode');
     }
   };
 
@@ -245,7 +249,7 @@ export function RegistrationForm() {
                   onChange={async (_, newValue) => {
                     field.onChange(newValue ?? '');
                     await trigger(`shipping_zipCode`);
-                    syncCountryFields(newValue);
+                    await syncCountryFields(newValue);
                   }}
                   isOptionEqualToValue={(option, value) => option === value}
                 />
@@ -300,14 +304,26 @@ export function RegistrationForm() {
                   />
                 )}
               />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={useAsBillingAddress}
-                    onChange={() => setUseAsBillingAddress(!useAsBillingAddress)}
+              <Controller
+                name="useAsBillingAddress"
+                control={control}
+                defaultValue={false}
+                render={({ field }) => (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        {...field}
+                        checked={useAsBilling}
+                        onChange={() => {
+                          setUseAsBilling(!useAsBilling);
+                          field.onChange(!useAsBilling);
+                          setIsCleared(!false);
+                        }}
+                      />
+                    }
+                    label="Use as billing address"
                   />
-                }
-                label="Use as billing address"
+                )}
               />
             </Stack>
           </Stack>
@@ -350,10 +366,12 @@ export function RegistrationForm() {
                   )}
                   onChange={async (_, newValue) => {
                     field.onChange(newValue ?? '');
-                    await trigger(`billing_zipCode`);
+                    if (!useAsBilling) {
+                      await trigger(`billing_zipCode`);
+                    }
                   }}
                   isOptionEqualToValue={(option, value) => option === value}
-                  disabled={useAsBillingAddress}
+                  disabled={useAsBilling}
                 />
               )}
             />
@@ -363,7 +381,7 @@ export function RegistrationForm() {
               errors={errors}
               label="billing_zipCode"
               fieldName="Zip Code"
-              disabled={useAsBillingAddress}
+              disabled={useAsBilling}
             />
 
             <ControlledTextField
@@ -372,7 +390,7 @@ export function RegistrationForm() {
               errors={errors}
               label="billing_street"
               fieldName="Street"
-              disabled={useAsBillingAddress}
+              disabled={useAsBilling}
             />
 
             <ControlledTextField
@@ -381,7 +399,7 @@ export function RegistrationForm() {
               errors={errors}
               label="billing_city"
               fieldName="City"
-              disabled={useAsBillingAddress}
+              disabled={useAsBilling}
             />
             <Controller
               name="useAsDefaultBillingAddress"

@@ -20,6 +20,7 @@ export interface FormValues {
   shipping_street: string;
   useAsDefaultShippingAddress: boolean;
   useAsDefaultBillingAddress: boolean;
+  useAsBillingAddress: boolean;
 }
 
 export const schema = yup.object<FormValues>().shape({
@@ -134,4 +135,5 @@ export const schema = yup.object<FormValues>().shape({
     }),
   useAsDefaultShippingAddress: yup.boolean().required(),
   useAsDefaultBillingAddress: yup.boolean().required(),
+  useAsBillingAddress: yup.boolean().required(),
 });

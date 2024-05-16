@@ -24,16 +24,33 @@ export const copyShippingToBilling = (
   getValues: UseFormGetValues<FormValues>,
   setValue: UseFormSetValue<FormValues>,
   useAsBillingAddress: boolean,
+  isCleaned: boolean,
 ) => {
   if (useAsBillingAddress) {
-    setValue('billing_street', getValues('shipping_street'));
-    setValue('billing_city', getValues('shipping_city'));
-    setValue('billing_zipCode', getValues('shipping_zipCode'));
-    setValue('billing_country', getValues('shipping_country'));
-  } else {
-    setValue('billing_street', '');
-    setValue('billing_city', '');
-    setValue('billing_zipCode', '');
-    setValue('billing_country', '');
+    setValue('billing_street', getValues('shipping_street'), {
+      shouldValidate: true,
+    });
+    setValue('billing_city', getValues('shipping_city'), {
+      shouldValidate: true,
+    });
+    setValue('billing_country', getValues('shipping_country'), {
+      shouldValidate: true,
+    });
+    setValue('billing_zipCode', getValues('shipping_zipCode'), {
+      shouldValidate: true,
+    });
+  } else if (!useAsBillingAddress && isCleaned) {
+    setValue('billing_street', '', {
+      shouldValidate: true,
+    });
+    setValue('billing_city', '', {
+      shouldValidate: true,
+    });
+    setValue('billing_country', '', {
+      shouldValidate: true,
+    });
+    setValue('billing_zipCode', '', {
+      shouldValidate: true,
+    });
   }
 };
