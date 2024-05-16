@@ -84,7 +84,6 @@ export function RegistrationForm() {
   const { signUp } = useAuth();
 
   const onSubmit = (data: FormValues) => {
-    console.log(data.useAsDefaultBillingAddress, data.useAsDefaultShippingAddress);
     const billingAddressIndex = 0;
     const shippingAddressIndex = 1;
 
