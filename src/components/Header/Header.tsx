@@ -1,37 +1,48 @@
-import { useTheme } from '@mui/material';
-import { Stack } from '@mui/material';
-import { AppBar } from '@mui/material';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { NavLink } from '@/components/UI/NavLink/NavLink';
+import { useTheme, AppBar, Container, Stack } from '@mui/material';
 
-// import { useAuth } from '@/hooks/useAuth';
+import BurgerMenu from './BurgerMenu';
+import IconMenu from './IconMenu';
+import LogoBlock from './LogoBlock';
+import NavMenu from './NavMenu';
 
 const Header = () => {
-  // const { isAuthenticated } = useAuth();
+  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+  const navigate = useNavigate();
   const theme = useTheme();
+
+  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElNav(event.currentTarget);
+  };
+
+  const handleCloseNavMenu = (path: string) => {
+    navigate(path);
+    setAnchorElNav(null);
+  };
 
   return (
     <AppBar
       position="static"
       sx={{
         backgroundColor: theme.palette.primary.dark,
-        padding: 2,
+        padding: '20px 0',
       }}
     >
-      <Stack direction="row" gap={2} justifyContent="center">
-        <NavLink to="/">Home</NavLink>
-        {/* {isAuthenticated ? (
-          <NavLink to="/signout">Sign out</NavLink>
-        ) : (
-          <>
-            <NavLink to="/signin">Sign in</NavLink>
-            <NavLink to="/signup">Sign up</NavLink>
-          </>
-        )} */}
-        <NavLink to="/signin">Sign in</NavLink>
-        <NavLink to="/signup">Sign up</NavLink>
-        <NavLink to="/signout">Sign out</NavLink>
-      </Stack>
+      <Container maxWidth="lg">
+        <Stack direction="row" justifyContent="space-between" alignItems="center">
+          <LogoBlock display={{ xs: 'none', md: 'flex' }} />
+          <BurgerMenu
+            handleOpenNavMenu={handleOpenNavMenu}
+            handleCloseNavMenu={handleCloseNavMenu}
+            anchorElNav={anchorElNav}
+          />
+          <NavMenu />
+          <LogoBlock display={{ xs: 'flex', md: 'none' }} />
+          <IconMenu />
+        </Stack>
+      </Container>
     </AppBar>
   );
 };
