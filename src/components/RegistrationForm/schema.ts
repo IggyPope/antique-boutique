@@ -22,7 +22,8 @@ export interface FormValues {
   useAsDefaultBillingAddress: boolean;
   useAsBillingAddress: boolean;
 }
-
+const maxAllowedDate = new Date();
+maxAllowedDate.setFullYear(maxAllowedDate.getFullYear() - 13);
 export const schema = yup.object<FormValues>().shape({
   email: yup
     .string()
@@ -65,7 +66,7 @@ export const schema = yup.object<FormValues>().shape({
   dateOfBirth: yup
     .date()
     .required('Please, enter your date of birth')
-    .max(new Date().getFullYear() - 13, 'You must be at least 13 years old'),
+    .max(maxAllowedDate, 'You must be at least 13 years old'),
 
   billing_country: yup
     .string()
