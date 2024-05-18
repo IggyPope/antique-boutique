@@ -7,7 +7,6 @@ import { LoginForm } from '@/components/LoginForm/LoginForm';
 const SignIn = () => {
   return (
     <>
-      <Typography variant="h3">Sign in</Typography>
       <LoginForm />
       <Box
         sx={{

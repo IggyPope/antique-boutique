@@ -9,7 +9,7 @@ const NotFound = () => {
   const navigate = useNavigate();
 
   return (
-    <Container maxWidth="lg">
+    <Container>
       <Stack
         direction="column"
         justifyContent="center"

@@ -62,9 +62,20 @@ const theme = createTheme({
         },
       },
     },
+    MuiContainer: {
+      defaultProps: {
+        maxWidth: 'lg',
+        sx: {
+          padding: '0 10px',
+        },
+      },
+    },
   },
   typography: {
     fontFamily: ['Poppins', 'sans-serif'].join(','),
+    h1: {
+      fontSize: '2.5rem',
+    },
   },
 });
 

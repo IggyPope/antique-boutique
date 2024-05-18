@@ -2,6 +2,7 @@ import { Route, createBrowserRouter, createRoutesFromElements } from 'react-rout
 
 import Layout from '@/layouts/Layout';
 import About from '@/pages/About';
+import Cart from '@/pages/Cart';
 import Catalog from '@/pages/Catalog';
 import Main from '@/pages/Main';
 import NotFound from '@/pages/NotFound';
@@ -17,6 +18,7 @@ const router = createBrowserRouter(
       <Route index element={<Main />} />
       <Route path="/catalog" element={<Catalog />} />
       <Route path="/about" element={<About />} />
+      <Route path="/cart" element={<Cart />} />
       <Route path="*" element={<NotFound />} />
       <Route element={<RequireNoAuth />}>
         <Route path="signin" element={<SignIn />} />

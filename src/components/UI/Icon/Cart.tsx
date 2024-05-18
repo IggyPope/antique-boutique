@@ -1,6 +1,6 @@
 import { SvgIcon, useTheme } from '@mui/material';
 
-const Basket = () => {
+const Cart = () => {
   const theme = useTheme();
 
   return (
@@ -27,4 +27,4 @@ const Basket = () => {
   );
 };
 
-export default Basket;
+export default Cart;

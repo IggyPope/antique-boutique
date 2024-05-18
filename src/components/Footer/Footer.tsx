@@ -24,7 +24,7 @@ const Footer = () => {
         },
       }}
     >
-      <Container maxWidth="lg">
+      <Container>
         <Grid
           columnSpacing={2}
           container

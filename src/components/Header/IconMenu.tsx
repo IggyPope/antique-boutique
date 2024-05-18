@@ -2,7 +2,7 @@ import { Badge, IconButton, Stack } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 import { useAuth } from '../../hooks/useAuth';
-import Basket from '../UI/Icon/Basket';
+import Cart from '../UI/Icon/Cart';
 import Profile from '../UI/Icon/Profile';
 import { NavLink } from '../UI/NavLink/NavLink';
 
@@ -11,7 +11,7 @@ const IconMenu = () => {
   const { isAuthenticated } = useAuth();
   const pages = [
     { icon: <Profile />, path: '/profile', auth: true },
-    { icon: <Basket />, path: '/basket' },
+    { icon: <Cart />, path: '/cart' },
   ];
   const filteredPages = pages.filter((page) =>
     isAuthenticated ? page.auth !== false : page.auth !== true,
