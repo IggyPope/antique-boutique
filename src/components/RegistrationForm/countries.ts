@@ -1,5 +1,5 @@
 export const countriesList = [
-  { label: 'Åland Islands', code: 'AX' },
+  // { label: 'Åland Islands', code: 'AX' },
   { label: 'Algeria', code: 'DZ' },
   { label: 'American Samoa', code: 'AS' },
   { label: 'AndorrA', code: 'AD' },

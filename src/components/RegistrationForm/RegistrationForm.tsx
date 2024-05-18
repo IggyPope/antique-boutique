@@ -86,7 +86,6 @@ export function RegistrationForm() {
   const onSubmit = (data: FormValues) => {
     const billingAddressIndex = 0;
     const shippingAddressIndex = 1;
-
     const customerDraft: CustomerDraft & { password: string } = {
       firstName: data.firstName,
       lastName: data.lastName,
@@ -169,7 +168,7 @@ export function RegistrationForm() {
               control={control}
               errors={errors}
               label="firstName"
-              fieldName="Frist Name"
+              fieldName="First Name"
             />
             <ControlledTextField
               name="lastName"
@@ -240,7 +239,7 @@ export function RegistrationForm() {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Country"
+                      label="Shipping Country"
                       inputProps={{ ...params.inputProps, autoComplete: 'none' }}
                       error={!!errors.shipping_country}
                       helperText={errors.shipping_country?.message || ' '}
@@ -260,7 +259,7 @@ export function RegistrationForm() {
               control={control}
               errors={errors}
               label="shipping_zipCode"
-              fieldName="Zip Code"
+              fieldName="Shipping Zip Code"
               nameToSync="billing_zipCode"
               callback={syncFields}
             />
@@ -269,7 +268,7 @@ export function RegistrationForm() {
               control={control}
               errors={errors}
               label="shipping_street"
-              fieldName="Street"
+              fieldName="Shipping Street"
               nameToSync="billing_street"
               callback={syncFields}
             />
@@ -278,7 +277,7 @@ export function RegistrationForm() {
               control={control}
               errors={errors}
               label="shipping_city"
-              fieldName="City"
+              fieldName="Shipping City"
               nameToSync="billing_city"
               callback={syncFields}
             />
@@ -355,7 +354,7 @@ export function RegistrationForm() {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Country"
+                      label="Billing Country"
                       inputProps={{
                         ...params.inputProps,
                         autoComplete: 'none',
@@ -380,7 +379,7 @@ export function RegistrationForm() {
               control={control}
               errors={errors}
               label="billing_zipCode"
-              fieldName="Zip Code"
+              fieldName="Billing Zip Code"
               disabled={useAsBilling}
             />
 
@@ -389,7 +388,7 @@ export function RegistrationForm() {
               control={control}
               errors={errors}
               label="billing_street"
-              fieldName="Street"
+              fieldName="Billing Street"
               disabled={useAsBilling}
             />
 
@@ -398,7 +397,7 @@ export function RegistrationForm() {
               control={control}
               errors={errors}
               label="billing_city"
-              fieldName="City"
+              fieldName="Billing City"
               disabled={useAsBilling}
             />
             <Controller
