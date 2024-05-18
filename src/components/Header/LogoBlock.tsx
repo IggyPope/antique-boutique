@@ -30,7 +30,9 @@ const LogoBlock = ({ display }: ILogoBlockProps) => {
       }}
     >
       <Logo />
-      <Typography variant="h6">Antique Boutique</Typography>
+      <Typography variant="h6" sx={{ [theme.breakpoints.down('sm')]: { display: 'none' } }}>
+        Antique Boutique
+      </Typography>
     </Stack>
   );
 };

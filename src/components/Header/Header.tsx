@@ -18,8 +18,11 @@ const Header = () => {
   };
 
   const handleCloseNavMenu = (path: string) => {
-    navigate(path);
     setAnchorElNav(null);
+    if (typeof path !== 'string') {
+      return;
+    }
+    navigate(path);
   };
 
   return (
@@ -28,9 +31,12 @@ const Header = () => {
       sx={{
         backgroundColor: theme.palette.primary.dark,
         padding: '20px 0',
+        [theme.breakpoints.down('sm')]: {
+          padding: '10px 0',
+        },
       }}
     >
-      <Container maxWidth="lg">
+      <Container>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <LogoBlock display={{ xs: 'none', md: 'flex' }} />
           <BurgerMenu

@@ -5,15 +5,18 @@ import { Container } from '@mui/material';
 
 import Footer from '@/components/Footer/Footer';
 import Header from '@/components/Header/Header';
+import PageHeader from '@/components/PageHeader/PageHeader';
 
 const Layout = () => {
   return (
     <>
       <Header />
+      <PageHeader />
       <Container
         component="main"
-        maxWidth="lg"
         sx={{
+          display: 'flex',
+          flexDirection: 'column',
           flex: 1,
           padding: 2,
         }}

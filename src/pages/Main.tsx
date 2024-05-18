@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
+import { Box } from '@mui/material';
 
-import { Box, Typography } from '@mui/material';
+import MainNavLinks from '@/components/MainNavLinks/MainNavLinks';
 
 const Main = () => {
   return (
@@ -15,10 +15,8 @@ const Main = () => {
           width: '100%',
         }}
       >
-        <Link to="/signin">Sign in</Link>
-        <Link to="/signup">Sign up</Link>
+        <MainNavLinks />
       </Box>
-      <Typography variant="h3">Main</Typography>
     </>
   );
 };

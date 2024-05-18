@@ -7,7 +7,6 @@ import { RegistrationForm } from '../components/RegistrationForm/RegistrationFor
 const SignUp = () => {
   return (
     <>
-      <Typography variant="h3">Sign Up</Typography>
       <RegistrationForm />
       <Box
         sx={{
