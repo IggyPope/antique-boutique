@@ -14,6 +14,7 @@ const Layout = () => {
 
   useEffect(() => {
     getToken();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <>

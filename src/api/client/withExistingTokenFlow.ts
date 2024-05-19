@@ -1,6 +1,6 @@
 import { ExistingTokenMiddlewareOptions } from '@commercetools/sdk-client-v2';
 
-import { anonymousTokenCache, passwordTokenCache } from './TockenCache';
+import { anonymousTokenCache, passwordTokenCache } from './TokenCache';
 
 export const options: ExistingTokenMiddlewareOptions = {
   force: true,

@@ -13,7 +13,7 @@ import {
 
 import { AnonymousFlowTokenStore, PasswordFlowTokenStore } from '@/Storage/Store';
 
-import { anonymousTokenCache, passwordTokenCache } from './TockenCache';
+import { anonymousTokenCache, passwordTokenCache } from './TokenCache';
 import { authorization, options } from './withExistingTokenFlow';
 
 const {
@@ -63,13 +63,13 @@ export class ApiClientBuilder {
     if (credentials) {
       return this.getPasswordFlowClient(credentials.username, credentials.password);
     } else if (PasswordFlowTokenStore.getData() || AnonymousFlowTokenStore.getData()) {
-      return this.getApiRootClient();
+      return this.getExistingTokenFlowClient();
     } else {
       return this.getAnonymousFlowClient();
     }
   }
 
-  private getApiRootClient(): Client {
+  private getExistingTokenFlowClient(): Client {
     return new ClientBuilder()
       .withProjectKey(this.projectKey)
       .withExistingTokenFlow(authorization, options)
