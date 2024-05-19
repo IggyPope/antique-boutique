@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 
@@ -6,8 +7,14 @@ import { Container } from '@mui/material';
 import Footer from '@/components/Footer/Footer';
 import Header from '@/components/Header/Header';
 import PageHeader from '@/components/PageHeader/PageHeader';
+import { useAuth } from '@/hooks/useAuth';
 
 const Layout = () => {
+  const { getToken } = useAuth();
+
+  useEffect(() => {
+    getToken();
+  }, []);
   return (
     <>
       <Header />

@@ -3,6 +3,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import type { CustomerDraft } from '@commercetools/platform-sdk';
 
+import { AnonymousFlowTokenStore, PasswordFlowTokenStore } from '@/Storage/Store';
 import { AuthService } from '@/api/services/AuthService';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 
@@ -14,6 +15,18 @@ export const useAuth = () => {
   const { isAuthenticated, isLoading, errorMessage } = useAppSelector((state) => state.user);
 
   return {
+    getToken: () => {
+      const passwordFlowToken = PasswordFlowTokenStore.getData();
+      const anonymousFlowTokenStoren = AnonymousFlowTokenStore.getData();
+      if (passwordFlowToken) {
+        dispatch({ type: 'user/signInSuccess' });
+      } else if (anonymousFlowTokenStoren) {
+        //TODO implement logic of using the cached token for anonymous session
+      } else {
+        //TODO implement logic to obtain an access token for anonymous session
+      }
+    },
+
     signIn: (username: string, password: string) => {
       dispatch({ type: 'user/signInStart' });
 
@@ -44,7 +57,7 @@ export const useAuth = () => {
     },
     signOut: () => {
       authService.signOut();
-
+      PasswordFlowTokenStore.removeData();
       dispatch({ type: 'user/signOut' });
       toast.success('You have successfully signed out!');
     },
