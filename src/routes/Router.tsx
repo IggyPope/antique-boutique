@@ -21,12 +21,18 @@ const router = createBrowserRouter(
       <Route path="/cart" element={<Cart />} />
       <Route path="*" element={<NotFound />} />
       <Route element={<RequireNoAuth />}>
-        <Route path="signin" element={<SignIn />} />
-        <Route path="signup" element={<SignUp />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+        {/* Alias for sign-in */}
+        <Route path="/login" element={<SignIn />} />
+        {/* Alias for sign-up */}
+        <Route path="/register" element={<SignUp />} />
       </Route>
       <Route element={<RequireAuth />}>
-        <Route path="signout" element={<SignOut />} />
-        <Route path="profile" element={<Profile />} />
+        <Route path="/signout" element={<SignOut />} />
+        {/* Alias for sign-out */}
+        <Route path="/logout" element={<SignOut />} />
+        <Route path="/profile" element={<Profile />} />
       </Route>
     </Route>,
   ),

@@ -8,7 +8,13 @@ import {
   type HttpMiddlewareOptions,
   type PasswordAuthMiddlewareOptions,
   type AnonymousAuthMiddlewareOptions,
+  type RefreshAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
+
+import { PasswordFlowTokenStore } from '@/Storage/Store';
+
+import { anonymousTokenCache, passwordTokenCache } from './TokenCache';
+import { authorization, options } from './withExistingTokenFlow';
 
 const {
   VITE_CTP_AUTH_URL,
@@ -56,8 +62,19 @@ export class ApiClientBuilder {
   private getApiClient(credentials?: { username: string; password: string }): Client {
     if (credentials) {
       return this.getPasswordFlowClient(credentials.username, credentials.password);
+    } else if (PasswordFlowTokenStore.getData()?.expirationTime ?? 0 > new Date().getTime()) {
+      return this.getExistingTokenFlowClient();
+    } else {
+      return this.getAnonymousFlowClient();
     }
-    return this.getAnonymousFlowClient();
+  }
+
+  private getExistingTokenFlowClient(): Client {
+    return new ClientBuilder()
+      .withProjectKey(this.projectKey)
+      .withExistingTokenFlow(authorization, options)
+      .withHttpMiddleware(this.getHttpMiddlewareOptions())
+      .build();
   }
 
   private getAnonymousFlowClient(): Client {
@@ -90,6 +107,7 @@ export class ApiClientBuilder {
         clientId: this.clientID,
         clientSecret: this.clientSecret,
       },
+      tokenCache: anonymousTokenCache,
     };
   }
 
@@ -108,6 +126,21 @@ export class ApiClientBuilder {
           password,
         },
       },
+      tokenCache: passwordTokenCache,
+    };
+  }
+
+  public getRefreshAuthMiddlewareOptions(refreshToken: string): RefreshAuthMiddlewareOptions {
+    return {
+      host: this.authUrl,
+      projectKey: this.projectKey,
+      credentials: {
+        clientId: this.clientID,
+        clientSecret: this.clientSecret,
+      },
+
+      refreshToken: refreshToken,
+      tokenCache: passwordTokenCache,
     };
   }
 }

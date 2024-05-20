@@ -7,7 +7,9 @@ interface IPageTitle {
 const pageTitles: IPageTitle = {
   '/': 'Welcome to Antique Boutique',
   '/signin': 'Sign In to Your Account',
+  '/login': 'Sign In to Your Account',
   '/signup': 'Create New Customer Account',
+  '/register': 'Create New Customer Account',
   '/cart': 'Shopping Cart',
   '/about': 'Learn More About Us',
   '/profile': 'Your Profile',

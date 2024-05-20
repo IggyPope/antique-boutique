@@ -3,17 +3,39 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import type { CustomerDraft } from '@commercetools/platform-sdk';
 
+import { AnonymousFlowTokenStore, PasswordFlowTokenStore } from '@/Storage/Store';
 import { AuthService } from '@/api/services/AuthService';
 import { useAppDispatch, useAppSelector } from '@/hooks';
+import { setIsInitialRender } from '@/store/slices/userSlice';
 
 export const useAuth = () => {
   const authService = AuthService.getInstance();
 
   const dispatch = useAppDispatch();
 
-  const { isAuthenticated, isLoading, errorMessage } = useAppSelector((state) => state.user);
+  const { isAuthenticated, isLoading, errorMessage, isInitialRender } = useAppSelector(
+    (state) => state.user,
+  );
 
   return {
+    getToken: () => {
+      const anonymousFlowToken = AnonymousFlowTokenStore.getData();
+      const passwordFlowTokenExpiration = PasswordFlowTokenStore.getData()?.expirationTime ?? 0;
+      //TODO implement logic to refresh the expired token
+      const currentTime = new Date().getTime();
+      const isValidPasswordFlowToken = passwordFlowTokenExpiration > currentTime;
+
+      if (isValidPasswordFlowToken) {
+        dispatch({ type: 'user/signInSuccess' });
+      } else if (anonymousFlowToken) {
+        dispatch(setIsInitialRender(false));
+        //TODO implement logic of using the cached token for anonymous session
+      } else {
+        dispatch(setIsInitialRender(false));
+        //TODO implement logic to obtain an access token for anonymous session
+      }
+    },
+
     signIn: (username: string, password: string) => {
       dispatch({ type: 'user/signInStart' });
 
@@ -22,6 +44,7 @@ export const useAuth = () => {
         .then(() => {
           dispatch({ type: 'user/signInSuccess' });
           toast.success('You have successfully signed in!');
+          AnonymousFlowTokenStore.removeData();
         })
         .catch((error: Error) => {
           dispatch({ type: 'user/signInError', payload: error.message });
@@ -36,6 +59,7 @@ export const useAuth = () => {
         .then(() => {
           dispatch({ type: 'user/signInSuccess' });
           toast.success('You have successfully signed up!');
+          AnonymousFlowTokenStore.removeData();
         })
         .catch((error: Error) => {
           dispatch({ type: 'user/signInError', payload: error.message });
@@ -44,12 +68,13 @@ export const useAuth = () => {
     },
     signOut: () => {
       authService.signOut();
-
+      PasswordFlowTokenStore.removeData();
       dispatch({ type: 'user/signOut' });
       toast.success('You have successfully signed out!');
     },
     isAuthenticated,
     isLoading,
+    isInitialRender,
     errorMessage,
   };
 };
