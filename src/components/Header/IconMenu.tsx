@@ -30,7 +30,7 @@ const IconMenu = () => {
     >
       {filteredPages.map((item) => (
         <IconButton key={item.path.slice(1)}>
-          {item.path === '/basket' ? (
+          {item.path === '/cart' ? (
             <Badge color="secondary" badgeContent={0}>
               <NavLink to={item.path}>{item.icon}</NavLink>
             </Badge>
