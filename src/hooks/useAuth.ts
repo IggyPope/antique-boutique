@@ -16,11 +16,10 @@ export const useAuth = () => {
 
   return {
     getToken: () => {
-      const passwordFlowToken = PasswordFlowTokenStore.getData();
-      const anonymousFlowTokenStoren = AnonymousFlowTokenStore.getData();
-      if (passwordFlowToken) {
+      const anonymousFlowToken = AnonymousFlowTokenStore.getData();
+      if (PasswordFlowTokenStore.getData()?.expirationTime ?? 0 > new Date().getTime()) {
         dispatch({ type: 'user/signInSuccess' });
-      } else if (anonymousFlowTokenStoren) {
+      } else if (anonymousFlowToken) {
         //TODO implement logic of using the cached token for anonymous session
       } else {
         //TODO implement logic to obtain an access token for anonymous session

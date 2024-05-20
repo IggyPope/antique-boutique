@@ -62,7 +62,7 @@ export class ApiClientBuilder {
   private getApiClient(credentials?: { username: string; password: string }): Client {
     if (credentials) {
       return this.getPasswordFlowClient(credentials.username, credentials.password);
-    } else if (PasswordFlowTokenStore.getData()?.expirationTime ?? 0 < new Date().getTime()) {
+    } else if (PasswordFlowTokenStore.getData()?.expirationTime ?? 0 > new Date().getTime()) {
       return this.getExistingTokenFlowClient();
     } else {
       return this.getAnonymousFlowClient();

@@ -29,10 +29,10 @@ const router = createBrowserRouter(
         <Route path="/register" element={<SignUp />} />
       </Route>
       <Route element={<RequireAuth />}>
-        <Route path="signout" element={<SignOut />} />
+        <Route path="/signout" element={<SignOut />} />
         {/* Alias for sign-out */}
         <Route path="/logout" element={<SignOut />} />
-        <Route path="profile" element={<Profile />} />
+        <Route path="/profile" element={<Profile />} />
       </Route>
     </Route>,
   ),
