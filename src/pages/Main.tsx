@@ -1,10 +1,13 @@
-import { Box } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 
 import MainNavLinks from '@/components/MainNavLinks/MainNavLinks';
+import PromoBlog from '@/components/Promo/PromoBlog';
+import PromoCategories from '@/components/Promo/PromoCategories';
+import PromoSlogan from '@/components/Promo/PromoSlogan';
 
 const Main = () => {
   return (
-    <>
+    <Stack direction="column" gap={2}>
       <Box
         sx={{
           marginTop: 1,
@@ -17,7 +20,10 @@ const Main = () => {
       >
         <MainNavLinks />
       </Box>
-    </>
+      <PromoCategories />
+      <PromoSlogan />
+      <PromoBlog />
+    </Stack>
   );
 };
 
