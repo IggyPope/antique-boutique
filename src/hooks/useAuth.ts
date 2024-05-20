@@ -6,22 +6,32 @@ import type { CustomerDraft } from '@commercetools/platform-sdk';
 import { AnonymousFlowTokenStore, PasswordFlowTokenStore } from '@/Storage/Store';
 import { AuthService } from '@/api/services/AuthService';
 import { useAppDispatch, useAppSelector } from '@/hooks';
+import { setIsInitialRender } from '@/store/slices/userSlice';
 
 export const useAuth = () => {
   const authService = AuthService.getInstance();
 
   const dispatch = useAppDispatch();
 
-  const { isAuthenticated, isLoading, errorMessage } = useAppSelector((state) => state.user);
+  const { isAuthenticated, isLoading, errorMessage, isInitialRender } = useAppSelector(
+    (state) => state.user,
+  );
 
   return {
     getToken: () => {
       const anonymousFlowToken = AnonymousFlowTokenStore.getData();
-      if (PasswordFlowTokenStore.getData()?.expirationTime ?? 0 > new Date().getTime()) {
+      const passwordFlowTokenExpiration = PasswordFlowTokenStore.getData()?.expirationTime ?? 0;
+      //TODO implement logic to refresh the expired token
+      const currentTime = new Date().getTime();
+      const isValidPasswordFlowToken = passwordFlowTokenExpiration > currentTime;
+
+      if (isValidPasswordFlowToken) {
         dispatch({ type: 'user/signInSuccess' });
       } else if (anonymousFlowToken) {
+        dispatch(setIsInitialRender(false));
         //TODO implement logic of using the cached token for anonymous session
       } else {
+        dispatch(setIsInitialRender(false));
         //TODO implement logic to obtain an access token for anonymous session
       }
     },
@@ -64,6 +74,7 @@ export const useAuth = () => {
     },
     isAuthenticated,
     isLoading,
+    isInitialRender,
     errorMessage,
   };
 };
