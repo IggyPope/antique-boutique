@@ -7,7 +7,7 @@ export const passwordTokenCache: TokenCache = {
     const cachePasswordFlowToken = PasswordFlowTokenStore.getData();
     if (cachePasswordFlowToken) {
       return {
-        token: `Bearer: ${cachePasswordFlowToken.token}`,
+        token: `Bearer ${cachePasswordFlowToken.token}`,
         expirationTime: 0,
         refreshToken: ``,
       };
@@ -26,7 +26,7 @@ export const anonymousTokenCache: TokenCache = {
     const cacheAnonymousFlowToken = AnonymousFlowTokenStore.getData();
     if (cacheAnonymousFlowToken) {
       return {
-        token: `Bearer: ${cacheAnonymousFlowToken.token}`,
+        token: `Bearer ${cacheAnonymousFlowToken.token}`,
         expirationTime: 0,
         refreshToken: ``,
       };

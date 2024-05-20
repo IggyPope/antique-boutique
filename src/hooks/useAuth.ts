@@ -35,6 +35,7 @@ export const useAuth = () => {
         .then(() => {
           dispatch({ type: 'user/signInSuccess' });
           toast.success('You have successfully signed in!');
+          AnonymousFlowTokenStore.removeData();
         })
         .catch((error: Error) => {
           dispatch({ type: 'user/signInError', payload: error.message });
@@ -49,6 +50,7 @@ export const useAuth = () => {
         .then(() => {
           dispatch({ type: 'user/signInSuccess' });
           toast.success('You have successfully signed up!');
+          AnonymousFlowTokenStore.removeData();
         })
         .catch((error: Error) => {
           dispatch({ type: 'user/signInError', payload: error.message });
