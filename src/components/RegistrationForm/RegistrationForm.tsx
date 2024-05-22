@@ -108,6 +108,8 @@ export function RegistrationForm() {
       ],
       defaultBillingAddress: data.useAsDefaultBillingAddress ? billingAddressIndex : undefined,
       defaultShippingAddress: data.useAsDefaultShippingAddress ? shippingAddressIndex : undefined,
+      shippingAddresses: [shippingAddressIndex],
+      billingAddresses: [billingAddressIndex],
     };
 
     signUp(customerDraft);
