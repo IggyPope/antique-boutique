@@ -1,23 +1,22 @@
 import type { UseFormSetValue, UseFormGetValues } from 'react-hook-form';
 
-import { countriesList } from './countries';
+import { COUNTRY_DATA_LIST } from './countries';
 import { FormValues } from './schema';
 
 export function getCountryByCode(countryCode: string | undefined): string | null {
-  const countryCodeInLowerCase = countryCode?.toLowerCase();
-  return countriesList
-    .map((country): string | null => {
-      return country.code.toLowerCase() === countryCodeInLowerCase ? country.label : null;
-    })
-    .join('');
+  if (countryCode === undefined) {
+    return null;
+  }
+  const foundCountry = COUNTRY_DATA_LIST.find((country) => country.code === countryCode);
+  return foundCountry ? foundCountry.label : null;
 }
 
 export function getCountryCode(countryName: string | undefined): string | null {
-  const countryNameInLowerCase = countryName?.toLowerCase();
-  return (
-    countriesList.find((country) => country.label.toLowerCase() === countryNameInLowerCase)?.code ||
-    null
-  );
+  if (countryName === undefined) {
+    return null;
+  }
+  const foundCountry = COUNTRY_DATA_LIST.find((country) => country.label === countryName);
+  return foundCountry?.code || null;
 }
 
 export const copyShippingToBilling = (

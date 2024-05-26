@@ -1,7 +1,7 @@
 import { postcodeValidator, postcodeValidatorExistsForCountry } from 'postcode-validator';
 import * as yup from 'yup';
 
-import { countriesArr } from './countries';
+import { COUNTRY_LIST } from './countries';
 import { getCountryCode } from './utils';
 
 export interface FormValues {
@@ -23,7 +23,8 @@ export interface FormValues {
   useAsBillingAddress: boolean;
 }
 const maxAllowedDate = new Date();
-maxAllowedDate.setFullYear(maxAllowedDate.getFullYear() - 13);
+const minAge: number = 13;
+maxAllowedDate.setFullYear(maxAllowedDate.getFullYear() - minAge);
 export const schema = yup.object<FormValues>().shape({
   email: yup
     .string()
@@ -72,7 +73,7 @@ export const schema = yup.object<FormValues>().shape({
     .string()
     .required('You should choose a country')
     .test('country', 'invalid country, choose a country from suggestions', (value) => {
-      if (countriesArr.map((contry) => contry.toLowerCase()).includes(value.toLowerCase())) {
+      if (COUNTRY_LIST.map((contry) => contry.toLowerCase()).includes(value.toLowerCase())) {
         return true;
       }
       return false;
@@ -105,7 +106,7 @@ export const schema = yup.object<FormValues>().shape({
     .string()
     .required('You should choose a country')
     .test('country', 'invalid country, choose a country from suggestions', (value) => {
-      if (countriesArr.map((contry) => contry.toLowerCase()).includes(value.toLowerCase())) {
+      if (COUNTRY_LIST.map((contry) => contry.toLowerCase()).includes(value.toLowerCase())) {
         return true;
       }
       return false;

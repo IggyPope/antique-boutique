@@ -13,6 +13,7 @@ interface ControledTextFieldProps {
   nameToSync?: keyof FormValues;
   callback?: (arg: keyof FormValues, val: string) => void;
   disabled?: boolean;
+  dataTestId?: string;
 }
 
 export const ControlledTextField = ({
@@ -24,6 +25,7 @@ export const ControlledTextField = ({
   nameToSync,
   callback,
   disabled,
+  dataTestId,
 }: ControledTextFieldProps) => {
   return (
     <Controller
@@ -44,6 +46,7 @@ export const ControlledTextField = ({
             }
           }}
           disabled={disabled}
+          inputProps={{ 'data-testid': dataTestId }}
         />
       )}
     />

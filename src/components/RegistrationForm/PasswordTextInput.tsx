@@ -1,20 +1,27 @@
 import { useState } from 'react';
-import { Control, Controller, FieldErrors } from 'react-hook-form';
+import { Control, Controller, FieldErrors, FieldValues, Path } from 'react-hook-form';
 
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { IconButton, TextField } from '@mui/material';
 
-import { LoginFormValues } from './schema';
-
-interface PasswordProps {
-  name: keyof LoginFormValues;
-  control: Control<LoginFormValues>;
-  errors: FieldErrors<LoginFormValues>;
+interface PasswordProps<TFormValues extends FieldValues> {
+  name: Path<TFormValues>;
+  control: Control<TFormValues>;
+  errors: FieldErrors<TFormValues>;
+  dataTestId?: string;
 }
 
-export const Password = ({ name, control, errors }: PasswordProps) => {
+type ErrorMessage = string | null;
+
+export const PasswordTextInput = <TFormValues extends FieldValues>({
+  name,
+  control,
+  errors,
+  dataTestId,
+}: PasswordProps<TFormValues>) => {
   const [showPassword, setShowPassword] = useState(false);
+  const errorMessage = errors[name] ? (errors[name]?.message as ErrorMessage) : null;
   return (
     <Controller
       name={name}
@@ -27,13 +34,16 @@ export const Password = ({ name, control, errors }: PasswordProps) => {
           label="Password"
           placeholder="Password"
           error={!!errors.password}
-          helperText={errors.password?.message || ' '}
+          helperText={errorMessage}
           InputProps={{
             endAdornment: (
               <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
                 {showPassword ? <VisibilityOff /> : <Visibility />}
               </IconButton>
             ),
+          }}
+          inputProps={{
+            'data-testid': dataTestId,
           }}
         />
       )}

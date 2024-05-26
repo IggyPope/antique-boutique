@@ -16,20 +16,18 @@ describe('RegistrationForm', () => {
       ...useAuth(),
       signUp: vi.fn(),
     });
-    const { getByLabelText, getByRole } = render(
+    const { getByTestId, getByRole } = render(
       <Provider store={store}>
         <RegistrationForm />
       </Provider>,
     );
     act(() => {
-      fireEvent.input(screen.getByRole('textbox', { name: /email/i }), {
-        target: {
-          value: 'test@mail.com',
-        },
+      fireEvent.change(getByTestId('registration-email'), { target: { value: 'test@mail.com' } });
+      fireEvent.change(getByTestId('registration-password'), {
+        target: { value: 'Securepassword123!' },
       });
-      fireEvent.change(getByLabelText(/password/i), { target: { value: 'Securepassword123!' } });
-      fireEvent.change(getByLabelText(/First Name/i), { target: { value: 'John' } });
-      fireEvent.change(getByLabelText(/Last Name/i), { target: { value: 'Doe' } });
+      fireEvent.change(getByTestId('registration-first-name'), { target: { value: 'John' } });
+      fireEvent.change(getByTestId('registration-last-name'), { target: { value: 'Doe' } });
     });
     const datePicker = screen.getByLabelText('Date of Birth');
 
@@ -40,13 +38,13 @@ describe('RegistrationForm', () => {
 
     fireEvent.click(chosenDate);
     act(() => {
-      fireEvent.input(screen.getByRole('textbox', { name: /Date of Birth/i }), {
+      fireEvent.input(datePicker, {
         target: {
           value: '01/01/1999',
         },
       });
-      fireEvent.change(getByLabelText(/Shipping Street/i), { target: { value: 'St' } });
-      fireEvent.change(getByLabelText(/Shipping City/i), { target: { value: 'Paris' } });
+      fireEvent.change(getByTestId('registration-shipping-street'), { target: { value: 'St' } });
+      fireEvent.change(getByTestId('registration-shipping-city'), { target: { value: 'Paris' } });
       const autocomplete = getByRole('combobox', { name: /shipping country/i });
       autocomplete.focus();
       fireEvent.mouseDown(autocomplete);
@@ -55,7 +53,9 @@ describe('RegistrationForm', () => {
       fireEvent.keyDown(autocomplete, { key: 'ArrowDown' });
       fireEvent.keyDown(autocomplete, { key: 'Enter' });
 
-      fireEvent.change(getByLabelText(/Shipping Zip Code/i), { target: { value: '12345' } });
+      fireEvent.change(getByTestId('registration-shipping-zip-code'), {
+        target: { value: '12345' },
+      });
       const autocompleteBil = getByRole('combobox', { name: /billing country/i });
 
       autocompleteBil.focus();
@@ -64,20 +64,22 @@ describe('RegistrationForm', () => {
       fireEvent.keyDown(autocompleteBil, { key: 'ArrowDown' });
       fireEvent.keyDown(autocompleteBil, { key: 'Enter', code: 'Enter' });
 
-      fireEvent.change(getByLabelText(/Billing Zip Code/i), { target: { value: '12345' } });
-      fireEvent.change(getByLabelText(/Billing Street/i), { target: { value: 'St' } });
-      fireEvent.change(getByLabelText(/Billing City/i), { target: { value: 'Paris' } });
+      fireEvent.change(getByTestId('registration-billing-zip-code'), {
+        target: { value: '12345' },
+      });
+      fireEvent.change(getByTestId('registration-billing-street'), { target: { value: 'St' } });
+      fireEvent.change(getByTestId('registration-billing-city'), { target: { value: 'Paris' } });
       const useAsBillingAddressCheckbox = screen.getByLabelText('Use as billing address');
       fireEvent.click(useAsBillingAddressCheckbox);
     });
 
     await waitFor(() => {
-      const submitButton = getByRole('button', { name: /submit/i }) as HTMLButtonElement;
+      const submitButton = getByTestId('registration_submit-button') as HTMLButtonElement;
       expect(submitButton.disabled).toBe(false);
     });
 
     await waitFor(() => {
-      fireEvent.submit(screen.getByRole('button', { name: /submit/i }));
+      fireEvent.submit(screen.getByTestId('registration_submit-button'));
     });
 
     expect(useAuth().signUp).toHaveBeenCalledWith(

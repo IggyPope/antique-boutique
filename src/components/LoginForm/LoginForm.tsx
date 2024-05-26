@@ -7,8 +7,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 import { useAuth } from '@/hooks/useAuth';
 
-import { Password } from './Password';
-import { UserName } from './UserName';
+import { PasswordTextInput } from '../RegistrationForm/PasswordTextInput';
+import { UserName } from './NameTextInput';
 import { schema, LoginFormValues } from './schema';
 
 export function LoginForm() {
@@ -51,8 +51,12 @@ export function LoginForm() {
         >
           <Typography component={'p'}>Your credentials</Typography>
           <UserName name="email" control={control} errors={errors} />
-          <Password name="password" control={control} errors={errors} />
-
+          <PasswordTextInput<LoginFormValues>
+            name="password"
+            control={control}
+            errors={errors}
+            dataTestId="login-password"
+          />
           <LoadingButton
             type="submit"
             loading={isLoading}

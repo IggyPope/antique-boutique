@@ -1,5 +1,4 @@
-export const countriesList = [
-  // { label: 'Åland Islands', code: 'AX' },
+export const COUNTRY_DATA_LIST = [
   { label: 'Algeria', code: 'DZ' },
   { label: 'American Samoa', code: 'AS' },
   { label: 'AndorrA', code: 'AD' },
@@ -159,4 +158,4 @@ export const countriesList = [
   { label: 'Zambia', code: 'ZM' },
 ];
 
-export const countriesArr = countriesList.map((country) => country.label);
+export const COUNTRY_LIST = COUNTRY_DATA_LIST.map((country) => country.label);
