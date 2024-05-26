@@ -3,10 +3,12 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import type { CustomerDraft } from '@commercetools/platform-sdk';
 
-import { AnonymousFlowTokenStore, PasswordFlowTokenStore } from '@/Storage/Store';
 import { AuthService } from '@/api/services/AuthService';
 import { useAppDispatch, useAppSelector } from '@/hooks';
+import { AnonymousFlowTokenStore } from '@/store/AnonymousStore';
+import { PasswordFlowTokenStore } from '@/store/PasswordStore';
 import { setIsInitialRender } from '@/store/slices/userSlice';
+import { isTokenValid } from '@/utils/isTokenValid';
 
 export const useAuth = () => {
   const authService = AuthService.getInstance();
@@ -20,19 +22,15 @@ export const useAuth = () => {
   return {
     getToken: () => {
       const anonymousFlowToken = AnonymousFlowTokenStore.getData();
-      const passwordFlowTokenExpiration = PasswordFlowTokenStore.getData()?.expirationTime ?? 0;
       //TODO implement logic to refresh the expired token
-      const currentTime = new Date().getTime();
-      const isValidPasswordFlowToken = passwordFlowTokenExpiration > currentTime;
-
-      if (isValidPasswordFlowToken) {
+      if (isTokenValid()) {
         dispatch({ type: 'user/signInSuccess' });
       } else if (anonymousFlowToken) {
         dispatch(setIsInitialRender(false));
-        //TODO implement logic of using the cached token for anonymous session
+        // TODO implement logic of using the cached token for anonymous session
       } else {
         dispatch(setIsInitialRender(false));
-        //TODO implement logic to obtain an access token for anonymous session
+        // TODO implement logic to obtain an access token for anonymous session
       }
     },
 

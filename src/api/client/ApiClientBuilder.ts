@@ -11,7 +11,7 @@ import {
   type RefreshAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
 
-import { PasswordFlowTokenStore } from '@/Storage/Store';
+import { isTokenValid } from '@/utils/isTokenValid';
 
 import { anonymousTokenCache, passwordTokenCache } from './TokenCache';
 import { authorization, options } from './withExistingTokenFlow';
@@ -62,7 +62,7 @@ export class ApiClientBuilder {
   private getApiClient(credentials?: { username: string; password: string }): Client {
     if (credentials) {
       return this.getPasswordFlowClient(credentials.username, credentials.password);
-    } else if (PasswordFlowTokenStore.getData()?.expirationTime ?? 0 > new Date().getTime()) {
+    } else if (isTokenValid()) {
       return this.getExistingTokenFlowClient();
     } else {
       return this.getAnonymousFlowClient();

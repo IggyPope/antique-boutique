@@ -22,8 +22,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useAuth } from '@/hooks/useAuth';
 
 import { ControlledTextField } from './ControlledTextField';
-import { Password } from './Password';
-import { countriesArr } from './countries';
+import { PasswordTextInput } from './PasswordTextInput';
+import { COUNTRY_LIST } from './countries';
 import { schema, FormValues } from './schema';
 import { copyShippingToBilling, getCountryCode } from './utils';
 
@@ -146,7 +146,7 @@ export function RegistrationForm() {
               label="email"
               fieldName="Email"
             />
-            <Password name="password" control={control} errors={errors} />
+            <PasswordTextInput<FormValues> name="password" control={control} errors={errors} />
           </Stack>
           <Stack
             direction="column"
@@ -234,7 +234,7 @@ export function RegistrationForm() {
               render={({ field }) => (
                 <Autocomplete
                   {...field}
-                  options={countriesArr}
+                  options={COUNTRY_LIST}
                   getOptionLabel={(option) => option}
                   renderInput={(params) => (
                     <TextField
@@ -349,7 +349,7 @@ export function RegistrationForm() {
               render={({ field }) => (
                 <Autocomplete
                   {...field}
-                  options={countriesArr}
+                  options={COUNTRY_LIST}
                   getOptionLabel={(option) => option}
                   renderInput={(params) => (
                     <TextField

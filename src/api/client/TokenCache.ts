@@ -1,6 +1,7 @@
 import { TokenStore, type TokenCache } from '@commercetools/sdk-client-v2';
 
-import { AnonymousFlowTokenStore, PasswordFlowTokenStore } from '@/Storage/Store';
+import { AnonymousFlowTokenStore } from '@/store/AnonymousStore';
+import { PasswordFlowTokenStore } from '@/store/PasswordStore';
 
 export const passwordTokenCache: TokenCache = {
   get: (): TokenStore => {

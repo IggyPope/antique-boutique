@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import { Box, Stack } from '@mui/material';
 
 import MainNavLinks from '@/components/MainNavLinks/MainNavLinks';
@@ -6,6 +8,8 @@ import PromoCategories from '@/components/Promo/PromoCategories';
 import PromoSlogan from '@/components/Promo/PromoSlogan';
 
 const Main = () => {
+  useEffect(() => {});
+
   return (
     <Stack direction="column" gap={2}>
       <Box
