@@ -1,0 +1,21 @@
+import { SvgIcon, useTheme } from '@mui/material';
+
+const Logo = () => {
+  const theme = useTheme();
+
+  return (
+    <SvgIcon>
+      <svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="45" cy="45" r="45" fill="white" />
+        <path
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d="M10 67H21.2583L28.2491 50.5622H60.9947L67.8926 67H79.5369L58.5929 19H47.5777L57.0096 40.8598H32.2378L41.5911 19H30.9404L10 67Z"
+          fill={theme.palette.primary.main}
+        />
+      </svg>
+    </SvgIcon>
+  );
+};
+
+export default Logo;

@@ -20,7 +20,7 @@ The project is built using:
 [![Static Badge](https://img.shields.io/badge/StyleLint-v.16.5.0-orange?style=plastic&logo=stylelint&logoColor=white)](https://www.npmjs.com/package/stylelint)
 [![Static Badge](https://img.shields.io/badge/Husky-v.9.0.11-blue?style=plastic&logo=husky&logoColor=white)](https://www.npmjs.com/package/husky)
 [![Static Badge](https://img.shields.io/badge/Sass-preprocessor-orange?style=plastic&logo=sass&logoColor=white)](https://sass-lang.com/)
-[![Static Badge](https://img.shields.io/badge/RTK-v.2.0.0-blue?style=plastic&logo=redux&logoColor=white)](https://redux-toolkit.js.org/)
+[![Static Badge](https://img.shields.io/badge/RTK-v.2.2.3-blue?style=plastic&logo=redux&logoColor=white)](https://redux-toolkit.js.org/)
 [![Static Badge](https://img.shields.io/badge/React_Router-v.6.23.0-orange?style=plastic&logo=reactrouter&logoColor=white)](https://reactrouter.com/)
 [![Static Badge](https://img.shields.io/badge/commitlint-v.19.3.0-blue?style=plastic&logo=commitlint&logoColor=white)](https://www.npmjs.com/package/commitlint)
 
@@ -53,7 +53,7 @@ Before you start, ensure you have [Node.js](https://nodejs.org/en/download/) ins
 
    ```shell
    git checkout develop
-   npm run install
+   npm install
    ```
 
 3. **Initialize** husky

@@ -27,4 +27,15 @@ module.exports = {
       version: 'detect',
     },
   },
+
+  rules: {
+    '@typescript-eslint/no-misused-promises': [
+      2,
+      {
+        checksVoidReturn: {
+          attributes: false,
+        },
+      },
+    ],
+  },
 };
