@@ -8,7 +8,6 @@ import { useAuth } from './hooks/useAuth';
 
 export function App() {
   const { getToken } = useAuth();
-  console.log('App');
   useEffect(() => {
     getToken();
     // eslint-disable-next-line react-hooks/exhaustive-deps

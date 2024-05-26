@@ -23,7 +23,6 @@ export const useAuth = () => {
 
   return {
     getToken: () => {
-      console.log('getToken');
       const anonymousFlowToken = AnonymousFlowTokenStore.getData();
       //TODO implement logic to refresh the expired token
       if (isTokenValid(PasswordFlowTokenStore)) {
@@ -69,7 +68,6 @@ export const useAuth = () => {
         });
     },
     signOut: () => {
-      console.log(12312313123);
       authService.signOut();
       PasswordFlowTokenStore.removeData();
       dispatch({ type: 'user/signOut' });
