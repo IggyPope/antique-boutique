@@ -10,6 +10,8 @@ import { PasswordFlowTokenStore } from '@/store/PasswordStore';
 import { setIsInitialRender } from '@/store/slices/userSlice';
 import { isTokenValid } from '@/utils/isTokenValid';
 
+//import { anonymousTokenCache, passwordTokenCache } from '@/api/client/TokenCache';
+
 export const useAuth = () => {
   const authService = AuthService.getInstance();
 
@@ -21,9 +23,10 @@ export const useAuth = () => {
 
   return {
     getToken: () => {
+      console.log('getToken');
       const anonymousFlowToken = AnonymousFlowTokenStore.getData();
       //TODO implement logic to refresh the expired token
-      if (isTokenValid()) {
+      if (isTokenValid(PasswordFlowTokenStore)) {
         dispatch({ type: 'user/signInSuccess' });
       } else if (anonymousFlowToken) {
         dispatch(setIsInitialRender(false));
@@ -57,6 +60,7 @@ export const useAuth = () => {
         .then(() => {
           dispatch({ type: 'user/signInSuccess' });
           toast.success('You have successfully signed up!');
+          //   passwordTokenCache.set(anonymousTokenCache.get())
           AnonymousFlowTokenStore.removeData();
         })
         .catch((error: Error) => {
@@ -65,6 +69,7 @@ export const useAuth = () => {
         });
     },
     signOut: () => {
+      console.log(12312313123);
       authService.signOut();
       PasswordFlowTokenStore.removeData();
       dispatch({ type: 'user/signOut' });

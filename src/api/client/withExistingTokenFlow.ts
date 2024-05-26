@@ -6,8 +6,4 @@ export const options: ExistingTokenMiddlewareOptions = {
   force: true,
 };
 
-export const customerAuthorization = (): string => passwordTokenCache.get().token;
-export const anonymAuthorization = (): string => anonymousTokenCache.get().token;
-export const authorization = customerAuthorization()
-  ? customerAuthorization()
-  : anonymAuthorization();
+export const authorization = passwordTokenCache.get().token || anonymousTokenCache.get().token;

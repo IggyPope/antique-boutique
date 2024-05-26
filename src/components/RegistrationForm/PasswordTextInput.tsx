@@ -9,6 +9,7 @@ interface PasswordProps<TFormValues extends FieldValues> {
   name: Path<TFormValues>;
   control: Control<TFormValues>;
   errors: FieldErrors<TFormValues>;
+  dataTestId?: string;
 }
 
 type ErrorMessage = string | null;
@@ -17,6 +18,7 @@ export const PasswordTextInput = <TFormValues extends FieldValues>({
   name,
   control,
   errors,
+  dataTestId,
 }: PasswordProps<TFormValues>) => {
   const [showPassword, setShowPassword] = useState(false);
   const errorMessage = errors[name] ? (errors[name]?.message as ErrorMessage) : null;
@@ -39,6 +41,9 @@ export const PasswordTextInput = <TFormValues extends FieldValues>({
                 {showPassword ? <VisibilityOff /> : <Visibility />}
               </IconButton>
             ),
+          }}
+          inputProps={{
+            'data-testid': dataTestId,
           }}
         />
       )}

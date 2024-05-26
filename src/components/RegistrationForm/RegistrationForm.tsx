@@ -145,8 +145,14 @@ export function RegistrationForm() {
               errors={errors}
               label="email"
               fieldName="Email"
+              dataTestId="registration-email"
             />
-            <PasswordTextInput<FormValues> name="password" control={control} errors={errors} />
+            <PasswordTextInput<FormValues>
+              name="password"
+              control={control}
+              errors={errors}
+              dataTestId="registration-password"
+            />
           </Stack>
           <Stack
             direction="column"
@@ -169,6 +175,7 @@ export function RegistrationForm() {
               errors={errors}
               label="firstName"
               fieldName="First Name"
+              dataTestId="registration-first-name"
             />
             <ControlledTextField
               name="lastName"
@@ -176,7 +183,9 @@ export function RegistrationForm() {
               errors={errors}
               label="lastName"
               fieldName="Last Name"
+              dataTestId="registration-last-name"
             />
+            slotProps
             <Controller
               name="dateOfBirth"
               control={control}
@@ -240,7 +249,10 @@ export function RegistrationForm() {
                     <TextField
                       {...params}
                       label="Shipping Country"
-                      inputProps={{ ...params.inputProps, autoComplete: 'none' }}
+                      inputProps={{
+                        ...params.inputProps,
+                        autoComplete: 'none',
+                      }}
                       error={!!errors.shipping_country}
                       helperText={errors.shipping_country?.message || ' '}
                     />
@@ -262,6 +274,7 @@ export function RegistrationForm() {
               fieldName="Shipping Zip Code"
               nameToSync="billing_zipCode"
               callback={syncFields}
+              dataTestId="registration-shipping-zip-code"
             />
             <ControlledTextField
               name="shipping_street"
@@ -271,6 +284,7 @@ export function RegistrationForm() {
               fieldName="Shipping Street"
               nameToSync="billing_street"
               callback={syncFields}
+              dataTestId="registration-shipping-street"
             />
             <ControlledTextField
               name="shipping_city"
@@ -280,6 +294,7 @@ export function RegistrationForm() {
               fieldName="Shipping City"
               nameToSync="billing_city"
               callback={syncFields}
+              dataTestId="registration-shipping-city"
             />
 
             <Stack direction="column">
@@ -381,6 +396,7 @@ export function RegistrationForm() {
               label="billing_zipCode"
               fieldName="Billing Zip Code"
               disabled={useAsBilling}
+              dataTestId="registration-billing-zip-code"
             />
 
             <ControlledTextField
@@ -390,6 +406,7 @@ export function RegistrationForm() {
               label="billing_street"
               fieldName="Billing Street"
               disabled={useAsBilling}
+              dataTestId="registration-billing-street"
             />
 
             <ControlledTextField
@@ -399,6 +416,7 @@ export function RegistrationForm() {
               label="billing_city"
               fieldName="Billing City"
               disabled={useAsBilling}
+              dataTestId="registration-billing-city"
             />
             <Controller
               name="useAsDefaultBillingAddress"
@@ -431,6 +449,7 @@ export function RegistrationForm() {
                 borderRadius: '5px',
                 textDecoration: 'none',
               }}
+              data-testid="registration_submit-button"
             >
               Submit
             </Button>

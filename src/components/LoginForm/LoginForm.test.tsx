@@ -16,7 +16,7 @@ describe('LoginForm', () => {
       signIn: vi.fn(),
     });
 
-    render(
+    const { getByTestId } = render(
       <Provider store={store}>
         <LoginForm />
       </Provider>,
@@ -29,9 +29,7 @@ describe('LoginForm', () => {
       });
     });
     act(() => {
-      fireEvent.change(screen.getByLabelText(/password/i), {
-        target: { value: 'Securepassword123!' },
-      });
+      fireEvent.change(getByTestId('login-password'), { target: { value: 'Securepassword123!' } });
     });
     await waitFor(() => {
       const submitButton = screen.getByRole('button', { name: /submit/i });

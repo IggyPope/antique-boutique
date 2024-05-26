@@ -51,7 +51,12 @@ export function LoginForm() {
         >
           <Typography component={'p'}>Your credentials</Typography>
           <UserName name="email" control={control} errors={errors} />
-          <PasswordTextInput<LoginFormValues> name="password" control={control} errors={errors} />
+          <PasswordTextInput<LoginFormValues>
+            name="password"
+            control={control}
+            errors={errors}
+            dataTestId="login-password"
+          />
           <LoadingButton
             type="submit"
             loading={isLoading}

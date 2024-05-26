@@ -3,40 +3,24 @@ import { TokenStore, type TokenCache } from '@commercetools/sdk-client-v2';
 import { AnonymousFlowTokenStore } from '@/store/AnonymousStore';
 import { PasswordFlowTokenStore } from '@/store/PasswordStore';
 
-export const passwordTokenCache: TokenCache = {
-  get: (): TokenStore => {
-    const cachePasswordFlowToken = PasswordFlowTokenStore.getData();
-    if (cachePasswordFlowToken) {
-      return {
-        token: `Bearer ${cachePasswordFlowToken.token}`,
-        expirationTime: 0,
-        refreshToken: ``,
-      };
-    }
-    return { token: '', expirationTime: 0, refreshToken: '' };
-  },
-  set: (cache): void => {
-    /* const cachePassworFlowToken = PasswordFlowTokenStore.getData();
-     if (!cachePassworFlowToken) */
-    PasswordFlowTokenStore.saveData(cache);
-  },
-};
+import { type LocalStorageApi } from '../Storage';
 
-export const anonymousTokenCache: TokenCache = {
-  get: (): TokenStore => {
-    const cacheAnonymousFlowToken = AnonymousFlowTokenStore.getData();
-    if (cacheAnonymousFlowToken) {
-      return {
-        token: `Bearer ${cacheAnonymousFlowToken.token}`,
-        expirationTime: 0,
-        refreshToken: ``,
-      };
-    }
-    return { token: '', expirationTime: 0, refreshToken: '' };
-  },
-  set: (cache): void => {
-    /* const cacheAnonymousFlowToken = AnonymousFlowTokenStore.getData();
-     if (!cacheAnonymousFlowToken) */
-    AnonymousFlowTokenStore.saveData(cache);
-  },
-};
+class TokenCacheClass implements TokenCache {
+  constructor(private store: LocalStorageApi<TokenStore>) {}
+
+  get() {
+    const cacheToken = this.store.getData();
+    return {
+      token: cacheToken?.token ? `Bearer ${cacheToken?.token}` : '',
+      expirationTime: 0,
+      refreshToken: cacheToken?.refreshToken ?? '',
+    };
+  }
+
+  set(cache: TokenStore) {
+    this.store.saveData(cache);
+  }
+}
+
+export const passwordTokenCache = new TokenCacheClass(PasswordFlowTokenStore);
+export const anonymousTokenCache = new TokenCacheClass(AnonymousFlowTokenStore);
