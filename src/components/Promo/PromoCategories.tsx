@@ -1,21 +1,21 @@
 import { Grid, Typography } from '@mui/material';
 import { lighten, useTheme } from '@mui/material/styles';
 
-import accessories from '@/assets/img/promo/accessories.png';
-import audio from '@/assets/img/promo/audio.png';
-import clock from '@/assets/img/promo/clock.png';
-import electronic from '@/assets/img/promo/electronic.png';
-import home from '@/assets/img/promo/home.png';
-import man from '@/assets/img/promo/man.png';
-import radio from '@/assets/img/promo/radio.jpg';
-import woman from '@/assets/img/promo/woman.png';
+import accessories from '@/assets/img/promo/accessories.webp';
+import audio from '@/assets/img/promo/audio.webp';
+import book from '@/assets/img/promo/book.webp';
+import clock from '@/assets/img/promo/clock.webp';
+import electronic from '@/assets/img/promo/electronic.webp';
+import home from '@/assets/img/promo/home.webp';
+import man from '@/assets/img/promo/man.webp';
+import radio from '@/assets/img/promo/radio.webp';
 
 const promo = [
   { name: 'Electronic', img: electronic },
   { name: 'Audio', img: audio },
+  { name: 'Books', img: book },
   { name: 'Clocks', img: clock },
-  { name: 'Man', img: man },
-  { name: 'Woman', img: woman },
+  { name: 'Clothes', img: man },
   { name: 'Accessories', img: accessories },
   { name: 'Home', img: home },
 ];
@@ -43,6 +43,13 @@ const PromoCategories = () => {
             backgroundPosition: '-50% 10%',
             backgroundSize: '80%',
             height: '180px',
+            cursor: 'pointer',
+            transition: 'background-color 0.3s',
+            '@media (any-hover: hover)': {
+              '&:hover': {
+                backgroundColor: lighten(theme.palette.primary.main, 0.9),
+              },
+            },
           }}
         >
           <Typography>{item.name}</Typography>
