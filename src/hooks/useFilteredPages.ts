@@ -1,4 +1,8 @@
+import { useMemo } from 'react';
+
 import { useAuth } from '@/hooks/useAuth';
+
+type Pages = { text: string; path: string; auth?: boolean }[];
 
 const pages = [
   { text: 'Home', path: '/' },
@@ -9,12 +13,12 @@ const pages = [
   { text: 'Sign out', path: '/signout', auth: true },
 ];
 
-export const useFilteredPages = () => {
+export const useFilteredPages = (): Pages => {
   const { isAuthenticated } = useAuth();
 
-  const filteredPages = pages.filter((page) =>
-    isAuthenticated ? page.auth !== false : page.auth !== true,
-  );
+  const filteredPages = useMemo(() => {
+    return pages.filter((page) => (isAuthenticated ? page.auth !== false : page.auth !== true));
+  }, [isAuthenticated, pages]);
 
   return filteredPages;
 };

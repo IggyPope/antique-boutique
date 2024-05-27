@@ -16,7 +16,7 @@ const pageTitles: IPageTitle = {
   '/catalog': 'Browse Our Catalog',
 };
 
-export const usePageTitle = () => {
+export const usePageTitle = (): string => {
   const location = useLocation();
   return pageTitles[location.pathname];
 };

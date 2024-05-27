@@ -6,13 +6,14 @@ import Cart from '../UI/Icon/Cart';
 import Profile from '../UI/Icon/Profile';
 import { NavLink } from '../UI/NavLink/NavLink';
 
+const pages = [
+  { icon: <Profile />, path: '/profile', auth: true },
+  { icon: <Cart />, path: '/cart' },
+];
+
 const IconMenu = () => {
   const theme = useTheme();
   const { isAuthenticated } = useAuth();
-  const pages = [
-    { icon: <Profile />, path: '/profile', auth: true },
-    { icon: <Cart />, path: '/cart' },
-  ];
   const filteredPages = pages.filter((page) =>
     isAuthenticated ? page.auth !== false : page.auth !== true,
   );
