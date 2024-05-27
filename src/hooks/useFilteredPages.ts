@@ -18,7 +18,7 @@ export const useFilteredPages = (): Pages => {
 
   const filteredPages = useMemo(() => {
     return pages.filter((page) => (isAuthenticated ? page.auth !== false : page.auth !== true));
-  }, [isAuthenticated, pages]);
+  }, [isAuthenticated]);
 
   return filteredPages;
 };
