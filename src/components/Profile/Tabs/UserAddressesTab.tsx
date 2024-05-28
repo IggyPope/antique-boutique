@@ -6,45 +6,35 @@ import {
   Button,
   Stack,
   Typography,
-  FormHelperText,
   Autocomplete,
   Checkbox,
   FormControlLabel,
 } from '@mui/material';
 import TextField from '@mui/material/TextField';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
-import { type CustomerDraft } from '@commercetools/platform-sdk';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { useAuth } from '@/hooks/useAuth';
+import { AuthService } from '@/api/services/AuthService';
+import { COUNTRY_LIST } from '@/components/RegistrationForm/countries';
+import { getCountryByCode } from '@/components/RegistrationForm/utils';
 
-import { ControlledTextField } from './ControlledTextField';
-import { PasswordTextInput } from './PasswordTextInput';
-import { COUNTRY_LIST } from './countries';
-import { schema, FormValues } from './schema';
-import { copyShippingToBilling, getCountryCode } from './utils';
+import { EditableTextField } from './EditableTextField';
+import { schema, AddressesFormValues } from './addressesSchema';
+import { copyShippingToBilling } from './utils';
 
-export function RegistrationForm() {
+export function UserAddressesTab() {
   const {
     handleSubmit,
     control,
     setValue,
     getValues,
     trigger,
-    formState: { errors, isDirty, isValid },
-  } = useForm<FormValues>({
+    formState: { errors, isValid },
+  } = useForm<AddressesFormValues>({
     resolver: yupResolver(schema),
     mode: 'onChange',
     reValidateMode: 'onChange',
     defaultValues: {
-      firstName: '',
-      lastName: '',
-      dateOfBirth: new Date(2000, 0, 1),
-      email: '',
-      password: '',
       billing_zipCode: '',
       billing_city: '',
       billing_country: '',
@@ -68,7 +58,7 @@ export function RegistrationForm() {
     copyShippingToBilling(getValues, setValue, useAsBilling, isCleared);
   }, [getValues, setValue, useAsBilling, isCleared]);
 
-  const syncFields = async (fieldName: keyof FormValues, value: string) => {
+  const syncFields = async (fieldName: keyof AddressesFormValues, value: string) => {
     if (useAsBilling) {
       setValue(fieldName, value);
       await trigger(fieldName);
@@ -80,147 +70,95 @@ export function RegistrationForm() {
       await trigger('billing_zipCode');
     }
   };
+  const service = AuthService.getInstance();
+  useEffect(() => {
+    service.apiRoot
+      .me()
+      .get()
+      .execute()
+      .then((res) => {
+        const bCity = res.body.addresses[0].city;
+        const bStreet = res.body.addresses[0].streetName;
+        const bZipCode = res.body.addresses[0].postalCode;
+        const bCountry = getCountryByCode(res.body.addresses[0].country);
+        const shCity = res.body.addresses[1].city;
+        const shStreet = res.body.addresses[1].streetName;
+        const shZipCode = res.body.addresses[1].postalCode;
+        const shCountry = getCountryByCode(res.body.addresses[1].country);
+        if (
+          bCity &&
+          bStreet &&
+          shStreet &&
+          shCity &&
+          bZipCode &&
+          shZipCode &&
+          bCountry &&
+          shCountry
+        ) {
+          setValue('billing_street', bStreet, {
+            shouldValidate: true,
+          });
+          setValue('billing_city', bCity, {
+            shouldValidate: true,
+          });
+          setValue('shipping_street', shStreet, {
+            shouldValidate: true,
+          });
+          setValue('shipping_city', shCity, {
+            shouldValidate: true,
+          });
+          setValue('billing_zipCode', bZipCode, {
+            shouldValidate: true,
+          });
+          setValue('shipping_zipCode', shZipCode, {
+            shouldValidate: true,
+          });
+          setValue('billing_country', bCountry, {
+            shouldValidate: true,
+          });
+          setValue('shipping_country', shCountry, {
+            shouldValidate: true,
+          });
+        }
+        console.log(JSON.stringify(res));
+      })
+      .catch((err) => {
+        throw new Error(`${err}`);
+      });
+  }, [service.apiRoot, setValue]);
 
-  const { signUp } = useAuth();
-
-  const onSubmit = (data: FormValues) => {
-    console.log(data.dateOfBirth);
-    const billingAddressIndex = 0;
-    const shippingAddressIndex = 1;
-    const customerDraft: CustomerDraft & { password: string } = {
-      firstName: data.firstName,
-      lastName: data.lastName,
-      dateOfBirth: new Intl.DateTimeFormat('fr-CA', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      }).format(new Date(data.dateOfBirth)),
-      // dateOfBirth: new Date(data.dateOfBirth).toISOString().slice(0, 10),
-      email: data.email,
-      password: data.password,
-      addresses: [
-        {
-          country: getCountryCode(data.billing_country) ?? '',
-          city: data.billing_city,
-          streetName: data.billing_street,
-          postalCode: data.billing_zipCode,
-        },
-        {
-          country: getCountryCode(data.billing_country) ?? '',
-          city: data.shipping_city,
-          streetName: data.shipping_street,
-          postalCode: data.shipping_zipCode,
-        },
-      ],
-      defaultBillingAddress: data.useAsDefaultBillingAddress ? billingAddressIndex : undefined,
-      defaultShippingAddress: data.useAsDefaultShippingAddress ? shippingAddressIndex : undefined,
-      shippingAddresses: [shippingAddressIndex],
-      billingAddresses: [billingAddressIndex],
-    };
-
-    signUp(customerDraft);
+  const onSubmit = (data: AddressesFormValues) => {
+    console.log(data);
+    /*  const billingAddressIndex = 0;
+     const shippingAddressIndex = 1;
+    const customerDraft = {
+     
+       addresses: [
+         {
+           country: getCountryCode(data.billing_country) ?? '',
+           city: data.billing_city,
+           streetName: data.billing_street,
+           postalCode: data.billing_zipCode,
+         },
+         {
+           country: getCountryCode(data.billing_country) ?? '',
+           city: data.shipping_city,
+           streetName: data.shipping_street,
+           postalCode: data.shipping_zipCode,
+         },
+       ],
+       defaultBillingAddress: data.useAsDefaultBillingAddress ? billingAddressIndex : undefined,
+       defaultShippingAddress: data.useAsDefaultShippingAddress ? shippingAddressIndex : undefined,
+       shippingAddresses: [shippingAddressIndex],
+       billingAddresses: [billingAddressIndex],
+     };
+ 
+     console.log(customerDraft);*/
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack direction="column" gap={2} width="100%">
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            flexDirection: { xs: 'column', sm: 'row' },
-            width: '100%',
-          }}
-        >
-          <Stack
-            direction="column"
-            gap={1}
-            justifyContent="center"
-            sx={{
-              width: {
-                sm: '40%',
-              },
-              padding: {
-                xs: '5%',
-                sm: '0',
-              },
-            }}
-          >
-            <Typography component={'p'}>Your credentials</Typography>
-            <ControlledTextField
-              name="email"
-              control={control}
-              errors={errors}
-              label="email"
-              fieldName="Email"
-              dataTestId="registration-email"
-            />
-            <PasswordTextInput<FormValues>
-              name="password"
-              control={control}
-              errors={errors}
-              dataTestId="registration-password"
-            />
-          </Stack>
-          <Stack
-            direction="column"
-            gap={1}
-            justifyContent="center"
-            sx={{
-              width: {
-                sm: '40%',
-              },
-              padding: {
-                xs: '5%',
-                sm: '0',
-              },
-            }}
-          >
-            <Typography component={'p'}>Your personal information</Typography>
-            <ControlledTextField
-              name="firstName"
-              control={control}
-              errors={errors}
-              label="firstName"
-              fieldName="First Name"
-              dataTestId="registration-first-name"
-            />
-            <ControlledTextField
-              name="lastName"
-              control={control}
-              errors={errors}
-              label="lastName"
-              fieldName="Last Name"
-              dataTestId="registration-last-name"
-            />
-            slotProps
-            <Controller
-              name="dateOfBirth"
-              control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker
-                    label="Date of Birth"
-                    format="dd/MM/yyyy"
-                    value={field.value}
-                    onChange={(newValue) => field.onChange(newValue)}
-                    slotProps={{
-                      textField: {
-                        size: 'small',
-                      },
-                    }}
-                  />
-                  {errors.dateOfBirth ? (
-                    <FormHelperText error>{errors.dateOfBirth?.message}</FormHelperText>
-                  ) : (
-                    <FormHelperText> </FormHelperText>
-                  )}
-                </LocalizationProvider>
-              )}
-            />
-          </Stack>
-        </Box>
         <Box
           sx={{
             display: 'flex',
@@ -274,7 +212,7 @@ export function RegistrationForm() {
                 />
               )}
             />
-            <ControlledTextField
+            <EditableTextField
               name="shipping_zipCode"
               control={control}
               errors={errors}
@@ -284,7 +222,7 @@ export function RegistrationForm() {
               callback={syncFields}
               dataTestId="registration-shipping-zip-code"
             />
-            <ControlledTextField
+            <EditableTextField
               name="shipping_street"
               control={control}
               errors={errors}
@@ -294,7 +232,7 @@ export function RegistrationForm() {
               callback={syncFields}
               dataTestId="registration-shipping-street"
             />
-            <ControlledTextField
+            <EditableTextField
               name="shipping_city"
               control={control}
               errors={errors}
@@ -397,7 +335,7 @@ export function RegistrationForm() {
                 />
               )}
             />
-            <ControlledTextField
+            <EditableTextField
               name="billing_zipCode"
               control={control}
               errors={errors}
@@ -407,7 +345,7 @@ export function RegistrationForm() {
               dataTestId="registration-billing-zip-code"
             />
 
-            <ControlledTextField
+            <EditableTextField
               name="billing_street"
               control={control}
               errors={errors}
@@ -417,7 +355,7 @@ export function RegistrationForm() {
               dataTestId="registration-billing-street"
             />
 
-            <ControlledTextField
+            <EditableTextField
               name="billing_city"
               control={control}
               errors={errors}
@@ -448,7 +386,7 @@ export function RegistrationForm() {
             />
             <Button
               type="submit"
-              disabled={!isDirty || !isValid}
+              disabled={!isValid}
               variant="contained"
               color="secondary"
               sx={{

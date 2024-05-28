@@ -14,10 +14,9 @@ const Main = () => {
   useEffect(() => {
     service.apiRoot
       .me()
-      .carts()
       .get()
       .execute()
-      .then((res) => JSON.stringify(res))
+      .then((res) => console.log(JSON.stringify(res)))
       .catch((err) => {
         throw new Error(`${err}`);
       });
