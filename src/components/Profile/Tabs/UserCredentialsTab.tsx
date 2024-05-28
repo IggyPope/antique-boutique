@@ -20,7 +20,7 @@ export function UserCredentialsTab() {
     handleSubmit,
     control,
     setValue,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isDirty },
   } = useForm<CredentialsFormValues>({
     resolver: yupResolver(schema),
     mode: 'onChange',
@@ -143,7 +143,7 @@ export function UserCredentialsTab() {
           <LoadingButton
             type="submit"
             loading={isLoading}
-            disabled={!isValid}
+            disabled={!isDirty || !isValid}
             variant="contained"
             color="secondary"
             sx={{

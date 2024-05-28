@@ -29,7 +29,7 @@ export function UserAddressesTab() {
     setValue,
     getValues,
     trigger,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isDirty },
   } = useForm<AddressesFormValues>({
     resolver: yupResolver(schema),
     mode: 'onChange',
@@ -386,7 +386,7 @@ export function UserAddressesTab() {
             />
             <Button
               type="submit"
-              disabled={!isValid}
+              disabled={!isDirty || !isValid}
               variant="contained"
               color="secondary"
               sx={{
