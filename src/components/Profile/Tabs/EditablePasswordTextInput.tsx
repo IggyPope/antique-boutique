@@ -11,6 +11,7 @@ interface EditablePasswordProps<TFormValues extends FieldValues> {
   name: Path<TFormValues>;
   control: Control<TFormValues>;
   errors: FieldErrors<TFormValues>;
+  placeholder: string;
   dataTestId?: string;
 }
 
@@ -20,6 +21,7 @@ export const EditablePasswordTextField = <TFormValues extends FieldValues>({
   name,
   control,
   errors,
+  placeholder,
   dataTestId,
 }: EditablePasswordProps<TFormValues>) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -34,9 +36,9 @@ export const EditablePasswordTextField = <TFormValues extends FieldValues>({
         <TextField
           {...field}
           type={showPassword ? 'text' : 'password'}
-          label="Password"
-          placeholder="Password"
-          error={!!errors.password}
+          label={placeholder}
+          placeholder={placeholder}
+          error={!!errors.newPassword}
           helperText={errorMessage}
           InputProps={{
             endAdornment: (

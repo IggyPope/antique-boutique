@@ -84,7 +84,6 @@ export function RegistrationForm() {
   const { signUp } = useAuth();
 
   const onSubmit = (data: FormValues) => {
-    console.log(data.dateOfBirth);
     const billingAddressIndex = 0;
     const shippingAddressIndex = 1;
     const customerDraft: CustomerDraft & { password: string } = {
@@ -106,7 +105,7 @@ export function RegistrationForm() {
           postalCode: data.billing_zipCode,
         },
         {
-          country: getCountryCode(data.billing_country) ?? '',
+          country: getCountryCode(data.shipping_country) ?? '',
           city: data.shipping_city,
           streetName: data.shipping_street,
           postalCode: data.shipping_zipCode,

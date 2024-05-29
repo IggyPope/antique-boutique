@@ -16,7 +16,7 @@ import { PasswordFlowTokenStore } from '@/store/PasswordStore';
 import { isTokenValid } from '@/utils/isTokenValid';
 
 import { anonymousTokenCache, passwordTokenCache } from './TokenCache';
-import { authorization, options } from './withExistingTokenFlow';
+import { getAuthorizationToken, options } from './withExistingTokenFlow';
 
 const {
   VITE_CTP_AUTH_URL,
@@ -76,7 +76,7 @@ export class ApiClientBuilder {
   private getExistingTokenFlowClient(): Client {
     return new ClientBuilder()
       .withProjectKey(this.projectKey)
-      .withExistingTokenFlow(authorization, options)
+      .withExistingTokenFlow(getAuthorizationToken(), options)
       .withHttpMiddleware(this.getHttpMiddlewareOptions())
       .build();
   }

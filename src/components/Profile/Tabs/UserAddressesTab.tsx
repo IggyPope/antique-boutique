@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
 import {
   Box,
@@ -12,24 +13,27 @@ import {
 } from '@mui/material';
 import TextField from '@mui/material/TextField';
 
+import { MyCustomerUpdate } from '@commercetools/platform-sdk';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { AuthService } from '@/api/services/AuthService';
+import { GetUserDetailsService } from '@/api/services/GetUserDetailsService';
+import { UpdateCustomerService } from '@/api/services/UpdateCustomerService';
 import { COUNTRY_LIST } from '@/components/RegistrationForm/countries';
-import { getCountryByCode } from '@/components/RegistrationForm/utils';
+import { getCountryByCode, getCountryCode } from '@/components/RegistrationForm/utils';
 
 import { EditableTextField } from './EditableTextField';
 import { schema, AddressesFormValues } from './addressesSchema';
 import { copyShippingToBilling } from './utils';
 
 export function UserAddressesTab() {
+  const service = GetUserDetailsService.getInstance();
   const {
     handleSubmit,
     control,
     setValue,
     getValues,
     trigger,
-    formState: { errors, isValid, isDirty },
+    formState: { errors, isValid },
   } = useForm<AddressesFormValues>({
     resolver: yupResolver(schema),
     mode: 'onChange',
@@ -53,7 +57,11 @@ export function UserAddressesTab() {
   const [useAsDefaultBilling, setUseAsDefaultBilling] = useState(false);
   const [useAsBilling, setUseAsBilling] = useState(false);
   const [isCleared, setIsCleared] = useState(false);
-
+  const userDetailsService = GetUserDetailsService.getInstance();
+  const updateService = UpdateCustomerService.getInstance();
+  const userVersionRef = useRef<number>(1);
+  const shippingAddressIdRef = useRef<string>('1');
+  const billingAddressIdRef = useRef<string>('1');
   useEffect(() => {
     copyShippingToBilling(getValues, setValue, useAsBilling, isCleared);
   }, [getValues, setValue, useAsBilling, isCleared]);
@@ -70,13 +78,10 @@ export function UserAddressesTab() {
       await trigger('billing_zipCode');
     }
   };
-  const service = AuthService.getInstance();
   useEffect(() => {
-    service.apiRoot
-      .me()
-      .get()
-      .execute()
-      .then((res) => {
+    const fetchData = async () => {
+      try {
+        const res = await userDetailsService.getUserDetails();
         const bCity = res.body.addresses[0].city;
         const bStreet = res.body.addresses[0].streetName;
         const bZipCode = res.body.addresses[0].postalCode;
@@ -85,6 +90,14 @@ export function UserAddressesTab() {
         const shStreet = res.body.addresses[1].streetName;
         const shZipCode = res.body.addresses[1].postalCode;
         const shCountry = getCountryByCode(res.body.addresses[1].country);
+        const version = res.body.version;
+        const shippingAddressId = res.body.addresses[1].id;
+        const billingAddressId = res.body.addresses[0].id;
+        if (version && shippingAddressId && billingAddressId) {
+          userVersionRef.current = version;
+          shippingAddressIdRef.current = shippingAddressId;
+          billingAddressIdRef.current = billingAddressId;
+        }
         if (
           bCity &&
           bStreet &&
@@ -120,40 +133,47 @@ export function UserAddressesTab() {
             shouldValidate: true,
           });
         }
-        console.log(JSON.stringify(res));
-      })
-      .catch((err) => {
-        throw new Error(`${err}`);
-      });
-  }, [service.apiRoot, setValue]);
+      } catch (error) {
+        console.error('Error fetching user details:', error);
+      }
+    };
+    void fetchData();
+  }, [service, setValue, userDetailsService]);
 
-  const onSubmit = (data: AddressesFormValues) => {
-    console.log(data);
-    /*  const billingAddressIndex = 0;
-     const shippingAddressIndex = 1;
-    const customerDraft = {
-     
-       addresses: [
-         {
-           country: getCountryCode(data.billing_country) ?? '',
-           city: data.billing_city,
-           streetName: data.billing_street,
-           postalCode: data.billing_zipCode,
-         },
-         {
-           country: getCountryCode(data.billing_country) ?? '',
-           city: data.shipping_city,
-           streetName: data.shipping_street,
-           postalCode: data.shipping_zipCode,
-         },
-       ],
-       defaultBillingAddress: data.useAsDefaultBillingAddress ? billingAddressIndex : undefined,
-       defaultShippingAddress: data.useAsDefaultShippingAddress ? shippingAddressIndex : undefined,
-       shippingAddresses: [shippingAddressIndex],
-       billingAddresses: [billingAddressIndex],
-     };
- 
-     console.log(customerDraft);*/
+  const onSubmit = async (data: AddressesFormValues) => {
+    const shipping_payload: MyCustomerUpdate = {
+      version: userVersionRef.current,
+      actions: [
+        {
+          action: 'changeAddress',
+          addressId: shippingAddressIdRef.current,
+          address: {
+            streetName: data.shipping_street,
+            postalCode: data.shipping_zipCode,
+            city: data.shipping_city,
+            country: getCountryCode(data.shipping_country) ?? '',
+          },
+        },
+        {
+          action: 'changeAddress',
+          addressId: billingAddressIdRef.current,
+          address: {
+            streetName: data.billing_street,
+            postalCode: data.billing_zipCode,
+            city: data.billing_city,
+            country: getCountryCode(data.billing_country) ?? '',
+          },
+        },
+      ],
+    };
+    try {
+      await updateService.updateCustomer(shipping_payload);
+      toast.success('Shipping address changed successfully');
+    } catch (error) {
+      toast.error(
+        `Error changing password: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
   };
 
   return (
@@ -386,7 +406,7 @@ export function UserAddressesTab() {
             />
             <Button
               type="submit"
-              disabled={!isDirty || !isValid}
+              disabled={!isValid}
               variant="contained"
               color="secondary"
               sx={{

@@ -1,52 +1,74 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
 import { Box, Button, Stack, Typography } from '@mui/material';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { AuthService } from '@/api/services/AuthService';
+import { ChangeUserPasswordService } from '@/api/services/ChangeUserPasswordService';
+import { GetUserDetailsService } from '@/api/services/GetUserDetailsService';
+import { useAuth } from '@/hooks/useAuth';
+import { PasswordFlowTokenStore } from '@/store/PasswordStore';
 
 import { EditablePasswordTextField } from './EditablePasswordTextInput';
-import { PasswordValues, schema } from './PasswordSchema';
+import { PasswordValues, passwordSchema } from './PasswordSchema';
 
 export function UserPasswordTab() {
   const {
     handleSubmit,
     control,
-    setValue,
-    formState: { errors, isValid, isDirty },
+    formState: { errors, isValid },
   } = useForm<PasswordValues>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(passwordSchema),
     mode: 'onChange',
     reValidateMode: 'onChange',
     defaultValues: {
-      password: '',
+      currentPassword: '',
+      newPassword: '',
       confirmPassword: '',
     },
   });
+  const passwordService = ChangeUserPasswordService.getInstance();
+  const userService = GetUserDetailsService.getInstance();
+  const userVersionRef = useRef<number>(1);
+  const userEmailRef = useRef<string>('');
+  const { signIn } = useAuth();
 
-  const onSubmit = (data: PasswordValues) => {
-    console.log(data.password, data.confirmPassword);
+  const onSubmit = async (data: PasswordValues) => {
+    const payload = {
+      version: userVersionRef.current,
+      currentPassword: data.currentPassword,
+      newPassword: data.newPassword,
+    };
+    try {
+      await passwordService.changePassword(payload);
+      toast.success('Password changed successfully');
+      signIn(userEmailRef.current, data.newPassword);
+      PasswordFlowTokenStore.removeData();
+    } catch (error) {
+      toast.error(
+        `Error changing password: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
   };
-  const service = AuthService.getInstance();
+
   useEffect(() => {
-    service.apiRoot
-      .me()
-      .get()
-      .execute()
-      .then((res) => {
-        const password = res.body.password;
-        if (password) {
-          setValue('password', password);
-          setValue('confirmPassword', password);
+    const fetchData = async () => {
+      try {
+        const res = await userService.getUserDetails();
+        const version = res.body.version;
+        const email = res.body.email;
+        if (version && email) {
+          userVersionRef.current = version;
+          userEmailRef.current = email;
         }
-        console.log(JSON.stringify(res));
-      })
-      .catch((err) => {
-        throw new Error(`${err}`);
-      });
-  }, [service.apiRoot, setValue]);
+      } catch (error) {
+        console.error('Error fetching user details:', error);
+      }
+    };
+    void fetchData();
+  }, [userService]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -66,23 +88,33 @@ export function UserPasswordTab() {
             },
           }}
         >
-          <Typography component={'p'}>Your Password </Typography>
+          <Typography component={'p'}>Your Current Password </Typography>
           <EditablePasswordTextField<PasswordValues>
-            name="password"
+            name="currentPassword"
             control={control}
             errors={errors}
-            dataTestId="edit-password"
+            placeholder="Current password"
+            dataTestId="edit-current-password"
           />
-          <Typography component={'p'}>Confirm Your Password </Typography>
+          <Typography component={'p'}>New Password </Typography>
+          <EditablePasswordTextField<PasswordValues>
+            name="newPassword"
+            control={control}
+            errors={errors}
+            placeholder="New password"
+            dataTestId="edit-new-password"
+          />
+          <Typography component={'p'}>Confirm New Password </Typography>
           <EditablePasswordTextField<PasswordValues>
             name="confirmPassword"
             control={control}
             errors={errors}
-            dataTestId="edit-password"
+            placeholder="Confirm new password"
+            dataTestId="edit-confirm-password"
           />
           <Button
             type="submit"
-            disabled={!isDirty || !isValid}
+            disabled={!isValid}
             variant="contained"
             color="secondary"
             sx={{
