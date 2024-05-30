@@ -58,17 +58,27 @@ const ProductList = () => {
                     {product.name.en}
                   </Typography>
                   <Stack direction="row" gap={1} alignItems="center">
-                    <Typography
-                      fontSize="0.9rem"
-                      fontWeight="600"
-                      color="primary.main"
-                      sx={{ textDecoration: 'line-through' }}
-                    >
-                      {`$${formatPrice(product.masterVariant.prices![0].value.centAmount)}`}
-                    </Typography>
-                    <Typography fontSize="1rem" fontWeight="600">
-                      {`$${formatPrice(product.masterVariant.prices![0].value.centAmount)}`}
-                    </Typography>
+                    {product.masterVariant.prices![0].discounted ? (
+                      <>
+                        <Typography fontSize="1rem" fontWeight="600">
+                          {`$${formatPrice(product.masterVariant.prices![0].discounted.value.centAmount)}`}
+                        </Typography>
+                        <Typography
+                          fontSize="0.9rem"
+                          fontWeight="600"
+                          color="primary.light"
+                          sx={{ textDecoration: 'line-through' }}
+                        >
+                          {`$${formatPrice(product.masterVariant.prices![0].value.centAmount)}`}
+                        </Typography>
+                      </>
+                    ) : (
+                      <>
+                        <Typography fontSize="1rem" fontWeight="600">
+                          {`$${formatPrice(product.masterVariant.prices![0].value.centAmount)}`}
+                        </Typography>
+                      </>
+                    )}
                   </Stack>
                   <Typography fontSize="0.9rem">{`${product.description![APP_SETTINGS.LOCALE].slice(0, 100)}...`}</Typography>
                 </CardContent>

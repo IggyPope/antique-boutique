@@ -1,6 +1,6 @@
 export const APP_SETTINGS = {
   LOCALE: 'en-US',
-  PRODUCTS_PER_PAGE: 10,
+  PRODUCTS_PER_PAGE: 12,
 } as const;
 
 export const SEARCH_PARAM_NAME = 'text.en-US';
