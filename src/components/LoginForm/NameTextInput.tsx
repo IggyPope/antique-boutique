@@ -2,7 +2,7 @@ import { Control, Controller, FieldErrors } from 'react-hook-form';
 
 import { TextField } from '@mui/material';
 
-import { LoginFormValues } from './schema';
+import { LoginFormValues } from '@/components/LoginForm/schema';
 
 interface UserNameProps {
   name: keyof LoginFormValues;

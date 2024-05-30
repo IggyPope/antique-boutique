@@ -1,7 +1,7 @@
 import type { UseFormSetValue, UseFormGetValues } from 'react-hook-form';
 
-import { COUNTRY_DATA_LIST } from './countries';
-import { FormValues } from './schema';
+import { COUNTRY_DATA_LIST } from '@/components/RegistrationForm/countries';
+import { FormValues } from '@/components/RegistrationForm/schema';
 
 export function getCountryByCode(countryCode: string | undefined): string | null {
   if (countryCode === undefined) {

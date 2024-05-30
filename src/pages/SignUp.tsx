@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 import { Box, Typography } from '@mui/material';
 
-import { RegistrationForm } from '../components/RegistrationForm/RegistrationForm';
+import { RegistrationForm } from '@/components/RegistrationForm/RegistrationForm';
 
 const SignUp = () => {
   return (

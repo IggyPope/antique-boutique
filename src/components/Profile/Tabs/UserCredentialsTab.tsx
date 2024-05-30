@@ -13,10 +13,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 import { GetUserDetailsService } from '@/api/services/GetUserDetailsService';
 import { UpdateCustomerService } from '@/api/services/UpdateCustomerService';
+import { EditableTextField } from '@/components/Profile/Tabs/EditableTextField';
+import { CredentialsFormValues, schema } from '@/components/Profile/Tabs/credentialsSchema';
 import { useAuth } from '@/hooks/useAuth';
-
-import { EditableTextField } from './EditableTextField';
-import { CredentialsFormValues, schema } from './credentialsSchema';
 
 export function UserCredentialsTab() {
   const userDetailsService = GetUserDetailsService.getInstance();

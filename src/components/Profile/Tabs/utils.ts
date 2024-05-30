@@ -1,6 +1,6 @@
 import { UseFormGetValues, UseFormSetValue } from 'react-hook-form';
 
-import { AddressesFormValues } from './addressesSchema';
+import { AddressesFormValues } from '@/components/Profile/Tabs/addressesSchema';
 
 export const copyShippingToBilling = (
   getValues: UseFormGetValues<AddressesFormValues>,

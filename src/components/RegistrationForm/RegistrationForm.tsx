@@ -19,13 +19,12 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { type CustomerDraft } from '@commercetools/platform-sdk';
 import { yupResolver } from '@hookform/resolvers/yup';
 
+import { ControlledTextField } from '@/components/RegistrationForm/ControlledTextField';
+import { PasswordTextInput } from '@/components/RegistrationForm/PasswordTextInput';
+import { COUNTRY_LIST } from '@/components/RegistrationForm/countries';
+import { schema, FormValues } from '@/components/RegistrationForm/schema';
+import { copyShippingToBilling, getCountryCode } from '@/components/RegistrationForm/utils';
 import { useAuth } from '@/hooks/useAuth';
-
-import { ControlledTextField } from './ControlledTextField';
-import { PasswordTextInput } from './PasswordTextInput';
-import { COUNTRY_LIST } from './countries';
-import { schema, FormValues } from './schema';
-import { copyShippingToBilling, getCountryCode } from './utils';
 
 export function RegistrationForm() {
   const {

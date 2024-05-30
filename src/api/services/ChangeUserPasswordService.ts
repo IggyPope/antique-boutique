@@ -1,6 +1,6 @@
 import { ClientResponse, Customer, MyCustomerChangePassword } from '@commercetools/platform-sdk';
 
-import { ApiClientBuilder } from '../client/ApiClientBuilder';
+import { ApiClientBuilder } from '@/api/client/ApiClientBuilder';
 
 export class ChangeUserPasswordService {
   private static instance: ChangeUserPasswordService;

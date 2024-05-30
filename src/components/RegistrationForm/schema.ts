@@ -1,8 +1,8 @@
 import { postcodeValidator, postcodeValidatorExistsForCountry } from 'postcode-validator';
 import * as yup from 'yup';
 
-import { COUNTRY_LIST } from './countries';
-import { getCountryCode } from './utils';
+import { COUNTRY_LIST } from '@/components/RegistrationForm/countries';
+import { getCountryCode } from '@/components/RegistrationForm/utils';
 
 export interface FormValues {
   email: string;

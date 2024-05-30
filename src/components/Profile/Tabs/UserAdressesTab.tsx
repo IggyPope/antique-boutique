@@ -3,9 +3,8 @@ import { useEffect, useState } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 
 import { GetUserDetailsService } from '@/api/services/GetUserDetailsService';
+import { UserAddressForm } from '@/components/Profile/Tabs/UserAddressForm';
 import { getCountryByCode } from '@/components/RegistrationForm/utils';
-
-import { UserAddressForm } from './UserAddressForm';
 
 export interface AddressInfo {
   id?: string;

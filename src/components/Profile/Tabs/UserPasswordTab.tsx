@@ -8,11 +8,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 import { ChangeUserPasswordService } from '@/api/services/ChangeUserPasswordService';
 import { GetUserDetailsService } from '@/api/services/GetUserDetailsService';
+import { EditablePasswordTextField } from '@/components/Profile/Tabs/EditablePasswordTextInput';
+import { PasswordValues, passwordSchema } from '@/components/Profile/Tabs/PasswordSchema';
 import { useAuth } from '@/hooks/useAuth';
 import { PasswordFlowTokenStore } from '@/store/PasswordStore';
-
-import { EditablePasswordTextField } from './EditablePasswordTextInput';
-import { PasswordValues, passwordSchema } from './PasswordSchema';
 
 export function UserPasswordTab() {
   const {

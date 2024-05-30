@@ -1,10 +1,10 @@
 import { Badge, IconButton, Stack } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
-import { useAuth } from '../../hooks/useAuth';
-import Cart from '../UI/Icon/Cart';
-import Profile from '../UI/Icon/Profile';
-import { NavLink } from '../UI/NavLink/NavLink';
+import Cart from '@/components/UI/Icon/Cart';
+import Profile from '@/components/UI/Icon/Profile';
+import { NavLink } from '@/components/UI/NavLink/NavLink';
+import { useAuth } from '@/hooks/useAuth';
 
 const pages = [
   { icon: <Profile />, path: '/profile', auth: true },

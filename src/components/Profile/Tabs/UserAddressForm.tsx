@@ -9,12 +9,11 @@ import { MyCustomerUpdate } from '@commercetools/platform-sdk';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { UpdateCustomerService } from '@/api/services/UpdateCustomerService';
+import { EditableTextField } from '@/components/Profile/Tabs/EditableTextField';
+import { AddressInfo } from '@/components/Profile/Tabs/UserAdressesTab';
+import { addressSchema, AddressesFormValues } from '@/components/Profile/Tabs/addressSchema';
 import { COUNTRY_LIST } from '@/components/RegistrationForm/countries';
 import { getCountryCode } from '@/components/RegistrationForm/utils';
-
-import { EditableTextField } from './EditableTextField';
-import { AddressInfo } from './UserAdressesTab';
-import { addressSchema, AddressesFormValues } from './addressSchema';
 
 interface UserAddressFormProps {
   initialData: AddressInfo | null;
