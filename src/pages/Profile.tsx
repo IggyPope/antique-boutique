@@ -9,7 +9,7 @@ import TabPanel from '@mui/lab/TabPanel';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 
-import { UserAddressesTab } from '@/components/Profile/Tabs/UserAddressesTab';
+import { UserAddressesTab } from '@/components/Profile/Tabs/UserAdressesTab';
 import { UserCredentialsTab } from '@/components/Profile/Tabs/UserCredentialsTab';
 import { UserPasswordTab } from '@/components/Profile/Tabs/UserPasswordTab';
 

@@ -21,7 +21,6 @@ export class UpdateCustomerService {
   public async updateCustomer(payload: MyCustomerUpdate): Promise<ClientResponse<Customer>> {
     this.apiRoot = this.apiBuilder.getApiRoot();
 
-    // Assuming the SDK provides a way to update customer details, replace 'updateCustomer' with the actual method
     return this.apiRoot
       .me()
       .post({
