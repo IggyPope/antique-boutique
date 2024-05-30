@@ -2,7 +2,7 @@ import { Control, Controller, FieldErrors } from 'react-hook-form';
 
 import { TextField } from '@mui/material';
 
-import { FormValues } from './schema';
+import { FormValues } from '@/components/RegistrationForm/schema';
 
 interface ControlledTextFieldProps {
   name: keyof FormValues;

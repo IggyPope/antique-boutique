@@ -4,7 +4,7 @@ import {
   CustomerSignInResult,
 } from '@commercetools/platform-sdk';
 
-import { ApiClientBuilder } from '../client/ApiClientBuilder';
+import { ApiClientBuilder } from '@/api/client/ApiClientBuilder';
 
 export class AuthService {
   private static instance: AuthService;

@@ -1,7 +1,7 @@
 import { Pagination, Stack } from '@mui/material';
 
-import ProductFilters from './ProductFilters';
-import ProductList from './ProductList';
+import ProductFilters from '@/components/ProductsBlock/ProductFilters';
+import ProductList from '@/components/ProductsBlock/ProductList';
 
 const ProductsBlock = () => {
   return (

@@ -11,12 +11,11 @@ import {
   type RefreshAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
 
+import { anonymousTokenCache, passwordTokenCache } from '@/api/client/TokenCache';
+import { getAuthorizationToken, options } from '@/api/client/withExistingTokenFlow';
 import { AnonymousFlowTokenStore } from '@/store/AnonymousStore';
 import { PasswordFlowTokenStore } from '@/store/PasswordStore';
 import { isTokenValid } from '@/utils/isTokenValid';
-
-import { anonymousTokenCache, passwordTokenCache } from './TokenCache';
-import { getAuthorizationToken, options } from './withExistingTokenFlow';
 
 const {
   VITE_CTP_AUTH_URL,

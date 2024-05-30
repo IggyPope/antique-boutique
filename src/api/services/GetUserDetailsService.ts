@@ -1,6 +1,6 @@
 import { ClientResponse, Customer } from '@commercetools/platform-sdk';
 
-import { ApiClientBuilder } from '../client/ApiClientBuilder';
+import { ApiClientBuilder } from '@/api/client/ApiClientBuilder';
 
 export class GetUserDetailsService {
   private static instance: GetUserDetailsService;

@@ -2,9 +2,8 @@
 import { useEffect } from 'react';
 import { RouterProvider } from 'react-router-dom';
 
+import { useAuth } from '@/hooks/useAuth';
 import router from '@/routes/Router';
-
-import { useAuth } from './hooks/useAuth';
 
 export function App() {
   const { getToken } = useAuth();
