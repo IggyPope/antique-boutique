@@ -17,7 +17,7 @@ const Layout = () => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center',
+          justifyContent: 'start',
           flex: 1,
           padding: 2,
         }}

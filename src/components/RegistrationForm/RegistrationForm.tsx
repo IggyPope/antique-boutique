@@ -89,7 +89,12 @@ export function RegistrationForm() {
     const customerDraft: CustomerDraft & { password: string } = {
       firstName: data.firstName,
       lastName: data.lastName,
-      dateOfBirth: new Date(data.dateOfBirth).toISOString().slice(0, 10),
+      dateOfBirth: new Intl.DateTimeFormat('fr-CA', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      }).format(new Date(data.dateOfBirth)),
+      // dateOfBirth: new Date(data.dateOfBirth).toISOString().slice(0, 10),
       email: data.email,
       password: data.password,
       addresses: [
@@ -100,7 +105,7 @@ export function RegistrationForm() {
           postalCode: data.billing_zipCode,
         },
         {
-          country: getCountryCode(data.billing_country) ?? '',
+          country: getCountryCode(data.shipping_country) ?? '',
           city: data.shipping_city,
           streetName: data.shipping_street,
           postalCode: data.shipping_zipCode,

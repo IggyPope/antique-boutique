@@ -13,15 +13,13 @@ const Main = () => {
 
   useEffect(() => {
     service.apiRoot
-      .me()
-      .carts()
+      .productProjections()
       .get()
       .execute()
-      .then((res) => JSON.stringify(res))
       .catch((err) => {
         throw new Error(`${err}`);
       });
-  });
+  }, [service.apiRoot]);
 
   return (
     <Stack direction="column" gap={2}>
