@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
@@ -14,9 +14,11 @@ import { useAuth } from '@/hooks/useAuth';
 import { PasswordFlowTokenStore } from '@/store/PasswordStore';
 
 export function UserPasswordTab() {
+  const [submission, setSubmission] = useState(false);
   const {
     handleSubmit,
     control,
+    reset,
     formState: { errors, isValid },
   } = useForm<PasswordValues>({
     resolver: yupResolver(passwordSchema),
@@ -43,8 +45,10 @@ export function UserPasswordTab() {
     try {
       await passwordService.changePassword(payload);
       toast.success('Password changed successfully');
-      signIn(userEmailRef.current, data.newPassword);
       PasswordFlowTokenStore.removeData();
+      signIn(userEmailRef.current, data.newPassword);
+      setSubmission(!submission);
+      reset();
     } catch (error) {
       toast.error(
         `Error changing password: ${error instanceof Error ? error.message : String(error)}`,
@@ -67,7 +71,7 @@ export function UserPasswordTab() {
       }
     };
     void fetchData();
-  }, [userService]);
+  }, [userService, submission]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

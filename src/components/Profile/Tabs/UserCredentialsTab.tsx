@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
@@ -18,6 +18,7 @@ import { CredentialsFormValues, schema } from '@/components/Profile/Tabs/credent
 import { useAuth } from '@/hooks/useAuth';
 
 export function UserCredentialsTab() {
+  const [submission, setSubmission] = useState(false);
   const userDetailsService = GetUserDetailsService.getInstance();
   const updateService = UpdateCustomerService.getInstance();
   const userVersionRef = useRef<number>(1);
@@ -75,7 +76,7 @@ export function UserCredentialsTab() {
     };
 
     void fetchData();
-  }, [userDetailsService, setValue]);
+  }, [userDetailsService, setValue, submission]);
 
   const onSubmit = async (data: CredentialsFormValues) => {
     const payload: MyCustomerUpdate = {
@@ -108,6 +109,7 @@ export function UserCredentialsTab() {
     try {
       await updateService.updateCustomer(payload);
       toast.success('Profile data changed successfully');
+      setSubmission(!submission);
     } catch (error) {
       toast.error(
         `Error changing password: ${error instanceof Error ? error.message : String(error)}`,
