@@ -36,6 +36,8 @@ export class ApiClientBuilder {
 
   private readonly clientSecret: string;
 
+  public reset = false;
+
   constructor() {
     if (
       !VITE_CTP_AUTH_URL ||
@@ -55,7 +57,9 @@ export class ApiClientBuilder {
   }
 
   getApiRoot(credentials?: { username: string; password: string }): ByProjectKeyRequestBuilder {
-    return createApiBuilderFromCtpClient(this.getApiClient(credentials)).withProjectKey({
+    return createApiBuilderFromCtpClient(
+      this.getApiClient(this.reset ? undefined : credentials),
+    ).withProjectKey({
       projectKey: this.projectKey,
     });
   }

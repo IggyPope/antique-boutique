@@ -42,7 +42,12 @@ export class AuthService {
           // }
         },
       })
-      .execute();
+      .execute()
+      .then((res) => {
+        this.apiRoot = this.apiBuilder.getApiRoot();
+
+        return res;
+      });
   }
 
   public async signUp(

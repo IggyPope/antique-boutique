@@ -9,18 +9,17 @@ import TextField from '@mui/material/TextField';
 import { MyCustomerUpdate } from '@commercetools/platform-sdk';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { UpdateCustomerService } from '@/api/services/UpdateCustomerService';
+import { useUpdateCustomerMutation } from '@/api/services/commercetoolsApi';
 import { NotEditableTextField } from '@/components/Profile/Tabs/NotEditableTextField';
 import { addressSchema, AddressesFormValues } from '@/components/Profile/Tabs/addressSchema';
 import { COUNTRY_LIST } from '@/components/RegistrationForm/countries';
 import { getCountryCode } from '@/components/RegistrationForm/utils';
 
 interface AddUserAddressFormProps {
-  handleFormSubmission: () => void;
   version?: number;
 }
 
-export function AddUserAddressForm({ handleFormSubmission, version }: AddUserAddressFormProps) {
+export function AddUserAddressForm({ version }: AddUserAddressFormProps) {
   const {
     handleSubmit,
     control,
@@ -47,7 +46,7 @@ export function AddUserAddressForm({ handleFormSubmission, version }: AddUserAdd
   const [useAsDefaultBilling, setUseAsDefaultBilling] = useState(false);
   const [useAsBilling, setUseAsBilling] = useState(false);
   const [useAsShipping, setUseAsShipping] = useState(false);
-  const updateService = UpdateCustomerService.getInstance();
+  const [updateCustomer] = useUpdateCustomerMutation();
 
   const onSubmit = async (data: AddressesFormValues) => {
     let payload: MyCustomerUpdate = {
@@ -66,12 +65,13 @@ export function AddUserAddressForm({ handleFormSubmission, version }: AddUserAdd
     };
 
     try {
-      const res = await updateService.updateCustomer(payload);
+      const userDetails = await updateCustomer(payload).unwrap();
+
       if (useAsDefaultShipping || useAsDefaultShipping || useAsShipping || useAsBilling) {
-        if (!res.body.addresses) return;
-        const addressesList = res.body.addresses;
-        const version = res.body.version;
-        const id = res.body.addresses[addressesList.length - 1].id;
+        if (!userDetails?.addresses) return;
+        const addressesList = userDetails?.addresses;
+        const version = userDetails?.version || 1;
+        const id = userDetails?.addresses[addressesList.length - 1].id;
         payload = {
           version: version,
           actions: [
@@ -115,7 +115,7 @@ export function AddUserAddressForm({ handleFormSubmission, version }: AddUserAdd
           });
         }
 
-        await updateService.updateCustomer(payload);
+        await updateCustomer(payload);
       }
       const message = 'Address added successfully';
       reset();
@@ -124,7 +124,6 @@ export function AddUserAddressForm({ handleFormSubmission, version }: AddUserAdd
       setUseAsDefaultBilling(false);
       setUseAsDefaultShipping(false);
       toast.success(message);
-      handleFormSubmission();
     } catch (error) {
       toast.error(
         `Address updating failed: ${error instanceof Error ? error.message : String(error)}`,

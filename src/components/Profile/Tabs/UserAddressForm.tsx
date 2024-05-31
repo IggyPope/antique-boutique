@@ -9,7 +9,7 @@ import TextField from '@mui/material/TextField';
 import { MyCustomerUpdate } from '@commercetools/platform-sdk';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { UpdateCustomerService } from '@/api/services/UpdateCustomerService';
+import { useUpdateCustomerMutation } from '@/api/services/commercetoolsApi';
 import { EditableTextField } from '@/components/Profile/Tabs/EditableTextField';
 import { AddressInfo } from '@/components/Profile/Tabs/UserAdressesTab';
 import { addressSchema, AddressesFormValues } from '@/components/Profile/Tabs/addressSchema';
@@ -17,11 +17,10 @@ import { COUNTRY_LIST } from '@/components/RegistrationForm/countries';
 import { getCountryCode } from '@/components/RegistrationForm/utils';
 
 interface UserAddressFormProps {
-  handleFormSubmission: () => void;
   initialData: AddressInfo;
 }
 
-export function UserAddressForm({ handleFormSubmission, initialData }: UserAddressFormProps) {
+export function UserAddressForm({ initialData }: UserAddressFormProps) {
   const {
     handleSubmit,
     control,
@@ -47,7 +46,7 @@ export function UserAddressForm({ handleFormSubmission, initialData }: UserAddre
   const [useAsDefaultBilling, setUseAsDefaultBilling] = useState(false);
   const [useAsBilling, setUseAsBilling] = useState(false);
   const [useAsShipping, setUseAsShipping] = useState(false);
-  const updateService = UpdateCustomerService.getInstance();
+  const [updateCustomer] = useUpdateCustomerMutation();
 
   const onSubmit = async (data: AddressesFormValues) => {
     const payload: MyCustomerUpdate = {
@@ -94,14 +93,13 @@ export function UserAddressForm({ handleFormSubmission, initialData }: UserAddre
     }
 
     try {
-      await updateService.updateCustomer(payload);
+      await updateCustomer(payload);
       const message = 'Address changed successfully';
       toast.success(message);
       setUseAsBilling(false);
       setUseAsShipping(false);
       setUseAsDefaultBilling(false);
       setUseAsDefaultShipping(false);
-      handleFormSubmission();
     } catch (error) {
       toast.error(
         `Address updating failed: ${error instanceof Error ? error.message : String(error)}`,

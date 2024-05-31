@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
@@ -6,15 +5,14 @@ import { Box, Button, Stack, Typography } from '@mui/material';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { AuthService } from '@/api/services/AuthService';
-import { ChangeUserPasswordService } from '@/api/services/ChangeUserPasswordService';
-import { GetUserDetailsService } from '@/api/services/GetUserDetailsService';
+import { useChangePasswordMutation, useGetCustomerQuery } from '@/api/services/commercetoolsApi';
 import { EditablePasswordTextField } from '@/components/Profile/Tabs/EditablePasswordTextInput';
 import { PasswordValues, passwordSchema } from '@/components/Profile/Tabs/PasswordSchema';
-import { PasswordFlowTokenStore } from '@/store/PasswordStore';
 
 export function UserPasswordTab() {
-  const [submission, setSubmission] = useState(false);
+  const { data: userDetails } = useGetCustomerQuery();
+  const [changePassword] = useChangePasswordMutation();
+
   const {
     handleSubmit,
     control,
@@ -30,48 +28,26 @@ export function UserPasswordTab() {
       confirmPassword: '',
     },
   });
-  const passwordService = ChangeUserPasswordService.getInstance();
-  const userService = GetUserDetailsService.getInstance();
-  const userVersionRef = useRef<number>(1);
-  const userEmailRef = useRef<string>('');
-  const authService = AuthService.getInstance();
 
-  const onSubmit = async (data: PasswordValues) => {
+  const onSubmit = (data: PasswordValues) => {
     const payload = {
-      version: userVersionRef.current,
+      version: userDetails?.version || 1,
       currentPassword: data.currentPassword,
       newPassword: data.newPassword,
+      email: userDetails?.email || '',
     };
-    try {
-      await passwordService.changePassword(payload);
-      toast.success('Password changed successfully');
-      PasswordFlowTokenStore.removeData();
-      await authService.signIn(userEmailRef.current, data.newPassword);
-      setSubmission(!submission);
-      reset();
-    } catch (error) {
-      toast.error(
-        `Error changing password: ${error instanceof Error ? error.message : String(error)}`,
-      );
-    }
-  };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await userService.getUserDetails();
-        const version = res.body.version;
-        const email = res.body.email;
-        if (version && email) {
-          userVersionRef.current = version;
-          userEmailRef.current = email;
-        }
-      } catch (error) {
-        console.error('Error fetching user details:', error);
-      }
-    };
-    void fetchData();
-  }, [userService, submission]);
+    changePassword(payload)
+      .then(() => {
+        toast.success('Password changed successfully');
+        reset();
+      })
+      .catch((error) => {
+        toast.error(
+          `Error changing password: ${error instanceof Error ? error.message : String(error)}`,
+        );
+      });
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -81,9 +57,9 @@ export function UserPasswordTab() {
           gap={1}
           sx={{
             width: {
-              xs: '80%',
-              md: '40%',
-              sm: '50%',
+              xs: '90%',
+              md: '50%',
+              sm: '65%',
             },
             padding: {
               xs: '5%',

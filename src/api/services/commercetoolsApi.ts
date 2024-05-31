@@ -11,6 +11,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { AuthService } from '@/api/services/AuthService';
 import { isErrorWithMessage, isFetchBaseQueryError } from '@/api/services/utils';
 import { APP_SETTINGS, SEARCH_PARAM_NAME } from '@/constants/app';
+import { PasswordFlowTokenStore } from '@/store/PasswordStore';
 import { ProductFilters } from '@/store/slices/filtersSlice';
 
 export const commercetoolsApi = createApi({
@@ -67,12 +68,13 @@ export const commercetoolsApi = createApi({
         }
       },
     }),
-    changePassword: builder.mutation<Customer, MyCustomerChangePassword>({
-      queryFn: async ({ version, currentPassword, newPassword }) => {
-        const { apiRoot } = AuthService.getInstance();
+    changePassword: builder.mutation<Customer, MyCustomerChangePassword & { email: string }>({
+      invalidatesTags: ['Customer'],
+      queryFn: async ({ version, currentPassword, newPassword, email }) => {
+        const authService = AuthService.getInstance();
 
         try {
-          const customer = await apiRoot
+          const customer = await authService.apiRoot
             .me()
             .password()
             .post({
@@ -83,6 +85,10 @@ export const commercetoolsApi = createApi({
               },
             })
             .execute();
+
+          PasswordFlowTokenStore.removeData();
+
+          await authService.signIn(email, newPassword);
 
           return { data: customer.body };
         } catch (err) {
