@@ -6,11 +6,11 @@ import { Box, Button, Stack, Typography } from '@mui/material';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 
+import { AuthService } from '@/api/services/AuthService';
 import { ChangeUserPasswordService } from '@/api/services/ChangeUserPasswordService';
 import { GetUserDetailsService } from '@/api/services/GetUserDetailsService';
 import { EditablePasswordTextField } from '@/components/Profile/Tabs/EditablePasswordTextInput';
 import { PasswordValues, passwordSchema } from '@/components/Profile/Tabs/PasswordSchema';
-import { useAuth } from '@/hooks/useAuth';
 import { PasswordFlowTokenStore } from '@/store/PasswordStore';
 
 export function UserPasswordTab() {
@@ -34,7 +34,7 @@ export function UserPasswordTab() {
   const userService = GetUserDetailsService.getInstance();
   const userVersionRef = useRef<number>(1);
   const userEmailRef = useRef<string>('');
-  const { signIn } = useAuth();
+  const authService = AuthService.getInstance();
 
   const onSubmit = async (data: PasswordValues) => {
     const payload = {
@@ -46,7 +46,7 @@ export function UserPasswordTab() {
       await passwordService.changePassword(payload);
       toast.success('Password changed successfully');
       PasswordFlowTokenStore.removeData();
-      signIn(userEmailRef.current, data.newPassword);
+      await authService.signIn(userEmailRef.current, data.newPassword);
       setSubmission(!submission);
       reset();
     } catch (error) {
