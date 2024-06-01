@@ -1,5 +1,10 @@
+import { useState } from 'react';
+
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import CloseIcon from '@mui/icons-material/Close';
+import SearchIcon from '@mui/icons-material/Search';
 import {
+  Button,
   FormControl,
   IconButton,
   InputLabel,
@@ -8,14 +13,26 @@ import {
   Stack,
   TextField,
 } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 import { SORT_DIRECTION, SORT_OPTIONS, SortOption } from '@/constants/app';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import { setSearch, setSortBy, setSortDirection } from '@/store/slices/filtersSlice';
 
 const ProductFilters = () => {
+  const theme = useTheme();
   const dispatch = useAppDispatch();
-  const { search, sortBy, sortDirection } = useAppSelector((state) => state.filters);
+  const { sortBy, sortDirection } = useAppSelector((state) => state.filters);
+  const [searchWord, setSearchWord] = useState('');
+
+  const handleSearch = () => {
+    dispatch(setSearch(searchWord));
+  };
+
+  const handleClearSearch = () => {
+    setSearchWord('');
+    dispatch(setSearch(''));
+  };
 
   return (
     <Stack
@@ -26,14 +43,39 @@ const ProductFilters = () => {
       gap={2}
       sx={{ '& p': { fontSize: '0.875rem' } }}
     >
-      <TextField
-        value={search}
-        onChange={(e) => dispatch(setSearch(e.target.value))}
-        label="Search"
-        variant="outlined"
-        size="small"
-        sx={{ width: '250px' }}
-      />
+      <Stack direction="row" gap={1}>
+        <TextField
+          value={searchWord}
+          onChange={(e) => {
+            setSearchWord(e.target.value);
+          }}
+          helperText="at least 3 characters"
+          label="Search"
+          variant="outlined"
+          size="small"
+          onKeyDown={(e) => e.key === 'Enter' && searchWord.length >= 3 && handleSearch()}
+          sx={{
+            width: '250px',
+            '& > p': { m: '0' },
+            [theme.breakpoints.down('sm')]: { width: '200px' },
+          }}
+        />
+        <Button
+          onClick={handleSearch}
+          variant="outlined"
+          disabled={searchWord.length < 3}
+          sx={{ padding: '5px', minWidth: '45px', height: '40px' }}
+        >
+          <SearchIcon />
+        </Button>
+        <Button
+          onClick={handleClearSearch}
+          variant="outlined"
+          sx={{ padding: '5px', minWidth: '45px', height: '40px' }}
+        >
+          <CloseIcon />
+        </Button>
+      </Stack>
       <Stack direction="row" alignItems="center">
         <FormControl size="small" sx={{ m: 1, minWidth: 120 }}>
           <InputLabel id="sort-label">Sort By</InputLabel>
