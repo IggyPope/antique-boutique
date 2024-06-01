@@ -48,7 +48,7 @@ export function UserPasswordTab() {
         );
       });
   };
-
+  const resetForm = () => reset();
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
@@ -91,21 +91,47 @@ export function UserPasswordTab() {
             placeholder="Confirm new password"
             dataTestId="edit-confirm-password"
           />
-          <Button
-            type="submit"
-            disabled={!isValid}
-            variant="contained"
-            color="secondary"
+          <Box
             sx={{
-              textTransform: 'none',
-              fontWeight: '600',
-              borderRadius: '5px',
-              textDecoration: 'none',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '1',
             }}
-            data-testid="edit_password_submit-button"
           >
-            Submit
-          </Button>
+            <Button
+              type="button"
+              onClick={resetForm}
+              variant="outlined"
+              color="error"
+              sx={{
+                textTransform: 'none',
+                fontWeight: '600',
+                borderRadius: '5px',
+                textDecoration: 'none',
+                width: '45%',
+              }}
+              data-testid="discard_changes_button"
+            >
+              Discard Changes
+            </Button>
+            <Button
+              type="submit"
+              disabled={!isValid}
+              variant="contained"
+              color="secondary"
+              sx={{
+                textTransform: 'none',
+                fontWeight: '600',
+                borderRadius: '5px',
+                textDecoration: 'none',
+                width: '45%',
+              }}
+              data-testid="edit_password_submit-button"
+            >
+              Submit
+            </Button>
+          </Box>
         </Stack>
       </Box>
     </form>
