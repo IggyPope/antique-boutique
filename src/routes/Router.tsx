@@ -6,6 +6,7 @@ import Cart from '@/pages/Cart';
 import Catalog from '@/pages/Catalog';
 import Main from '@/pages/Main';
 import NotFound from '@/pages/NotFound';
+import { ProductPage } from '@/pages/ProductPage';
 import Profile from '@/pages/Profile';
 import SignIn from '@/pages/SignIn';
 import SignUp from '@/pages/SignUp';
@@ -19,6 +20,7 @@ const router = createBrowserRouter(
       <Route path="/catalog" element={<Catalog />} />
       <Route path="/about" element={<About />} />
       <Route path="/cart" element={<Cart />} />
+      <Route path="/product/:id" element={<ProductPage />} />
       <Route path="*" element={<NotFound />} />
       <Route element={<RequireNoAuth />}>
         <Route path="/signin" element={<SignIn />} />
