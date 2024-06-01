@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
@@ -11,16 +11,15 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { MyCustomerUpdate } from '@commercetools/platform-sdk';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { GetUserDetailsService } from '@/api/services/GetUserDetailsService';
-import { UpdateCustomerService } from '@/api/services/UpdateCustomerService';
+import { useGetCustomerQuery, useUpdateCustomerMutation } from '@/api/services/commercetoolsApi';
 import { EditableTextField } from '@/components/Profile/Tabs/EditableTextField';
 import { CredentialsFormValues, schema } from '@/components/Profile/Tabs/credentialsSchema';
 import { useAuth } from '@/hooks/useAuth';
 
 export function UserCredentialsTab() {
-  const userDetailsService = GetUserDetailsService.getInstance();
-  const updateService = UpdateCustomerService.getInstance();
-  const userVersionRef = useRef<number>(1);
+  const { data: userDetails } = useGetCustomerQuery();
+  const [updateCustomer] = useUpdateCustomerMutation();
+
   const {
     handleSubmit,
     control,
@@ -37,16 +36,19 @@ export function UserCredentialsTab() {
       dateOfBirth: new Date(2000, 0, 1),
     },
   });
+
   const { isLoading } = useAuth();
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await userDetailsService.getUserDetails();
-        const email = res.body.email;
-        const firstName = res.body.firstName;
-        const lastName = res.body.lastName;
-        const dateString = res.body.dateOfBirth;
-        const dateParts = dateString?.split('-');
+    if (userDetails) {
+      if (
+        userDetails?.dateOfBirth &&
+        userDetails?.firstName &&
+        userDetails?.lastName &&
+        userDetails?.email
+      ) {
+        const dateParts = userDetails?.dateOfBirth?.split('-');
+
         if (dateParts) {
           const dateOfBirth = new Date(+dateParts[0], +dateParts[1] - 1, +dateParts[2]);
           setValue('dateOfBirth', dateOfBirth),
@@ -54,32 +56,25 @@ export function UserCredentialsTab() {
               shouldValidate: true,
             };
         }
-        const version = res.body.version;
-        if (version) {
-          userVersionRef.current = version;
-        }
-        if (firstName && lastName && email) {
-          setValue('firstName', firstName, {
-            shouldValidate: true,
-          });
-          setValue('lastName', lastName, {
-            shouldValidate: true,
-          });
-          setValue('email', email, {
-            shouldValidate: true,
-          });
-        }
-      } catch (error) {
-        console.error('Error fetching user details:', error);
+
+        setValue('firstName', userDetails?.firstName, {
+          shouldValidate: true,
+        });
+
+        setValue('lastName', userDetails?.lastName, {
+          shouldValidate: true,
+        });
+
+        setValue('email', userDetails?.email, {
+          shouldValidate: true,
+        });
       }
-    };
+    }
+  }, [userDetails, setValue]);
 
-    void fetchData();
-  }, [userDetailsService, setValue]);
-
-  const onSubmit = async (data: CredentialsFormValues) => {
+  const onSubmit = (data: CredentialsFormValues) => {
     const payload: MyCustomerUpdate = {
-      version: userVersionRef.current,
+      version: userDetails?.version || 1,
       actions: [
         {
           action: 'setFirstName',
@@ -105,14 +100,16 @@ export function UserCredentialsTab() {
         },
       ],
     };
-    try {
-      await updateService.updateCustomer(payload);
-      toast.success('Profile data changed successfully');
-    } catch (error) {
-      toast.error(
-        `Error changing password: ${error instanceof Error ? error.message : String(error)}`,
-      );
-    }
+
+    updateCustomer(payload)
+      .then(() => {
+        toast.success('Profile data changed successfully');
+      })
+      .catch((error) => {
+        toast.error(
+          `Error changing profile data: ${error instanceof Error ? error.message : String(error)}`,
+        );
+      });
   };
 
   return (
@@ -123,9 +120,9 @@ export function UserCredentialsTab() {
           gap={1}
           sx={{
             width: {
-              xs: '80%',
-              md: '40%',
-              sm: '50%',
+              xs: '90%',
+              md: '50%',
+              sm: '65%',
             },
             padding: {
               xs: '5%',

@@ -6,6 +6,7 @@ import KeyIcon from '@mui/icons-material/Key';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
+import { useMediaQuery } from '@mui/material';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 
@@ -14,6 +15,8 @@ import { UserCredentialsTab } from '@/components/Profile/Tabs/UserCredentialsTab
 import { UserPasswordTab } from '@/components/Profile/Tabs/UserPasswordTab';
 
 function Profile() {
+  const matches = useMediaQuery('(max-width:550px)');
+
   const [value, setValue] = React.useState('1');
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
@@ -31,7 +34,6 @@ function Profile() {
         alignItems: 'center',
       }}
     >
-      <h3>User Profile</h3>
       <TabContext value={value}>
         <Box>
           <TabList
@@ -39,6 +41,8 @@ function Profile() {
             indicatorColor="secondary"
             textColor="secondary"
             centered
+            orientation={matches ? 'vertical' : 'horizontal'}
+            variant={matches ? 'scrollable' : 'standard'}
           >
             <Tab icon={<ContactMailIcon />} label="Personal Information" value="1" />
             <Tab icon={<KeyIcon />} label="Your Password" value="2" />

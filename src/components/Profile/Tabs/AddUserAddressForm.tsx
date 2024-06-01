@@ -10,35 +10,35 @@ import { MyCustomerUpdate } from '@commercetools/platform-sdk';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { useUpdateCustomerMutation } from '@/api/services/commercetoolsApi';
-import { EditableTextField } from '@/components/Profile/Tabs/EditableTextField';
-import { AddressInfo } from '@/components/Profile/Tabs/UserAdressesTab';
+import { NotEditableTextField } from '@/components/Profile/Tabs/NotEditableTextField';
 import { addressSchema, AddressesFormValues } from '@/components/Profile/Tabs/addressSchema';
 import { COUNTRY_LIST } from '@/components/RegistrationForm/countries';
 import { getCountryCode } from '@/components/RegistrationForm/utils';
 
-interface UserAddressFormProps {
-  initialData: AddressInfo;
+interface AddUserAddressFormProps {
+  version?: number;
 }
 
-export function UserAddressForm({ initialData }: UserAddressFormProps) {
+export function AddUserAddressForm({ version }: AddUserAddressFormProps) {
   const {
     handleSubmit,
     control,
     trigger,
+    reset,
     formState: { errors, isValid },
   } = useForm<AddressesFormValues>({
     resolver: yupResolver(addressSchema),
     mode: 'onChange',
     reValidateMode: 'onChange',
     defaultValues: {
-      zipCode: initialData?.zipCode,
-      city: initialData?.city,
-      country: initialData?.country || '',
-      street: initialData?.street,
-      useAsDefaultShippingAddress: initialData?.useAsDefaultShipping,
-      useAsDefaultBillingAddress: initialData?.useAsDefaultBilling,
-      useAsBillingAddress: initialData?.billingAddressId,
-      useAsShippingAddress: initialData?.shippingAddressId,
+      zipCode: '',
+      city: '',
+      country: '',
+      street: '',
+      useAsDefaultShippingAddress: false,
+      useAsDefaultBillingAddress: false,
+      useAsBillingAddress: false,
+      useAsShippingAddress: false,
     },
   });
 
@@ -49,12 +49,11 @@ export function UserAddressForm({ initialData }: UserAddressFormProps) {
   const [updateCustomer] = useUpdateCustomerMutation();
 
   const onSubmit = async (data: AddressesFormValues) => {
-    const payload: MyCustomerUpdate = {
-      version: initialData.version || 1,
+    let payload: MyCustomerUpdate = {
+      version: version || 1,
       actions: [
         {
-          action: 'changeAddress',
-          addressId: initialData.id,
+          action: 'addAddress',
           address: {
             streetName: data.street,
             postalCode: data.zipCode,
@@ -64,42 +63,67 @@ export function UserAddressForm({ initialData }: UserAddressFormProps) {
         },
       ],
     };
-    if (useAsDefaultShipping) {
-      payload.actions.push({
-        action: 'setDefaultShippingAddress',
-        addressId: initialData?.id || '',
-      });
-    }
-
-    if (useAsDefaultBilling) {
-      payload.actions.push({
-        action: 'setDefaultBillingAddress',
-        addressId: initialData?.id || '',
-      });
-    }
-
-    if (useAsShipping) {
-      payload.actions.push({
-        action: 'addShippingAddressId',
-        addressId: initialData?.id || '',
-      });
-    }
-
-    if (useAsBilling) {
-      payload.actions.push({
-        action: 'addBillingAddressId',
-        addressId: initialData?.id || '',
-      });
-    }
 
     try {
-      await updateCustomer(payload);
-      const message = 'Address changed successfully';
-      toast.success(message);
+      const userDetails = await updateCustomer(payload).unwrap();
+
+      if (useAsDefaultShipping || useAsDefaultShipping || useAsShipping || useAsBilling) {
+        if (!userDetails?.addresses) return;
+        const addressesList = userDetails?.addresses;
+        const version = userDetails?.version || 1;
+        const id = userDetails?.addresses[addressesList.length - 1].id;
+        payload = {
+          version: version,
+          actions: [
+            {
+              action: 'changeAddress',
+              addressId: id,
+              address: {
+                streetName: data.street,
+                postalCode: data.zipCode,
+                city: data.city,
+                country: getCountryCode(data.country) ?? '',
+              },
+            },
+          ],
+        };
+
+        if (useAsDefaultShipping) {
+          payload.actions.push({
+            action: 'setDefaultShippingAddress',
+            addressId: id,
+          });
+        }
+
+        if (useAsDefaultBilling) {
+          payload.actions.push({
+            action: 'setDefaultBillingAddress',
+            addressId: id,
+          });
+        }
+
+        if (useAsShipping) {
+          payload.actions.push({
+            action: 'addShippingAddressId',
+            addressId: id,
+          });
+        }
+        if (useAsBilling) {
+          payload.actions.push({
+            action: 'addBillingAddressId',
+            addressId: id,
+          });
+        }
+
+        await updateCustomer(payload);
+      }
+      const message = 'Address added successfully';
+      reset();
       setUseAsBilling(false);
       setUseAsShipping(false);
       setUseAsDefaultBilling(false);
       setUseAsDefaultShipping(false);
+      toast.success(message);
     } catch (error) {
       toast.error(
         `Address updating failed: ${error instanceof Error ? error.message : String(error)}`,
@@ -154,7 +178,7 @@ export function UserAddressForm({ initialData }: UserAddressFormProps) {
             />
           )}
         />
-        <EditableTextField
+        <NotEditableTextField
           name="zipCode"
           control={control}
           errors={errors}
@@ -163,7 +187,7 @@ export function UserAddressForm({ initialData }: UserAddressFormProps) {
           dataTestId="editing-zip-code"
         />
 
-        <EditableTextField
+        <NotEditableTextField
           name="street"
           control={control}
           errors={errors}
@@ -172,7 +196,7 @@ export function UserAddressForm({ initialData }: UserAddressFormProps) {
           dataTestId="editing-street"
         />
 
-        <EditableTextField
+        <NotEditableTextField
           name="city"
           control={control}
           errors={errors}
@@ -286,9 +310,9 @@ export function UserAddressForm({ initialData }: UserAddressFormProps) {
             borderRadius: '5px',
             textDecoration: 'none',
           }}
-          data-testid="editing_submit-button"
+          data-testid="addAddress_submit-button"
         >
-          Save Changes
+          Add address
         </Button>
       </Stack>
     </form>

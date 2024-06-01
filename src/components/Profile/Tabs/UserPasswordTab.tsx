@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
@@ -6,17 +5,18 @@ import { Box, Button, Stack, Typography } from '@mui/material';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { ChangeUserPasswordService } from '@/api/services/ChangeUserPasswordService';
-import { GetUserDetailsService } from '@/api/services/GetUserDetailsService';
+import { useChangePasswordMutation, useGetCustomerQuery } from '@/api/services/commercetoolsApi';
 import { EditablePasswordTextField } from '@/components/Profile/Tabs/EditablePasswordTextInput';
 import { PasswordValues, passwordSchema } from '@/components/Profile/Tabs/PasswordSchema';
-import { useAuth } from '@/hooks/useAuth';
-import { PasswordFlowTokenStore } from '@/store/PasswordStore';
 
 export function UserPasswordTab() {
+  const { data: userDetails } = useGetCustomerQuery();
+  const [changePassword] = useChangePasswordMutation();
+
   const {
     handleSubmit,
     control,
+    reset,
     formState: { errors, isValid },
   } = useForm<PasswordValues>({
     resolver: yupResolver(passwordSchema),
@@ -28,47 +28,27 @@ export function UserPasswordTab() {
       confirmPassword: '',
     },
   });
-  const passwordService = ChangeUserPasswordService.getInstance();
-  const userService = GetUserDetailsService.getInstance();
-  const userVersionRef = useRef<number>(1);
-  const userEmailRef = useRef<string>('');
-  const { signIn } = useAuth();
 
-  const onSubmit = async (data: PasswordValues) => {
+  const onSubmit = (data: PasswordValues) => {
     const payload = {
-      version: userVersionRef.current,
+      version: userDetails?.version || 1,
       currentPassword: data.currentPassword,
       newPassword: data.newPassword,
+      email: userDetails?.email || '',
     };
-    try {
-      await passwordService.changePassword(payload);
-      toast.success('Password changed successfully');
-      signIn(userEmailRef.current, data.newPassword);
-      PasswordFlowTokenStore.removeData();
-    } catch (error) {
-      toast.error(
-        `Error changing password: ${error instanceof Error ? error.message : String(error)}`,
-      );
-    }
+
+    changePassword(payload)
+      .then(() => {
+        toast.success('Password changed successfully');
+        reset();
+      })
+      .catch((error) => {
+        toast.error(
+          `Error changing password: ${error instanceof Error ? error.message : String(error)}`,
+        );
+      });
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await userService.getUserDetails();
-        const version = res.body.version;
-        const email = res.body.email;
-        if (version && email) {
-          userVersionRef.current = version;
-          userEmailRef.current = email;
-        }
-      } catch (error) {
-        console.error('Error fetching user details:', error);
-      }
-    };
-    void fetchData();
-  }, [userService]);
-
+  const resetForm = () => reset();
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
@@ -77,9 +57,9 @@ export function UserPasswordTab() {
           gap={1}
           sx={{
             width: {
-              xs: '80%',
-              md: '40%',
-              sm: '50%',
+              xs: '90%',
+              md: '50%',
+              sm: '65%',
             },
             padding: {
               xs: '5%',
@@ -111,21 +91,47 @@ export function UserPasswordTab() {
             placeholder="Confirm new password"
             dataTestId="edit-confirm-password"
           />
-          <Button
-            type="submit"
-            disabled={!isValid}
-            variant="contained"
-            color="secondary"
+          <Box
             sx={{
-              textTransform: 'none',
-              fontWeight: '600',
-              borderRadius: '5px',
-              textDecoration: 'none',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '1',
             }}
-            data-testid="edit_password_submit-button"
           >
-            Submit
-          </Button>
+            <Button
+              type="button"
+              onClick={resetForm}
+              variant="outlined"
+              color="error"
+              sx={{
+                textTransform: 'none',
+                fontWeight: '600',
+                borderRadius: '5px',
+                textDecoration: 'none',
+                width: '45%',
+              }}
+              data-testid="discard_changes_button"
+            >
+              Discard Changes
+            </Button>
+            <Button
+              type="submit"
+              disabled={!isValid}
+              variant="contained"
+              color="secondary"
+              sx={{
+                textTransform: 'none',
+                fontWeight: '600',
+                borderRadius: '5px',
+                textDecoration: 'none',
+                width: '45%',
+              }}
+              data-testid="edit_password_submit-button"
+            >
+              Submit
+            </Button>
+          </Box>
         </Stack>
       </Box>
     </form>
