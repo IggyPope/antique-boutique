@@ -1,6 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { useEffect } from 'react';
 import { RouterProvider } from 'react-router-dom';
+
+import { CssBaseline } from '@mui/material';
 
 import { useAuth } from '@/hooks/useAuth';
 import router from '@/routes/Router';
@@ -11,5 +12,9 @@ export function App() {
     getToken();
   }, [getToken]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <CssBaseline>
+      <RouterProvider router={router} />
+    </CssBaseline>
+  );
 }
