@@ -1,16 +1,17 @@
+/* eslint-disable react/jsx-no-undef */
 import { useState } from 'react';
 import Carousel from 'react-material-ui-carousel';
 import { useParams } from 'react-router-dom';
 
-import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
-import { Typography, Box, Stack, Card, CardContent } from '@mui/material';
+import { Typography, Box, Stack, Card, CardContent, Button, TextField } from '@mui/material';
 
 import { useGetProductByIdQuery } from '@/api/services/commercetoolsApi';
 import { ModalCarousel } from '@/components/ModalCarousel/ModalCarousel';
+import { ProductAvailability } from '@/components/ProductInfo/ProductAvailability';
+import { ProductPrice } from '@/components/ProductInfo/ProductPrice';
 import { VerticalCarousel } from '@/components/VerticalCarousel/VerticalCarousel';
 import { APP_SETTINGS } from '@/constants/app';
 import { FakeRating } from '@/utils/fakeRating';
-import formatPrice from '@/utils/formatPrice';
 
 export const ProductPage = () => {
   const { id } = useParams();
@@ -19,6 +20,18 @@ export const ProductPage = () => {
   const [activeItemIndex, setActiveItemIndex] = useState(0);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
+  const [quantity, setQuantity] = useState(0);
+
+  const addToCart = () => {
+    return;
+    //TODO Add the logic for adding the product to cart
+  };
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(event.target.value);
+    if (!isNaN(value)) {
+      setQuantity(value);
+    }
+  };
 
   const handleImageClick = () => {
     setModalOpen(true);
@@ -90,63 +103,46 @@ export const ProductPage = () => {
             </CardContent>
           </Card>
         </Box>
-        <Box sx={{ width: '40%' }}>
+        <Box display="flex" flexDirection="column" gap={3} sx={{ width: '40%' }}>
           <Typography gutterBottom variant="h4" component="div">
             {product?.name.en || 'Unknown Product'}
           </Typography>
           <FakeRating id={id} />
           <Stack flexDirection="row" justifyContent="space-between">
-            <Box>
-              <Typography gutterBottom variant="h6" component="div">
-                Price
-              </Typography>
-              <Stack direction="row" gap={1} alignItems="center">
-                {product?.masterVariant.prices![0].discounted ? (
-                  <>
-                    <Typography fontSize="2rem" fontWeight="600">
-                      {`$${formatPrice(product?.masterVariant.prices[0].discounted.value.centAmount)}`}
-                    </Typography>
-                    <Typography
-                      fontSize="1.5rem"
-                      fontWeight="600"
-                      color="primary.light"
-                      sx={{ textDecoration: 'line-through' }}
-                    >
-                      {`$${formatPrice(product?.masterVariant.prices[0].value.centAmount)}`}
-                    </Typography>
-                  </>
-                ) : (
-                  <Typography fontSize="2rem" fontWeight="600">
-                    {`$${formatPrice(product?.masterVariant.prices![0].value.centAmount || 1)}`}
-                  </Typography>
-                )}
-              </Stack>
-            </Box>
-            <Box>
-              <Typography
-                gutterBottom
-                variant="h6"
-                component="div"
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <FiberManualRecordIcon
-                  color={
-                    product?.masterVariant?.attributes?.find((v) => v.name === 'In-Stock')
-                      ? 'secondary'
-                      : 'error'
-                  }
-                  fontSize="small"
-                />
-                {product?.masterVariant?.attributes?.find((v) => v.name === 'In-Stock')
-                  ? 'In Stock'
-                  : 'Sold'}
-              </Typography>
-            </Box>
+            <ProductPrice product={product} />
+            <ProductAvailability product={product} />
           </Stack>
+
+          <TextField
+            type="number"
+            id="quantity"
+            label="Quantity"
+            value={quantity}
+            onChange={handleChange}
+            InputProps={{
+              inputProps: {
+                min: '1',
+                max: '99',
+              },
+            }}
+            sx={{ width: '30%' }}
+          />
+
+          <Button
+            type="button"
+            variant="contained"
+            color="secondary"
+            sx={{
+              textTransform: 'none',
+              fontWeight: '600',
+              borderRadius: '5px',
+              textDecoration: 'none',
+            }}
+            onClick={addToCart}
+            data-testid="addToCart_button"
+          >
+            Add to Cart
+          </Button>
         </Box>
       </Box>
     </Box>

@@ -48,8 +48,6 @@ export const FakeRating = ({ id }: FakeRating) => {
         display: 'flex',
         alignItems: 'center',
         gap: 1,
-        marginTop: '10px',
-        marginBottom: '10px',
       }}
     >
       {Array.from({ length: 5 }).map((_, index) => (
