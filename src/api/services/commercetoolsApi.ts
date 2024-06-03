@@ -1,3 +1,5 @@
+import { toast } from 'react-toastify';
+
 import {
   CategoryPagedQueryResponse,
   Customer,
@@ -90,9 +92,12 @@ export const commercetoolsApi = createApi({
 
           await authService.signIn(email, newPassword);
 
+          toast.success('Password changed successfully');
+
           return { data: customer.body };
         } catch (err) {
           if (isErrorWithMessage(err)) {
+            toast.error(`Error changing password: ${err.message}`);
             return { error: { status: 500, data: err.message } };
           } else if (isFetchBaseQueryError(err)) {
             const errMsg = 'error' in err ? err.error : JSON.stringify(err.data);
@@ -190,7 +195,7 @@ export const commercetoolsApi = createApi({
             'variants.attributes.Color as colors',
             'variants.attributes.Brand as brands',
           ],
-          filter: [
+          'filter.query': [
             categoryFilter,
             brandFilter,
             colorFilter,
