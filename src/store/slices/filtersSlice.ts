@@ -30,7 +30,11 @@ export const filtersSlice = createSlice({
       state.page = action.payload;
     },
     setSearch: (state, action: PayloadAction<string>) => {
-      state.search = action.payload;
+      if (action.payload === '') {
+        state.search = undefined;
+      } else {
+        state.search = action.payload;
+      }
       state.page = 1;
     },
     setSortBy: (state, action: PayloadAction<SortOption>) => {
