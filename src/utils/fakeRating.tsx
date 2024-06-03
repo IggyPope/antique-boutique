@@ -44,16 +44,27 @@ export const FakeRating = ({ id }: FakeRating) => {
   const { numberOfFieldStars, numberOfReviews } = extractValuesFromId(id);
   return (
     <Box
+      display="flex"
       sx={{
-        display: 'flex',
-        alignItems: 'center',
+        flexDirection: {
+          xs: 'row',
+          sm: 'column',
+          md: 'row',
+        },
+        alignItems: {
+          xs: 'center',
+          sm: 'start',
+          md: 'center',
+        },
         gap: 1,
       }}
     >
-      {Array.from({ length: 5 }).map((_, index) => (
-        <StarBorderIcon key={index} color={index < numberOfFieldStars ? 'secondary' : 'action'} />
-      ))}
-      <span>{numberOfReviews} Reviews</span>
+      <Box>
+        {Array.from({ length: 5 }).map((_, index) => (
+          <StarBorderIcon key={index} color={index < numberOfFieldStars ? 'secondary' : 'action'} />
+        ))}
+      </Box>
+      <Box>{numberOfReviews} Reviews</Box>
     </Box>
   );
 };

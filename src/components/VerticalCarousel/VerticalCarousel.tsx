@@ -11,46 +11,65 @@ export const VerticalCarousel = ({
   onSelect: (index: number) => void;
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [originalSelectedIndex, setOriginalSelectedIndex] = useState<number>(0);
 
   if (!images) return null;
 
   const handleNextClick = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    onSelect(currentIndex + 1);
   };
 
   const handlePrevClick = () => {
     setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+    onSelect(currentIndex - 1);
   };
+
+  const isAtStart = currentIndex === 0;
+  const isAtEnd = currentIndex === images.length - 3;
+
   const imagesToShow = images.length > 3 ? 3 : images.length;
 
-  const originalFirstIndex = images
-    .slice(0, currentIndex)
-    .reduce((acc, _, idx) => acc + (idx >= imagesToShow ? 1 : 0), 0);
-
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '120px' }}>
-      <IconButton onClick={handlePrevClick}>
+    <Box
+      sx={{
+        display: {
+          xs: 'none',
+          sm: 'none',
+          md: 'flex',
+        },
+        flexDirection: 'column',
+        gap: 2,
+        width: '120px',
+        minHeight: '100px',
+      }}
+    >
+      <IconButton onClick={handlePrevClick} disabled={isAtStart}>
         <ExpandMoreIcon sx={{ transform: 'scaleY(-1)' }} />
       </IconButton>
-      {images.slice(originalFirstIndex, originalFirstIndex + imagesToShow).map((image, index) => (
+
+      {images.slice(currentIndex, currentIndex + imagesToShow).map((image, index) => (
         <Box
-          key={index}
-          sx={{ width: '100%', height: 'auto', border: '1px solid #ccc', padding: 1 }}
+          key={image}
+          sx={{
+            width: '100%',
+            height: '127px',
+            border: '1px solid #ccc',
+            padding: 1,
+            overflow: 'hidden',
+          }}
         >
           <img
             src={image}
             alt={`Image ${index}`}
-            style={{ width: '100%', height: 'auto', cursor: 'pointer' }}
+            style={{ width: '100%', height: 'auto', cursor: 'pointer', objectFit: 'contain' }}
             onClick={() => {
-              setOriginalSelectedIndex(originalFirstIndex + index);
-              onSelect(originalSelectedIndex);
+              onSelect(currentIndex + index);
             }}
           />
         </Box>
       ))}
 
-      <IconButton onClick={handleNextClick}>
+      <IconButton onClick={handleNextClick} disabled={isAtEnd}>
         <ExpandMoreIcon />
       </IconButton>
     </Box>

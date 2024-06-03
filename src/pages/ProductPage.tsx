@@ -3,11 +3,20 @@ import { useState } from 'react';
 import Carousel from 'react-material-ui-carousel';
 import { useParams } from 'react-router-dom';
 
-import { Typography, Box, Stack, Card, CardContent, Button, TextField } from '@mui/material';
+import {
+  Typography,
+  Box,
+  Stack,
+  Card,
+  CardContent,
+  Button,
+  TextField,
+  useTheme,
+} from '@mui/material';
 
 import { useGetProductByIdQuery } from '@/api/services/commercetoolsApi';
 import { ModalCarousel } from '@/components/ModalCarousel/ModalCarousel';
-import { ProductAvailability } from '@/components/ProductInfo/ProductAvailability';
+import { ProductAvailability, isiInStock } from '@/components/ProductInfo/ProductAvailability';
 import { ProductPrice } from '@/components/ProductInfo/ProductPrice';
 import { VerticalCarousel } from '@/components/VerticalCarousel/VerticalCarousel';
 import { APP_SETTINGS } from '@/constants/app';
@@ -21,7 +30,7 @@ export const ProductPage = () => {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
   const [quantity, setQuantity] = useState(0);
-
+  const theme = useTheme();
   const addToCart = () => {
     return;
     //TODO Add the logic for adding the product to cart
@@ -41,11 +50,19 @@ export const ProductPage = () => {
   }
 
   return (
-    <Box sx={{ width: '90%' }}>
+    <Box
+      sx={{
+        width: '98%',
+      }}
+    >
       <Box
         sx={{
           display: 'flex',
-          flexDirection: 'row',
+          flexDirection: {
+            xs: 'column',
+            sm: 'row',
+            md: 'row',
+          },
           alignItems: 'start',
           justifyContent: 'center',
         }}
@@ -54,7 +71,15 @@ export const ProductPage = () => {
         <Box>
           <VerticalCarousel images={images} onSelect={(index) => setActiveItemIndex(index)} />
         </Box>
-        <Box sx={{ width: '55%' }}>
+        <Box
+          sx={{
+            width: {
+              xs: '95%',
+              sm: '65%',
+              md: '65%',
+            },
+          }}
+        >
           <Card>
             <CardContent>
               <Carousel
@@ -64,6 +89,16 @@ export const ProductPage = () => {
                 index={activeItemIndex}
                 height={500}
                 className="carousel"
+                activeIndicatorIconButtonProps={{
+                  style: {
+                    color: theme.palette.secondary.main,
+                  },
+                }}
+                navButtonsProps={{
+                  style: {
+                    backgroundColor: theme.palette.primary.light,
+                  },
+                }}
               >
                 {images?.map((image, index) => (
                   <div
@@ -103,7 +138,18 @@ export const ProductPage = () => {
             </CardContent>
           </Card>
         </Box>
-        <Box display="flex" flexDirection="column" gap={3} sx={{ width: '40%' }}>
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap={3}
+          sx={{
+            width: {
+              xs: '95%',
+              sm: '35%',
+              md: '35%',
+            },
+          }}
+        >
           <Typography gutterBottom variant="h4" component="div">
             {product?.name.en || 'Unknown Product'}
           </Typography>
@@ -112,26 +158,29 @@ export const ProductPage = () => {
             <ProductPrice product={product} />
             <ProductAvailability product={product} />
           </Stack>
-
-          <TextField
-            type="number"
-            id="quantity"
-            label="Quantity"
-            value={quantity}
-            onChange={handleChange}
-            InputProps={{
-              inputProps: {
-                min: '1',
-                max: '99',
-              },
-            }}
-            sx={{ width: '30%' }}
-          />
-
+          <Box display="flex" gap={2}>
+            <Typography gutterBottom variant="h6" component="div">
+              Quantity
+            </Typography>
+            <TextField
+              type="number"
+              id="quantity"
+              value={quantity}
+              onChange={handleChange}
+              InputProps={{
+                inputProps: {
+                  min: '1',
+                  max: '99',
+                },
+              }}
+              sx={{ width: '80px', textAlign: 'center' }}
+            />
+          </Box>
           <Button
             type="button"
             variant="contained"
             color="secondary"
+            disabled={!isiInStock(product)}
             sx={{
               textTransform: 'none',
               fontWeight: '600',

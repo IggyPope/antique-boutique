@@ -1,6 +1,6 @@
 import Carousel from 'react-material-ui-carousel';
 
-import { Box, Modal, Fade, Button } from '@mui/material';
+import { Box, Modal, Fade, Button, useTheme } from '@mui/material';
 
 interface ModalCarouselProps {
   open: boolean;
@@ -15,6 +15,8 @@ export const ModalCarousel: React.FC<ModalCarouselProps> = ({
   images,
   activeItemIndex,
 }: ModalCarouselProps) => {
+  const theme = useTheme();
+
   return (
     <Modal
       aria-labelledby="transition-modal-title"
@@ -25,25 +27,50 @@ export const ModalCarousel: React.FC<ModalCarouselProps> = ({
     >
       <Fade in={open}>
         <Box
+          display="flex"
+          flexDirection="column"
           sx={{
             position: 'absolute',
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: 800,
-            bgcolor: 'white',
-            border: '2px solid #000',
+            width: {
+              xs: '90%',
+              sm: '90%',
+              md: '60%',
+            },
+            height: {
+              xs: 'auto',
+              sm: 'auto',
+              md: 'auto',
+            },
+            bgcolor: 'background.paper',
+            border: '1px solid grey',
             boxShadow: 24,
-            p: 4,
+            p: 1,
+            overflow: 'hidden',
           }}
         >
+          <Button sx={{ alignSelf: 'flex-end' }} onClick={handleClose}>
+            Close
+          </Button>
           <Carousel
             autoPlay={false}
             animation={'fade'}
             navButtonsAlwaysVisible={true}
             index={activeItemIndex}
-            height={500}
+            height={700}
             className="carousel"
+            activeIndicatorIconButtonProps={{
+              style: {
+                color: theme.palette.secondary.main,
+              },
+            }}
+            navButtonsProps={{
+              style: {
+                backgroundColor: theme.palette.primary.light,
+              },
+            }}
           >
             {images?.map((image, index) => (
               <div
@@ -52,22 +79,19 @@ export const ModalCarousel: React.FC<ModalCarouselProps> = ({
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  width: '100%',
+                  height: '100%',
                 }}
               >
                 <img
                   key={index}
                   src={`${image}`}
                   alt={`image ${index}`}
-                  height="70%"
-                  width="70%"
-                  style={{
-                    objectFit: 'contain',
-                  }}
+                  style={{ width: '100%', height: '100%', cursor: 'pointer', objectFit: 'contain' }}
                 />
               </div>
             ))}
           </Carousel>
-          <Button onClick={handleClose}>X</Button>
         </Box>
       </Fade>
     </Modal>

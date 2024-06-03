@@ -32,3 +32,9 @@ export const ProductAvailability = ({ product }: ProductAvailabilityProps) => {
     </Box>
   );
 };
+
+export function isiInStock(product: ProductProjection | undefined) {
+  return product?.masterVariant?.attributes?.find((v) => v.name === 'In-Stock') as
+    | { name: string; value: boolean }
+    | undefined;
+}
