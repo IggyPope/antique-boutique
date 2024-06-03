@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { useMemo } from 'react';
 import { toast } from 'react-toastify';
 

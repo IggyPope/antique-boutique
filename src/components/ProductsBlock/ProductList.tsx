@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import {
   Card,
   CardActionArea,
@@ -36,6 +38,8 @@ const ProductList = () => {
             }}
           >
             <CardActionArea
+              component={Link}
+              to={`/product/${product.id}`}
               sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}
             >
               <CardMedia
