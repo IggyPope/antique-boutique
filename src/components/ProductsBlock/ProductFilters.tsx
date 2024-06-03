@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import CloseIcon from '@mui/icons-material/Close';
@@ -24,8 +24,16 @@ const ProductFilters = () => {
 
   const dispatch = useAppDispatch();
 
-  const { sortBy, sortDirection } = useAppSelector((state) => state.filters);
+  const { sortBy, sortDirection, search: searchFilter } = useAppSelector((state) => state.filters);
   const [searchWord, setSearchWord] = useState('');
+
+  useEffect(() => {
+    if (!searchFilter) {
+      setSearchWord('');
+    } else {
+      setSearchWord(searchFilter);
+    }
+  }, [searchFilter]);
 
   const handleSearch = () => {
     dispatch(setSearch(searchWord));
