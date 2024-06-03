@@ -1,24 +1,38 @@
 import { Box, Typography, Stack } from '@mui/material';
 
-import { ProductProjection } from '@commercetools/platform-sdk';
-
 import formatPrice from '@/utils/formatPrice';
 
-type ProductPriceProps = {
-  product: ProductProjection | undefined;
+type PriceObject = {
+  value: {
+    centAmount: number;
+    currencyCode: string;
+    fractionDigits: number;
+  };
+  discounted?: {
+    value: {
+      centAmount: number;
+      currencyCode: string;
+      fractionDigits: number;
+    };
+  };
 };
 
-export const ProductPrice = ({ product }: ProductPriceProps) => {
+type ProductPriceProps = {
+  prices: PriceObject[] | undefined;
+};
+
+export const ProductPrice = ({ prices }: ProductPriceProps) => {
+  const firstPrice = prices?.[0] ?? undefined;
   return (
     <Box>
       <Typography gutterBottom variant="h6" component="div">
         Price
       </Typography>
       <Stack direction="row" gap={1} alignItems="center">
-        {product?.masterVariant.prices![0].discounted ? (
+        {firstPrice?.discounted ? (
           <>
             <Typography fontSize="2rem" fontWeight="600">
-              {`$${formatPrice(product.masterVariant.prices[0].discounted.value.centAmount)}`}
+              {`$${formatPrice(firstPrice.discounted.value.centAmount)}`}
             </Typography>
             <Typography
               fontSize="1.5rem"
@@ -26,12 +40,12 @@ export const ProductPrice = ({ product }: ProductPriceProps) => {
               color="primary.light"
               sx={{ textDecoration: 'line-through' }}
             >
-              {`$${formatPrice(product.masterVariant.prices[0].value.centAmount)}`}
+              {`$${formatPrice(firstPrice.value.centAmount)}`}
             </Typography>
           </>
         ) : (
           <Typography fontSize="2rem" fontWeight="600">
-            {`$${formatPrice(product?.masterVariant.prices![0].value.centAmount || 1)}`}
+            {`$${formatPrice(firstPrice?.value.centAmount || 0)}`}
           </Typography>
         )}
       </Stack>

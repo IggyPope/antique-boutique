@@ -2,16 +2,17 @@ import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-import { ProductProjection } from '@commercetools/platform-sdk';
+export interface Attribute {
+  name: string;
+  value: boolean;
+}
 
 type ProductAvailabilityProps = {
-  product: ProductProjection | undefined;
+  attributes: Attribute[] | undefined;
 };
 
-export const ProductAvailability = ({ product }: ProductAvailabilityProps) => {
-  const inStockAttribute = product?.masterVariant?.attributes?.find(
-    (v) => v.name === 'In-Stock',
-  ) as { name: string; value: boolean } | undefined;
+export const ProductAvailability = ({ attributes }: ProductAvailabilityProps) => {
+  const inStockAttribute = attributes?.find((v) => v.name === 'In-Stock');
   const inStockColor: boolean = inStockAttribute?.value ?? false;
 
   return (
@@ -33,8 +34,6 @@ export const ProductAvailability = ({ product }: ProductAvailabilityProps) => {
   );
 };
 
-export function isiInStock(product: ProductProjection | undefined) {
-  return product?.masterVariant?.attributes?.find((v) => v.name === 'In-Stock') as
-    | { name: string; value: boolean }
-    | undefined;
-}
+export const isiInStock = (attributes: Attribute[] | undefined): boolean => {
+  return attributes?.some((attr) => attr.name === 'In-Stock') ?? false;
+};
