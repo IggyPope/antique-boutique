@@ -224,10 +224,10 @@ const Filters = () => {
         label="In Stock"
       />
       <Stack direction="row" gap={2}>
-        <Button variant="contained" onClick={handleApplyFilters}>
+        <Button variant="contained" color="secondary" onClick={handleApplyFilters}>
           Apply Filters
         </Button>
-        <Button variant="outlined" onClick={handleResetFilters}>
+        <Button variant="outlined" color="error" onClick={handleResetFilters}>
           Reset
         </Button>
       </Stack>
