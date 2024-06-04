@@ -17,7 +17,11 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
       <Route index element={<Main />} />
-      <Route path="/catalog" element={<Catalog />} />
+      <Route path="/catalog" element={<Catalog />} errorElement={<NotFound />}>
+        <Route path=":category" element={<Catalog />}>
+          <Route path=":subcategory" element={<Catalog />} />
+        </Route>
+      </Route>
       <Route path="/about" element={<About />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/product/:id" element={<ProductPage />} />

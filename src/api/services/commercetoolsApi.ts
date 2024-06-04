@@ -195,7 +195,7 @@ export const commercetoolsApi = createApi({
             'variants.attributes.Color as colors',
             'variants.attributes.Brand as brands',
           ],
-          'filter.query': [
+          filter: [
             categoryFilter,
             brandFilter,
             colorFilter,

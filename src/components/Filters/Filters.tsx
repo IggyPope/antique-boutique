@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import {
   Button,
@@ -31,18 +32,25 @@ import {
   setSubcategory,
 } from '@/store/slices/filtersSlice';
 
+interface FiltersProps {
+  initialCategoryId?: string;
+  initialSubcategoryId?: string;
+}
+
 const INITIAL_PRICE_RANGE = [0, 100000] as const as [number, number];
 
-const Filters = () => {
+const Filters = ({ initialCategoryId, initialSubcategoryId }: FiltersProps) => {
+  const navigate = useNavigate();
+
   const { products } = useProducts();
   const dispatch = useAppDispatch();
 
-  const { getMainCategories, getSubcategories } = categories();
+  const { getMainCategories, getSubcategories, getCategorySlugById } = categories();
   const mainCategories = getMainCategories();
   const [subcategories, setSubcategories] = useState<Category[]>([]);
 
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedSubcategory, setSelectedSubcategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState(initialCategoryId || 'all');
+  const [selectedSubcategory, setSelectedSubcategory] = useState(initialSubcategoryId || '');
 
   const [selectedPrice, setSelectedPrice] = useState<number[]>(INITIAL_PRICE_RANGE);
   const [minPrice, setMinPrice] = useState<number>(INITIAL_PRICE_RANGE[0]);
@@ -60,8 +68,6 @@ const Filters = () => {
   const [selectedInStock, setSelectedInStock] = useState(false);
 
   useEffect(() => {
-    setSelectedSubcategory('');
-
     if (selectedCategory === 'all') {
       setSubcategories([]);
     } else {
@@ -121,6 +127,10 @@ const Filters = () => {
       ? dispatch(setSubcategory(null))
       : dispatch(setSubcategory(selectedSubcategory));
 
+    navigate({
+      pathname: `/catalog${selectedCategory !== 'all' ? '/' + getCategorySlugById(selectedCategory) : ''}${selectedSubcategory ? '/' + getCategorySlugById(selectedSubcategory) : ''}`,
+    });
+
     dispatch(setBrand(selectedBrands));
     dispatch(setSize(selectedSizes));
     dispatch(setColor(selectedColors));
@@ -134,6 +144,10 @@ const Filters = () => {
   };
 
   const handleResetFilters = () => {
+    navigate({
+      pathname: '/catalog',
+    });
+
     setSelectedCategory('all');
     setSelectedSubcategory('');
     setSubcategories([]);
@@ -154,6 +168,7 @@ const Filters = () => {
         <Select
           value={selectedCategory}
           onChange={(e) => {
+            setSelectedSubcategory('');
             setSelectedCategory(e.target.value);
           }}
         >
@@ -173,9 +188,9 @@ const Filters = () => {
           value={selectedSubcategory}
           onChange={(e) => setSelectedSubcategory(e.target.value)}
         >
-          {subcategories.map((category) => (
-            <MenuItem key={category.id} value={category.id}>
-              {category.name[APP_SETTINGS.LOCALE]}
+          {subcategories.map((subcategory) => (
+            <MenuItem key={subcategory.id} value={subcategory.id}>
+              {subcategory.name[APP_SETTINGS.LOCALE]}
             </MenuItem>
           ))}
         </Select>

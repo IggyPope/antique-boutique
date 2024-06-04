@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@mui/material';
+import { Grid, Link, Typography } from '@mui/material';
 import { lighten, useTheme } from '@mui/material/styles';
 
 import accessories from '@/assets/img/promo/accessories.webp';
@@ -11,13 +11,13 @@ import man from '@/assets/img/promo/man.webp';
 import radio from '@/assets/img/promo/radio.webp';
 
 const promo = [
-  { name: 'Electronic', img: electronic },
-  { name: 'Audio', img: audio },
-  { name: 'Books', img: book },
-  { name: 'Clocks', img: clock },
-  { name: 'Clothes', img: man },
-  { name: 'Accessories', img: accessories },
-  { name: 'Home', img: home },
+  { name: 'Devices', href: '/catalog/devices', img: electronic },
+  { name: 'Clothes', href: '/catalog/clothes', img: man },
+  { name: 'Home', href: '/catalog/home', img: home },
+  { name: 'Books', href: '/catalog/home/books', img: book },
+  { name: 'Clocks', href: '/catalog/devices/clocks', img: clock },
+  { name: 'Audio', href: '/catalog/devices/audio', img: audio },
+  { name: 'Accessories', href: '/catalog/clothes/accessories', img: accessories },
 ];
 
 const PromoCategories = () => {
@@ -26,12 +26,15 @@ const PromoCategories = () => {
     <Grid container>
       {promo.map((item) => (
         <Grid
+          component={Link}
+          href={item.href}
           item
           key={item.name}
           xs={12}
           sm={6}
           md={4}
           sx={{
+            textDecoration: 'none',
             display: 'flex',
             alignItems: 'end',
             justifyContent: 'end',
