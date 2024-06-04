@@ -1,5 +1,6 @@
 import { Pagination, Stack, Typography } from '@mui/material';
 
+import AppBreadcrumbs from '@/components/AppBreadcrumbs/AppBreadcrumbs';
 import ProductFilters from '@/components/ProductsBlock/ProductFilters';
 import ProductList from '@/components/ProductsBlock/ProductList';
 import { APP_SETTINGS } from '@/constants/app';
@@ -15,6 +16,7 @@ const ProductsBlock = () => {
 
   return (
     <Stack direction="column" gap={2}>
+      <AppBreadcrumbs />
       <ProductFilters />
       {isFetching ? (
         <Typography sx={{ textAlign: 'center' }}>Loading...</Typography>
