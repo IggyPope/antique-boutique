@@ -4,7 +4,7 @@ import { Typography, Box, Stack } from '@mui/material';
 
 import { useGetProductByIdQuery } from '@/api/services/commercetoolsApi';
 import { ProductAvailability } from '@/components/ProductInfo/ProductAvailability';
-import ProductCard from '@/components/ProductInfo/ProductCard';
+import { ProductCard } from '@/components/ProductInfo/ProductCard';
 import { ProductPrice } from '@/components/ProductInfo/ProductPrice';
 import { ProductQuantity } from '@/components/ProductInfo/ProductQuantity';
 import { ProductTitle } from '@/components/ProductInfo/ProductTitle';
