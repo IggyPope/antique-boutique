@@ -1,4 +1,3 @@
-// ProductCard.js
 import { useState } from 'react';
 import Carousel from 'react-material-ui-carousel';
 
@@ -14,7 +13,7 @@ interface ProductCardProps {
   images: string[] | undefined;
   product: ProductProjection | undefined;
 }
-const ProductCard: React.FC<ProductCardProps> = ({ images, product }: ProductCardProps) => {
+export const ProductCard: React.FC<ProductCardProps> = ({ images, product }: ProductCardProps) => {
   const [activeItemIndex, setActiveItemIndex] = useState(0);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
