@@ -10,7 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 import { useUpdateCustomerMutation } from '@/api/services/commercetoolsApi';
 import { EditableTextField } from '@/components/Profile/Tabs/EditableTextField';
-import { AddressInfo } from '@/components/Profile/Tabs/UserAdressesTab';
+import { AddressInfo } from '@/components/Profile/Tabs/UserAddressesTab';
 import { addressSchema, AddressesFormValues } from '@/components/Profile/Tabs/addressSchema';
 import { COUNTRY_LIST } from '@/components/RegistrationForm/countries';
 import { getCountryCode } from '@/components/RegistrationForm/utils';
@@ -177,7 +177,7 @@ export function UserAddressForm({ initialData }: UserAddressFormProps) {
           errors={errors}
           label="city"
           fieldName="City"
-          dataTestId="editing-billing-city"
+          dataTestId="editing-city"
         />
 
         <Box

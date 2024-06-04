@@ -10,11 +10,11 @@ import { useMediaQuery } from '@mui/material';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 
-import { UserAddressesTab } from '@/components/Profile/Tabs/UserAdressesTab';
+import { UserAddressesTab } from '@/components/Profile/Tabs/UserAddressesTab';
 import { UserCredentialsTab } from '@/components/Profile/Tabs/UserCredentialsTab';
 import { UserPasswordTab } from '@/components/Profile/Tabs/UserPasswordTab';
 
-function Profile() {
+export function Profile() {
   const matches = useMediaQuery('(max-width:550px)');
 
   const [value, setValue] = React.useState('1');
