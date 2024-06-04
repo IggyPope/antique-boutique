@@ -1,5 +1,6 @@
 import Carousel from 'react-material-ui-carousel';
 
+import { useMediaQuery } from '@mui/material';
 import { Box, Modal, Fade, Button, useTheme } from '@mui/material';
 
 interface ModalCarouselProps {
@@ -16,6 +17,9 @@ export const ModalCarousel: React.FC<ModalCarouselProps> = ({
   activeItemIndex,
 }: ModalCarouselProps) => {
   const theme = useTheme();
+  const xs = useMediaQuery('(min-width:500px) and (max-width:600px)');
+  const xxs = useMediaQuery('(min-width:400px) and (max-width:499px)');
+  const xxxs = useMediaQuery('(max-width:399px)');
 
   return (
     <Modal
@@ -44,8 +48,8 @@ export const ModalCarousel: React.FC<ModalCarouselProps> = ({
               sm: 'auto',
               md: 'auto',
             },
-            bgcolor: 'background.paper',
-            border: '1px solid grey',
+            bgcolor: '#e8e3e3',
+            border: 'none',
             boxShadow: 24,
             p: 1,
             overflow: 'hidden',
@@ -59,7 +63,7 @@ export const ModalCarousel: React.FC<ModalCarouselProps> = ({
             animation={'fade'}
             navButtonsAlwaysVisible={true}
             index={activeItemIndex}
-            height={700}
+            height={xxxs ? 400 : xxs ? 500 : xs ? 600 : 700}
             className="carousel"
             activeIndicatorIconButtonProps={{
               style: {
