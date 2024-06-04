@@ -4,9 +4,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import type { CustomerDraft } from '@commercetools/platform-sdk';
 
 import { AuthService } from '@/api/services/AuthService';
-import { useAppDispatch, useAppSelector } from '@/hooks';
 import { AnonymousFlowTokenStore } from '@/store/AnonymousStore';
 import { PasswordFlowTokenStore } from '@/store/PasswordStore';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { setIsInitialRender } from '@/store/slices/userSlice';
 import { isTokenValid } from '@/utils/isTokenValid';
 

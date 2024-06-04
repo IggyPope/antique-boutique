@@ -13,7 +13,6 @@ const pageTitles: IPageTitle = {
   '/cart': 'Shopping Cart',
   '/about': 'Learn More About Us',
   '/profile': 'Your Profile',
-  '/catalog': 'Browse Our Catalog',
 };
 
 export const usePageTitle = (): string => {

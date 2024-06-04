@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import CloseIcon from '@mui/icons-material/Close';
@@ -16,14 +16,24 @@ import {
 import { useTheme } from '@mui/material/styles';
 
 import { SORT_DIRECTION, SORT_OPTIONS, SortOption } from '@/constants/app';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { setSearch, setSortBy, setSortDirection } from '@/store/slices/filtersSlice';
 
 const ProductFilters = () => {
   const theme = useTheme();
+
   const dispatch = useAppDispatch();
-  const { sortBy, sortDirection } = useAppSelector((state) => state.filters);
+
+  const { sortBy, sortDirection, search: searchFilter } = useAppSelector((state) => state.filters);
   const [searchWord, setSearchWord] = useState('');
+
+  useEffect(() => {
+    if (!searchFilter) {
+      setSearchWord('');
+    } else {
+      setSearchWord(searchFilter);
+    }
+  }, [searchFilter]);
 
   const handleSearch = () => {
     dispatch(setSearch(searchWord));
@@ -38,7 +48,7 @@ const ProductFilters = () => {
     <Stack
       justifyContent="space-between"
       direction="row"
-      alignItems="center"
+      alignItems="flex-start"
       flexWrap="wrap"
       gap={2}
       sx={{ '& p': { fontSize: '0.875rem' } }}
@@ -77,7 +87,7 @@ const ProductFilters = () => {
         </Button>
       </Stack>
       <Stack direction="row" alignItems="center">
-        <FormControl size="small" sx={{ m: 1, minWidth: 120 }}>
+        <FormControl size="small" sx={{ minWidth: 120 }}>
           <InputLabel id="sort-label">Sort By</InputLabel>
           <Select
             labelId="sort-label"

@@ -1,13 +1,13 @@
 import { Checkbox, FormControl, InputLabel, ListItemText, MenuItem, Select } from '@mui/material';
 
-type MultiplySelectProps = {
+type MultipleSelectProps = {
   label: string;
   state: string[];
   itemsData: string[];
   setState: (arg: string[]) => void;
 };
 
-const MultiplySelect = ({ label, state, itemsData, setState }: MultiplySelectProps) => {
+const MultipleSelect = ({ label, state, itemsData, setState }: MultipleSelectProps) => {
   return (
     <FormControl variant="standard">
       <InputLabel>{label}</InputLabel>
@@ -33,4 +33,4 @@ const MultiplySelect = ({ label, state, itemsData, setState }: MultiplySelectPro
   );
 };
 
-export default MultiplySelect;
+export default MultipleSelect;

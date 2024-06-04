@@ -13,6 +13,13 @@ export interface ProductFilters {
   search?: string;
   sortBy: SortOption;
   sortDirection: SortDirection;
+  category: string | null;
+  subcategory: string | null;
+  brand: string[];
+  size: string[];
+  color: string[];
+  priceRange: [number, number] | null;
+  availability: boolean | null;
 }
 
 const initialState: ProductFilters = {
@@ -20,6 +27,13 @@ const initialState: ProductFilters = {
   search: undefined,
   sortBy: DEFAULT_SORT_OPTION,
   sortDirection: DEFAULT_SORT_DIRECTION,
+  category: null,
+  subcategory: null,
+  brand: [],
+  size: [],
+  color: [],
+  priceRange: null,
+  availability: null,
 };
 
 export const filtersSlice = createSlice({
@@ -45,11 +59,51 @@ export const filtersSlice = createSlice({
       state.sortDirection = action.payload;
       state.page = 1;
     },
+    setCategory: (state, action: PayloadAction<string | null>) => {
+      state.category = action.payload;
+      state.page = 1;
+    },
+    setSubcategory: (state, action: PayloadAction<string | null>) => {
+      state.subcategory = action.payload;
+      state.page = 1;
+    },
+    setBrand: (state, action: PayloadAction<string[]>) => {
+      state.brand = action.payload;
+      state.page = 1;
+    },
+    setSize: (state, action: PayloadAction<string[]>) => {
+      state.size = action.payload;
+      state.page = 1;
+    },
+    setColor: (state, action: PayloadAction<string[]>) => {
+      state.color = action.payload;
+      state.page = 1;
+    },
+    setPriceRange: (state, action: PayloadAction<[number, number] | null>) => {
+      state.priceRange = action.payload;
+      state.page = 1;
+    },
+    setAvailability: (state, action: PayloadAction<boolean | null>) => {
+      state.availability = action.payload;
+      state.page = 1;
+    },
     resetFilters: () => initialState,
   },
 });
 
-export const { setPage, setSearch, setSortBy, setSortDirection, resetFilters } =
-  filtersSlice.actions;
+export const {
+  setPage,
+  setSearch,
+  setSortBy,
+  setSortDirection,
+  setCategory,
+  setSubcategory,
+  setBrand,
+  setSize,
+  setColor,
+  setPriceRange,
+  setAvailability,
+  resetFilters,
+} = filtersSlice.actions;
 
 export default filtersSlice.reducer;

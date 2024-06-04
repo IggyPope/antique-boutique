@@ -39,7 +39,6 @@ export function UserPasswordTab() {
 
     changePassword(payload)
       .then(() => {
-        toast.success('Password changed successfully');
         reset();
       })
       .catch((error) => {
