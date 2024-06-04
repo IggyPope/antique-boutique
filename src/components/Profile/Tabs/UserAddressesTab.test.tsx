@@ -1,7 +1,7 @@
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import nock from 'nock';
 import { describe, it, expect } from 'vitest';
 
@@ -68,6 +68,12 @@ describe('Profile Page Component', () => {
       expect(zipCodeFields[1].value).toBe('23456');
       expect(streetFields[1].value).toBe('Street');
       expect(cityFields[1].value).toBe('Calais');
+      fireEvent.blur(cityFields[0]);
+    });
+
+    const submitButtons = screen.getAllByRole('button', { name: /Save Changes/i });
+    submitButtons.forEach((button) => {
+      expect(button).not.toBeDisabled();
     });
   });
   afterEach(() => {
