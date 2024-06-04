@@ -137,6 +137,7 @@ export function UserCredentialsTab() {
             errors={errors}
             label={'firstName'}
             fieldName={'First Name'}
+            dataTestId={'edit-first-name'}
           />
           <EditableTextField<CredentialsFormValues>
             name="lastName"
@@ -144,6 +145,7 @@ export function UserCredentialsTab() {
             errors={errors}
             label={'lastName'}
             fieldName={'Last Name'}
+            dataTestId={'edit-last-name'}
           />
           <EditableTextField<CredentialsFormValues>
             name="email"
@@ -151,6 +153,7 @@ export function UserCredentialsTab() {
             errors={errors}
             label={'email'}
             fieldName={'Email'}
+            dataTestId={'edit-email'}
           />
           <Controller
             name="dateOfBirth"
