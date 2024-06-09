@@ -1,21 +1,13 @@
 import { useState } from 'react';
 
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
 import { Typography, Button, Box } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
 
 import { Attribute, isInStock } from '@/components/ProductInfo/ProductAvailability';
+import { ProductQuantityInput } from '@/components/ProductInfo/ProductQuantityInput';
 
 interface ProductQuantityProps {
   attributes: Attribute[] | undefined;
   isInCart: boolean;
-}
-interface IncrementDecrementButtonsProps {
-  value: number;
-  onIncrement: () => void;
-  onDecrement: () => void;
-  isInStock: boolean;
 }
 
 export const ProductQuantity = ({ attributes, isInCart }: ProductQuantityProps) => {
@@ -27,38 +19,6 @@ export const ProductQuantity = ({ attributes, isInCart }: ProductQuantityProps) 
 
   const handleDecrement = () => {
     setQuantity((prevQuantity) => Math.max(prevQuantity - 1, 1));
-  };
-
-  const IncrementDecrementButtons: React.FC<IncrementDecrementButtonsProps> = ({
-    value,
-    onIncrement,
-    onDecrement,
-    isInStock,
-  }: IncrementDecrementButtonsProps) => {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          width: '80px',
-          height: '100%',
-        }}
-      >
-        <IconButton onClick={onDecrement} disabled={isInCart || !isInStock}>
-          <RemoveIcon />
-        </IconButton>
-        <input
-          type="text"
-          readOnly
-          value={value}
-          style={{ textAlign: 'center', width: '40px', height: '80%' }}
-        />
-        <IconButton onClick={onIncrement} disabled={isInCart || !isInStock}>
-          <AddIcon />
-        </IconButton>
-      </div>
-    );
   };
 
   const handleCartAction = (isInCart: boolean) => {
@@ -75,10 +35,11 @@ export const ProductQuantity = ({ attributes, isInCart }: ProductQuantityProps) 
         <Typography gutterBottom variant="h6" component="span" textAlign="center">
           Quantity
         </Typography>
-        <IncrementDecrementButtons
+        <ProductQuantityInput
           value={quantity}
           onIncrement={handleIncrement}
           onDecrement={handleDecrement}
+          isInCart={isInCart}
           isInStock={isInStock(attributes)}
         />
       </Box>
