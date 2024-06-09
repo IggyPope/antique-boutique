@@ -1,61 +1,103 @@
 import { useState } from 'react';
 
-import { Typography, TextField, Button, Box } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import { Typography, Button, Box } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
 
-import { Attribute, isiInStock } from '@/components/ProductInfo/ProductAvailability';
+import { Attribute, isInStock } from '@/components/ProductInfo/ProductAvailability';
 
 interface ProductQuantityProps {
   attributes: Attribute[] | undefined;
+  isInCart: boolean;
+}
+interface IncrementDecrementButtonsProps {
+  value: number;
+  onIncrement: () => void;
+  onDecrement: () => void;
+  isInStock: boolean;
 }
 
-export const ProductQuantity = ({ attributes }: ProductQuantityProps) => {
-  const [quantity, setQuantity] = useState(0);
+export const ProductQuantity = ({ attributes, isInCart }: ProductQuantityProps) => {
+  const [quantity, setQuantity] = useState(() => (isInStock(attributes) ? 1 : 0));
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(event.target.value);
-    if (!isNaN(value)) {
-      setQuantity(value);
+  const handleIncrement = () => {
+    setQuantity((prevQuantity) => Math.min(prevQuantity + 1, 99));
+  };
+
+  const handleDecrement = () => {
+    setQuantity((prevQuantity) => Math.max(prevQuantity - 1, 1));
+  };
+
+  const IncrementDecrementButtons: React.FC<IncrementDecrementButtonsProps> = ({
+    value,
+    onIncrement,
+    onDecrement,
+    isInStock,
+  }: IncrementDecrementButtonsProps) => {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          width: '80px',
+          height: '100%',
+        }}
+      >
+        <IconButton onClick={onDecrement} disabled={isInCart || !isInStock}>
+          <RemoveIcon />
+        </IconButton>
+        <input
+          type="text"
+          readOnly
+          value={value}
+          style={{ textAlign: 'center', width: '40px', height: '80%' }}
+        />
+        <IconButton onClick={onIncrement} disabled={isInCart || !isInStock}>
+          <AddIcon />
+        </IconButton>
+      </div>
+    );
+  };
+
+  const handleCartAction = (isInCart: boolean) => {
+    if (isInCart) {
+      // TODO add logic to remove the product from the cart
+    } else {
+      // TODO add logic to add the product to the cart
     }
   };
-  const addToCart = () => {
-    return;
-    //TODO Add the logic for adding the product to cart
-  };
+
   return (
     <>
-      <Box display="flex" gap={2}>
-        <Typography gutterBottom variant="h6" component="div">
+      <Box display="flex" gap={2} sx={{ height: '40px' }}>
+        <Typography gutterBottom variant="h6" component="span" textAlign="center">
           Quantity
         </Typography>
-        <TextField
-          type="number"
-          id="quantity"
+        <IncrementDecrementButtons
           value={quantity}
-          onChange={handleChange}
-          InputProps={{
-            inputProps: {
-              min: '1',
-              max: '99',
-            },
-          }}
-          sx={{ width: '80px', textAlign: 'center' }}
+          onIncrement={handleIncrement}
+          onDecrement={handleDecrement}
+          isInStock={isInStock(attributes)}
         />
       </Box>
       <Button
         type="button"
-        variant="contained"
-        color="secondary"
-        disabled={!isiInStock(attributes)}
+        variant={isInCart ? 'outlined' : 'contained'}
+        color={isInCart ? 'error' : 'secondary'}
+        disabled={!isInStock(attributes)}
         sx={{
           textTransform: 'none',
           fontWeight: '600',
           borderRadius: '5px',
           textDecoration: 'none',
+          height: '40px',
         }}
-        onClick={addToCart}
+        onClick={() => handleCartAction(isInCart)}
         data-testid="addToCart_button"
       >
-        Add to Cart
+        {isInCart ? 'Remove from Cart' : 'Add to Cart'}
       </Button>
     </>
   );

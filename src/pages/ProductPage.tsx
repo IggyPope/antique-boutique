@@ -17,6 +17,7 @@ export const ProductPage = () => {
   const attributes = product?.masterVariant?.attributes;
   const prices = product?.masterVariant?.prices;
   const title = product?.name.en;
+  const isInCart = false; //TODO add logic to verify if the product is in cart
   if (isFetching) {
     return <Typography sx={{ textAlign: 'center' }}>Loading...</Typography>;
   }
@@ -59,7 +60,7 @@ export const ProductPage = () => {
             <ProductPrice prices={prices} />
             <ProductAvailability attributes={attributes} />
           </Stack>
-          <ProductQuantity attributes={attributes} />
+          <ProductQuantity attributes={attributes} isInCart={isInCart} />
         </Box>
       </Box>
     </Box>
