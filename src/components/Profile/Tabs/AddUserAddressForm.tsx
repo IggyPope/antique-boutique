@@ -17,6 +17,16 @@ import { getCountryCode } from '@/components/RegistrationForm/utils';
 interface AddUserAddressFormProps {
   version?: number;
 }
+const DEFAULT_FORM_VALUES = {
+  zipCode: '',
+  city: '',
+  country: '',
+  street: '',
+  useAsDefaultShippingAddress: false,
+  useAsDefaultBillingAddress: false,
+  useAsBillingAddress: false,
+  useAsShippingAddress: false,
+};
 
 export function AddUserAddressForm({ version }: AddUserAddressFormProps) {
   const {
@@ -29,16 +39,7 @@ export function AddUserAddressForm({ version }: AddUserAddressFormProps) {
     resolver: yupResolver(addressSchema),
     mode: 'onChange',
     reValidateMode: 'onChange',
-    defaultValues: {
-      zipCode: '',
-      city: '',
-      country: '',
-      street: '',
-      useAsDefaultShippingAddress: false,
-      useAsDefaultBillingAddress: false,
-      useAsBillingAddress: false,
-      useAsShippingAddress: false,
-    },
+    defaultValues: DEFAULT_FORM_VALUES,
   });
 
   const [useAsDefaultShipping, setUseAsDefaultShipping] = useState(false);

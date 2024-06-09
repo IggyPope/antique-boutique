@@ -12,7 +12,11 @@ type ProductAvailabilityProps = {
 };
 
 export const ProductAvailability = ({ attributes }: ProductAvailabilityProps) => {
-  const inStockAttribute = attributes?.find((v) => v.name === 'In-Stock' || 'Availability');
+  const inStockAttribute = attributes?.find(
+    (v) =>
+      (v.name === 'In-Stock' && Array.isArray(v.value) && v.value.includes(true)) ||
+      (v.name === 'Availability' && Array.isArray(v.value) && v.value.includes(true)),
+  );
   const inStockColor: boolean = inStockAttribute?.value ?? false;
 
   return (
@@ -35,5 +39,11 @@ export const ProductAvailability = ({ attributes }: ProductAvailabilityProps) =>
 };
 
 export const isiInStock = (attributes: Attribute[] | undefined): boolean => {
-  return attributes?.some((attr) => attr.name === 'In-Stock') ?? false;
+  return (
+    attributes?.some(
+      (attr) =>
+        (attr.name === 'In-Stock' && Array.isArray(attr.value) && attr.value.includes(true)) ||
+        (attr.name === 'Availability' && Array.isArray(attr.value) && attr.value.includes(true)),
+    ) ?? false
+  );
 };
