@@ -9,7 +9,7 @@ export const RequireAuth = () => {
   if (isInitialRender) {
     return <Loader />;
   }
-  return isAuthenticated ? <Outlet /> : <Navigate to="/" />;
+  return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
 };
 
 export const RequireNoAuth = () => {

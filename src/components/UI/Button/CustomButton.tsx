@@ -11,7 +11,7 @@ const CustomButton = ({
     <Button
       variant="contained"
       color="secondary"
-      onClick={() => onClick()}
+      onClick={onClick}
       sx={{
         textTransform: 'none',
         fontWeight: '600',

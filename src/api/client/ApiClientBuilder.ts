@@ -11,12 +11,11 @@ import {
   type RefreshAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
 
+import { anonymousTokenCache, passwordTokenCache } from '@/api/client/TokenCache';
+import { getAuthorizationToken, options } from '@/api/client/withExistingTokenFlow';
 import { AnonymousFlowTokenStore } from '@/store/AnonymousStore';
 import { PasswordFlowTokenStore } from '@/store/PasswordStore';
 import { isTokenValid } from '@/utils/isTokenValid';
-
-import { anonymousTokenCache, passwordTokenCache } from './TokenCache';
-import { authorization, options } from './withExistingTokenFlow';
 
 const {
   VITE_CTP_AUTH_URL,
@@ -37,6 +36,8 @@ export class ApiClientBuilder {
 
   private readonly clientSecret: string;
 
+  public reset = false;
+
   constructor() {
     if (
       !VITE_CTP_AUTH_URL ||
@@ -56,7 +57,9 @@ export class ApiClientBuilder {
   }
 
   getApiRoot(credentials?: { username: string; password: string }): ByProjectKeyRequestBuilder {
-    return createApiBuilderFromCtpClient(this.getApiClient(credentials)).withProjectKey({
+    return createApiBuilderFromCtpClient(
+      this.getApiClient(this.reset ? undefined : credentials),
+    ).withProjectKey({
       projectKey: this.projectKey,
     });
   }
@@ -76,7 +79,7 @@ export class ApiClientBuilder {
   private getExistingTokenFlowClient(): Client {
     return new ClientBuilder()
       .withProjectKey(this.projectKey)
-      .withExistingTokenFlow(authorization, options)
+      .withExistingTokenFlow(getAuthorizationToken(), options)
       .withHttpMiddleware(this.getHttpMiddlewareOptions())
       .build();
   }

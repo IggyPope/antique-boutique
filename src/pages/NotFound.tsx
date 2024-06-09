@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { Container, Stack, Typography } from '@mui/material';
 
-import notFoundSrc from '@/assets/img/not-found.png';
+import notFoundSrc from '@/assets/img/not-found.webp';
 import CustomButton from '@/components/UI/Button/CustomButton';
 
 const NotFound = () => {

@@ -1,7 +1,7 @@
 import { Grid, Typography } from '@mui/material';
 import { lighten, useTheme } from '@mui/material/styles';
 
-import blog from '@/assets/img/blog.jpg';
+import blog from '@/assets/img/blog.webp';
 
 const PromoBlog = () => {
   const theme = useTheme();

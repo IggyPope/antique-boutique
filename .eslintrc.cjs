@@ -37,5 +37,12 @@ module.exports = {
         },
       },
     ],
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: ['.*'],
+      },
+    ],
+    'no-console': ['error', { allow: ['warn', 'error'] }],
   },
 };

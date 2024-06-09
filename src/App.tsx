@@ -1,17 +1,20 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { useEffect } from 'react';
 import { RouterProvider } from 'react-router-dom';
 
-import router from '@/routes/Router';
+import { CssBaseline } from '@mui/material';
 
-import { useAuth } from './hooks/useAuth';
+import { useAuth } from '@/hooks/useAuth';
+import router from '@/routes/Router';
 
 export function App() {
   const { getToken } = useAuth();
   useEffect(() => {
     getToken();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getToken]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <CssBaseline>
+      <RouterProvider router={router} />
+    </CssBaseline>
+  );
 }

@@ -2,9 +2,9 @@ import { Control, Controller, FieldErrors } from 'react-hook-form';
 
 import { TextField } from '@mui/material';
 
-import { FormValues } from './schema';
+import { FormValues } from '@/components/RegistrationForm/schema';
 
-interface ControledTextFieldProps {
+interface ControlledTextFieldProps {
   name: keyof FormValues;
   control: Control<FormValues>;
   errors: FieldErrors<FormValues>;
@@ -26,7 +26,7 @@ export const ControlledTextField = ({
   callback,
   disabled,
   dataTestId,
-}: ControledTextFieldProps) => {
+}: ControlledTextFieldProps) => {
   return (
     <Controller
       name={name}

@@ -19,13 +19,12 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { type CustomerDraft } from '@commercetools/platform-sdk';
 import { yupResolver } from '@hookform/resolvers/yup';
 
+import { ControlledTextField } from '@/components/RegistrationForm/ControlledTextField';
+import { PasswordTextInput } from '@/components/RegistrationForm/PasswordTextInput';
+import { COUNTRY_LIST } from '@/components/RegistrationForm/countries';
+import { schema, FormValues } from '@/components/RegistrationForm/schema';
+import { copyShippingToBilling, getCountryCode } from '@/components/RegistrationForm/utils';
 import { useAuth } from '@/hooks/useAuth';
-
-import { ControlledTextField } from './ControlledTextField';
-import { PasswordTextInput } from './PasswordTextInput';
-import { COUNTRY_LIST } from './countries';
-import { schema, FormValues } from './schema';
-import { copyShippingToBilling, getCountryCode } from './utils';
 
 export function RegistrationForm() {
   const {
@@ -89,7 +88,12 @@ export function RegistrationForm() {
     const customerDraft: CustomerDraft & { password: string } = {
       firstName: data.firstName,
       lastName: data.lastName,
-      dateOfBirth: new Date(data.dateOfBirth).toISOString().slice(0, 10),
+      dateOfBirth: new Intl.DateTimeFormat('fr-CA', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      }).format(new Date(data.dateOfBirth)),
+      // dateOfBirth: new Date(data.dateOfBirth).toISOString().slice(0, 10),
       email: data.email,
       password: data.password,
       addresses: [
@@ -100,7 +104,7 @@ export function RegistrationForm() {
           postalCode: data.billing_zipCode,
         },
         {
-          country: getCountryCode(data.billing_country) ?? '',
+          country: getCountryCode(data.shipping_country) ?? '',
           city: data.shipping_city,
           streetName: data.shipping_street,
           postalCode: data.shipping_zipCode,

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Stack, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
-import Logo from '../UI/Logo/Logo';
+import Logo from '@/components/UI/Logo/Logo';
 
 interface ILogoBlockProps {
   display?: { xs: string; md: string };

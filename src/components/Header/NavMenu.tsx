@@ -1,9 +1,8 @@
 import { Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
+import { NavLink } from '@/components/UI/NavLink/NavLink';
 import { useFilteredPages } from '@/hooks/useFilteredPages';
-
-import { NavLink } from '../UI/NavLink/NavLink';
 
 const NavMenu = () => {
   const pages = useFilteredPages();

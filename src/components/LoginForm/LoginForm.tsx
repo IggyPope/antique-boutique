@@ -5,11 +5,10 @@ import { Box, Stack, Typography } from '@mui/material';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 
+import { UserName } from '@/components/LoginForm/NameTextInput';
+import { schema, LoginFormValues } from '@/components/LoginForm/schema';
+import { PasswordTextInput } from '@/components/RegistrationForm/PasswordTextInput';
 import { useAuth } from '@/hooks/useAuth';
-
-import { PasswordTextInput } from '../RegistrationForm/PasswordTextInput';
-import { UserName } from './NameTextInput';
-import { schema, LoginFormValues } from './schema';
 
 export function LoginForm() {
   const {

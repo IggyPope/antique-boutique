@@ -2,10 +2,9 @@ import { Provider } from 'react-redux';
 
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 
+import { LoginForm } from '@/components/LoginForm/LoginForm';
 import { useAuth } from '@/hooks/useAuth';
-
-import { store } from '../../store/store';
-import { LoginForm } from './LoginForm';
+import { store } from '@/store/store';
 
 vi.mock('@/hooks/useAuth');
 

@@ -1,6 +1,6 @@
 import { Box, Container, Stack, Typography, useTheme } from '@mui/material';
 
-import furniture from '@/assets/img/furniture.jpg';
+import furniture from '@/assets/img/furniture.webp';
 import { usePageTitle } from '@/hooks/usePageTitle';
 
 const PageHeader = () => {

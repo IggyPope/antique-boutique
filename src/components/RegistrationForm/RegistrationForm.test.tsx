@@ -4,10 +4,9 @@ import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event';
 import { expect } from 'vitest';
 
+import { RegistrationForm } from '@/components/RegistrationForm/RegistrationForm';
 import { useAuth } from '@/hooks/useAuth';
-
-import { store } from '../../store/store';
-import { RegistrationForm } from './RegistrationForm';
+import { store } from '@/store/store';
 
 vi.mock('@/hooks/useAuth');
 describe('RegistrationForm', () => {

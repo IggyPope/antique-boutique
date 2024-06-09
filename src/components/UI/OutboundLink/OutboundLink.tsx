@@ -2,7 +2,12 @@ import { Link } from '@mui/material';
 
 import theme from '@/theme';
 
-const OutboundLink = ({ href, text }: { href: string; text: string }) => {
+type OutboundLinkProps = {
+  href: string;
+  text: string;
+};
+
+const OutboundLink = ({ href, text }: OutboundLinkProps) => {
   return (
     <Link
       href={href}

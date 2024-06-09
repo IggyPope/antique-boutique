@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 
 import { useTheme, AppBar, Container, Stack } from '@mui/material';
 
-import BurgerMenu from './BurgerMenu';
-import IconMenu from './IconMenu';
-import LogoBlock from './LogoBlock';
-import NavMenu from './NavMenu';
+import BurgerMenu from '@/components/Header/BurgerMenu';
+import IconMenu from '@/components/Header/IconMenu';
+import LogoBlock from '@/components/Header/LogoBlock';
+import NavMenu from '@/components/Header/NavMenu';
 
 const Header = () => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);

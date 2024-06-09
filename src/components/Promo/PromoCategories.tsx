@@ -1,23 +1,23 @@
-import { Grid, Typography } from '@mui/material';
+import { Grid, Link, Typography } from '@mui/material';
 import { lighten, useTheme } from '@mui/material/styles';
 
-import accessories from '@/assets/img/promo/accessories.png';
-import audio from '@/assets/img/promo/audio.png';
-import clock from '@/assets/img/promo/clock.png';
-import electronic from '@/assets/img/promo/electronic.png';
-import home from '@/assets/img/promo/home.png';
-import man from '@/assets/img/promo/man.png';
-import radio from '@/assets/img/promo/radio.jpg';
-import woman from '@/assets/img/promo/woman.png';
+import accessories from '@/assets/img/promo/accessories.webp';
+import audio from '@/assets/img/promo/audio.webp';
+import book from '@/assets/img/promo/book.webp';
+import clock from '@/assets/img/promo/clock.webp';
+import electronic from '@/assets/img/promo/electronic.webp';
+import home from '@/assets/img/promo/home.webp';
+import man from '@/assets/img/promo/man.webp';
+import radio from '@/assets/img/promo/radio.webp';
 
 const promo = [
-  { name: 'Electronic', img: electronic },
-  { name: 'Audio', img: audio },
-  { name: 'Clocks', img: clock },
-  { name: 'Man', img: man },
-  { name: 'Woman', img: woman },
-  { name: 'Accessories', img: accessories },
-  { name: 'Home', img: home },
+  { name: 'Devices', href: '/catalog/devices', img: electronic },
+  { name: 'Clothes', href: '/catalog/clothes', img: man },
+  { name: 'Home', href: '/catalog/home', img: home },
+  { name: 'Books', href: '/catalog/home/books', img: book },
+  { name: 'Clocks', href: '/catalog/devices/clocks', img: clock },
+  { name: 'Audio', href: '/catalog/devices/audio', img: audio },
+  { name: 'Accessories', href: '/catalog/clothes/accessories', img: accessories },
 ];
 
 const PromoCategories = () => {
@@ -26,12 +26,15 @@ const PromoCategories = () => {
     <Grid container>
       {promo.map((item) => (
         <Grid
+          component={Link}
+          href={item.href}
           item
           key={item.name}
           xs={12}
           sm={6}
           md={4}
           sx={{
+            textDecoration: 'none',
             display: 'flex',
             alignItems: 'end',
             justifyContent: 'end',
@@ -43,6 +46,13 @@ const PromoCategories = () => {
             backgroundPosition: '-50% 10%',
             backgroundSize: '80%',
             height: '180px',
+            cursor: 'pointer',
+            transition: 'background-color 0.3s',
+            '@media (any-hover: hover)': {
+              '&:hover': {
+                backgroundColor: lighten(theme.palette.primary.main, 0.9),
+              },
+            },
           }}
         >
           <Typography>{item.name}</Typography>

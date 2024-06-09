@@ -4,7 +4,7 @@ import {
   CustomerSignInResult,
 } from '@commercetools/platform-sdk';
 
-import { ApiClientBuilder } from '../client/ApiClientBuilder';
+import { ApiClientBuilder } from '@/api/client/ApiClientBuilder';
 
 export class AuthService {
   private static instance: AuthService;
@@ -29,6 +29,7 @@ export class AuthService {
     this.apiRoot = this.apiBuilder.getApiRoot({ username, password });
 
     return this.apiRoot
+      .me()
       .login()
       .post({
         body: {
@@ -36,13 +37,19 @@ export class AuthService {
           password: password,
           // TODO:
           // Add anonymous cart to be merged with the active customer cart, when we have cart functionality
+          // activeCartSignInMode: 'mergeWithExistingCustomerCart',
           // anonymousCart: {
           //   typeId: 'cart',
           //   id: '<anonymous-cart-id>',
           // }
         },
       })
-      .execute();
+      .execute()
+      .then((res) => {
+        this.apiRoot = this.apiBuilder.getApiRoot();
+
+        return res;
+      });
   }
 
   public async signUp(
