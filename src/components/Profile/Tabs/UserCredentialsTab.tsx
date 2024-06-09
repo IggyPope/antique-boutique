@@ -8,12 +8,12 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
-import { MyCustomerUpdate } from '@commercetools/platform-sdk';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { useGetCustomerQuery, useUpdateCustomerMutation } from '@/api/services/commercetoolsApi';
 import { EditableTextField } from '@/components/Profile/Tabs/EditableTextField';
 import { CredentialsFormValues, schema } from '@/components/Profile/Tabs/credentialsSchema';
+import { createPayload, parseDateOfBirth } from '@/components/Profile/Tabs/utils';
 import { useAuth } from '@/hooks/useAuth';
 
 export function UserCredentialsTab() {
@@ -40,66 +40,31 @@ export function UserCredentialsTab() {
   const { isLoading } = useAuth();
 
   useEffect(() => {
-    if (userDetails) {
-      if (
-        userDetails?.dateOfBirth &&
-        userDetails?.firstName &&
-        userDetails?.lastName &&
-        userDetails?.email
-      ) {
-        const dateParts = userDetails?.dateOfBirth?.split('-');
-
-        if (dateParts) {
-          const dateOfBirth = new Date(+dateParts[0], +dateParts[1] - 1, +dateParts[2]);
-          setValue('dateOfBirth', dateOfBirth),
-            {
-              shouldValidate: true,
-            };
-        }
-
-        setValue('firstName', userDetails?.firstName, {
-          shouldValidate: true,
-        });
-
-        setValue('lastName', userDetails?.lastName, {
-          shouldValidate: true,
-        });
-
-        setValue('email', userDetails?.email, {
-          shouldValidate: true,
-        });
-      }
+    if (
+      !userDetails ||
+      !userDetails.dateOfBirth ||
+      !userDetails.firstName ||
+      !userDetails.lastName ||
+      !userDetails.email
+    )
+      return;
+    const dateOfBirth = parseDateOfBirth(userDetails.dateOfBirth);
+    if (dateOfBirth) {
+      setValue('dateOfBirth', dateOfBirth), { shouldValidate: true };
     }
+    setValue('firstName', userDetails?.firstName, {
+      shouldValidate: true,
+    });
+    setValue('lastName', userDetails?.lastName, {
+      shouldValidate: true,
+    });
+    setValue('email', userDetails?.email, {
+      shouldValidate: true,
+    });
   }, [userDetails, setValue]);
 
   const onSubmit = (data: CredentialsFormValues) => {
-    const payload: MyCustomerUpdate = {
-      version: userDetails?.version || 1,
-      actions: [
-        {
-          action: 'setFirstName',
-          firstName: data.firstName,
-        },
-        {
-          action: 'setLastName',
-          lastName: data.lastName,
-        },
-
-        {
-          action: 'changeEmail',
-          email: data.email,
-        },
-
-        {
-          action: 'setDateOfBirth',
-          dateOfBirth: new Intl.DateTimeFormat('fr-CA', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-          }).format(new Date(data.dateOfBirth)),
-        },
-      ],
-    };
+    const payload = createPayload(userDetails, data);
 
     updateCustomer(payload)
       .then(() => {

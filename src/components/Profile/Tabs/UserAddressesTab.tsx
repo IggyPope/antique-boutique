@@ -18,7 +18,7 @@ import { MyCustomerUpdate } from '@commercetools/platform-sdk';
 import { useGetCustomerQuery, useUpdateCustomerMutation } from '@/api/services/commercetoolsApi';
 import { AddUserAddressForm } from '@/components/Profile/Tabs/AddUserAddressForm';
 import { UserAddressForm } from '@/components/Profile/Tabs/UserAddressForm';
-import { getCountryByCode } from '@/components/RegistrationForm/utils';
+import { processAddresses } from '@/components/Profile/Tabs/utils';
 
 export interface AddressInfo {
   id?: string;
@@ -58,32 +58,7 @@ export function UserAddressesTab() {
       });
   };
 
-  const addresses = useMemo<AddressInfo[]>(() => {
-    return (
-      userDetails?.addresses?.map((address) => ({
-        id: address.id,
-        street: address.streetName,
-        city: address.city,
-        zipCode: address.postalCode,
-        country: getCountryByCode(address.country),
-        version: userDetails?.version || 1,
-        shippingAddressId: userDetails?.shippingAddressIds?.includes(address.id || '') ?? false,
-        billingAddressId: userDetails?.billingAddressIds?.includes(address.id || '') ?? false,
-        addressType: address.id
-          ? userDetails?.billingAddressIds?.includes(address.id) &&
-            userDetails?.shippingAddressIds?.includes(address.id)
-            ? 'shipping and billing'
-            : userDetails?.billingAddressIds?.includes(address.id)
-              ? 'billing'
-              : userDetails?.shippingAddressIds?.includes(address.id)
-                ? 'shipping'
-                : ''
-          : '',
-        useAsDefaultShipping: userDetails?.defaultShippingAddressId === address.id,
-        useAsDefaultBilling: userDetails?.defaultBillingAddressId === address.id,
-      })) ?? []
-    );
-  }, [userDetails]);
+  const addresses = useMemo<AddressInfo[]>(() => processAddresses(userDetails), [userDetails]);
 
   return (
     <Box
