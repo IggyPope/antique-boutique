@@ -12,7 +12,7 @@ type ProductAvailabilityProps = {
 };
 
 export const ProductAvailability = ({ attributes }: ProductAvailabilityProps) => {
-  const inStockAttribute = attributes?.find((v) => v.name === 'In-Stock');
+  const inStockAttribute = attributes?.find((v) => v.name === 'In-Stock' || 'Availability');
   const inStockColor: boolean = inStockAttribute?.value ?? false;
 
   return (
