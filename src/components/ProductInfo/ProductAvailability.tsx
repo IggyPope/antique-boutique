@@ -38,7 +38,7 @@ export const ProductAvailability = ({ attributes }: ProductAvailabilityProps) =>
   );
 };
 
-export const isiInStock = (attributes: Attribute[] | undefined): boolean => {
+export const isInStock = (attributes: Attribute[] | undefined): boolean => {
   return (
     attributes?.some(
       (attr) =>
