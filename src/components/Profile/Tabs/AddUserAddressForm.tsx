@@ -170,9 +170,7 @@ export function AddUserAddressForm({ version }: AddUserAddressFormProps) {
               )}
               onChange={async (_, newValue) => {
                 field.onChange(newValue ?? '');
-                if (!useAsBilling) {
-                  await trigger(`zipCode`);
-                }
+                await trigger(`zipCode`);
               }}
               isOptionEqualToValue={(option, value) => option === value}
             />

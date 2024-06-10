@@ -16,7 +16,7 @@ import Chip from '@mui/material/Chip';
 import { MyCustomerUpdate } from '@commercetools/platform-sdk';
 
 import { useGetCustomerQuery, useUpdateCustomerMutation } from '@/api/services/commercetoolsApi';
-import { AddUserAddressForm } from '@/components/Profile/Tabs/AddUserAddressForm';
+import { AddUserAddressComponent } from '@/components/Profile/Tabs/AddUserAddressComponent';
 import { UserAddressForm } from '@/components/Profile/Tabs/UserAddressForm';
 import { processAddresses } from '@/components/Profile/Tabs/utils';
 
@@ -106,7 +106,6 @@ export function UserAddressesTab() {
                 width: '100%',
               }}
             >
-              {' '}
               <Typography component={'p'}>{addressTypeMessage}</Typography>
               <DeleteOutlineIcon
                 sx={{ color: '#e46d6d', cursor: 'pointer' }}
@@ -121,7 +120,6 @@ export function UserAddressesTab() {
                 width: '100%',
               }}
             >
-              {' '}
               {addressTypeLabelShipping && (
                 <Chip label={addressTypeLabelShipping} color="secondary" variant="outlined" />
               )}
@@ -140,7 +138,6 @@ export function UserAddressesTab() {
                 width: '100%',
               }}
             >
-              {' '}
               {addressTypeName && (
                 <Chip label={addressTypeName} variant="outlined" sx={{ color: 'orange' }} />
               )}
@@ -169,7 +166,7 @@ export function UserAddressesTab() {
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <AddUserAddressForm version={userDetails?.version || 1} />
+            <AddUserAddressComponent version={userDetails?.version || 1} />
           </AccordionDetails>
         </Accordion>
       </Stack>
