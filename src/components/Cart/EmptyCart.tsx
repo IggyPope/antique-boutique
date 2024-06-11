@@ -7,7 +7,7 @@ import CustomButton from '@/components/UI/Button/CustomButton';
 const EmptyCart = () => {
   const navigate = useNavigate();
   return (
-    <Stack direction="column" justifyContent="center" alignItems="center" gap={2}>
+    <Stack direction="column" justifyContent="center" alignItems="center" gap={2} height="100%">
       <Typography variant="h5">Nothing in your cart yet!</Typography>
       <Typography variant="body1">
         Why not take a look through{' '}

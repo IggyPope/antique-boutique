@@ -1,17 +1,18 @@
 import { Button } from '@mui/material';
 
-const CustomButton = ({
-  onClick,
-  children,
-}: {
+type CustomButtonProps = {
   onClick: () => void;
+  disabled?: boolean;
   children: React.ReactNode;
-}) => {
+};
+
+const CustomButton = ({ onClick, disabled, children }: CustomButtonProps) => {
   return (
     <Button
       variant="contained"
       color="secondary"
       onClick={onClick}
+      disabled={disabled}
       sx={{
         textTransform: 'none',
         fontWeight: '600',
