@@ -6,7 +6,7 @@ import { MyCustomerUpdate } from '@commercetools/platform-sdk';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { useUpdateCustomerMutation } from '@/api/services/commercetoolsApi';
-import { AddUserAddressForm1 } from '@/components/Profile/Tabs/AddUserAddressForm1';
+import { AddUserAddressForm } from '@/components/Profile/Tabs/AddUserAddressForm';
 import { AddressesFormValues, addressSchema } from '@/components/Profile/Tabs/addressSchema';
 import { getCountryCode } from '@/components/RegistrationForm/utils';
 
@@ -124,7 +124,7 @@ export function AddUserAddressComponent({ version }: AddUserAddressFormProps) {
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
-        <AddUserAddressForm1 handleResetFlags={refHandleResetFlags} />
+        <AddUserAddressForm handleResetFlags={refHandleResetFlags} />
       </form>
     </FormProvider>
   );

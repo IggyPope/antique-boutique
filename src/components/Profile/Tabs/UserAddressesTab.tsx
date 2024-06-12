@@ -18,6 +18,7 @@ import { MyCustomerUpdate } from '@commercetools/platform-sdk';
 import { useGetCustomerQuery, useUpdateCustomerMutation } from '@/api/services/commercetoolsApi';
 import { AddUserAddressComponent } from '@/components/Profile/Tabs/AddUserAddressComponent';
 import { UserAddressForm } from '@/components/Profile/Tabs/UserAddressForm';
+import { getAddressLabels } from '@/components/Profile/Tabs/addressHelpers';
 import { processAddresses } from '@/components/Profile/Tabs/utils';
 
 export interface AddressInfo {
@@ -73,19 +74,8 @@ export function UserAddressesTab() {
       }}
     >
       {addresses.map((address) => {
-        let addressTypeLabelShipping;
-        let addressTypeLabelBilling;
-        const addressTypeMessage = 'Your address';
-
-        if (address.useAsDefaultShipping) {
-          addressTypeLabelShipping = 'Default Shipping';
-        }
-
-        if (address.useAsDefaultBilling) {
-          addressTypeLabelBilling = 'Default Billing';
-        }
-
-        const addressTypeName = address.addressType;
+        const { shippingLabel, billingLabel, addressTypeName, addressTypeMessage } =
+          getAddressLabels(address);
 
         return (
           <Stack
@@ -120,13 +110,11 @@ export function UserAddressesTab() {
                 width: '100%',
               }}
             >
-              {addressTypeLabelShipping && (
-                <Chip label={addressTypeLabelShipping} color="secondary" variant="outlined" />
+              {shippingLabel && <Chip label={shippingLabel} color="secondary" variant="outlined" />}
+              {billingLabel && (
+                <Chip label={billingLabel} sx={{ color: 'blue' }} variant="outlined" />
               )}
-              {addressTypeLabelBilling && (
-                <Chip label={addressTypeLabelBilling} sx={{ color: 'blue' }} variant="outlined" />
-              )}
-              {!addressTypeLabelShipping && !addressTypeLabelBilling && (
+              {!shippingLabel && !billingLabel && (
                 <Chip label="Not a Default address" color="error" variant="outlined" />
               )}
             </Box>
