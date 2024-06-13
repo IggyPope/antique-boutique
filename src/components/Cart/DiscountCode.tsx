@@ -1,8 +1,6 @@
 import { useState } from 'react';
 
-import { Stack, TextField, Typography } from '@mui/material';
-
-import CustomButton from '@/components/UI/Button/CustomButton';
+import { Stack, TextField, Typography, Button } from '@mui/material';
 
 const DiscountCode = ({ disabled }: { disabled: boolean }) => {
   const [promo, setPromo] = useState('');
@@ -22,9 +20,9 @@ const DiscountCode = ({ disabled }: { disabled: boolean }) => {
           placeholder="Enter code"
           sx={{ backgroundColor: 'secondary.contrastText' }}
         />
-        <CustomButton disabled={disabled} onClick={() => applyPromo()}>
+        <Button disabled={disabled} onClick={() => applyPromo()} color="primary">
           Apply
-        </CustomButton>
+        </Button>
       </Stack>
     </Stack>
   );

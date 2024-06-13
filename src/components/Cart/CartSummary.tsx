@@ -1,8 +1,7 @@
-import { Stack, Typography, lighten } from '@mui/material';
+import { Stack, Typography, lighten, Button } from '@mui/material';
 
 import DiscountCode from '@/components/Cart/DiscountCode';
 import TotalPriceSummary from '@/components/Cart/TotalPriceSummary';
-import CustomButton from '@/components/UI/Button/CustomButton';
 import theme from '@/theme';
 
 const CartSummary = () => {
@@ -32,9 +31,9 @@ const CartSummary = () => {
       </Typography>
       <DiscountCode disabled={!subtotalPrice} />
       <TotalPriceSummary subtotalSummary={subtotalPrice} totalSummary={totalSummary} />
-      <CustomButton onClick={() => {}} disabled={!subtotalPrice}>
+      <Button onClick={() => {}} disabled={!subtotalPrice}>
         Proceed to Checkout
-      </CustomButton>
+      </Button>
     </Stack>
   );
 };

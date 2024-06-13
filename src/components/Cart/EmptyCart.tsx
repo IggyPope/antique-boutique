@@ -1,8 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import { Stack, Typography, Link } from '@mui/material';
-
-import CustomButton from '@/components/UI/Button/CustomButton';
+import { Stack, Typography, Link, Button } from '@mui/material';
 
 const EmptyCart = () => {
   const navigate = useNavigate();
@@ -30,7 +28,7 @@ const EmptyCart = () => {
         to discover some vintage items? Whether you are looking for something specific or just
         browsing for inspiration, we are sure you will find something you love.
       </Typography>
-      <CustomButton onClick={() => navigate('/catalog')}>Shop Now</CustomButton>
+      <Button onClick={() => navigate('/catalog')}>Shop Now</Button>
     </Stack>
   );
 };

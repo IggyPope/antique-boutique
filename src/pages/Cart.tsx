@@ -18,7 +18,7 @@ const Cart = () => {
     {
       id: '2',
       name: '1972 Olympia Learning Program',
-      discountedPrice: 6500,
+      discountedPrice: 4500,
       price: 5525,
       quantity: 2,
       imageUrl:
@@ -31,7 +31,7 @@ const Cart = () => {
       container
       display="grid"
       gridTemplateColumns="3fr 1fr"
-      gap={2}
+      gap={4}
       height="100%"
       sx={{
         [theme.breakpoints.down('md')]: {
