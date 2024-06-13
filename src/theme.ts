@@ -70,6 +70,18 @@ const theme = createTheme({
         },
       },
     },
+    MuiButton: {
+      defaultProps: {
+        variant: 'contained',
+        color: 'secondary',
+        sx: {
+          textTransform: 'none',
+          fontWeight: '600',
+          borderRadius: '2px',
+          textDecoration: 'none',
+        },
+      },
+    },
   },
   typography: {
     fontFamily: ['Poppins', 'sans-serif'].join(','),
