@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import {
@@ -9,16 +10,31 @@ import {
   Grid,
   useTheme,
   Stack,
+  CardActions,
+  Button,
 } from '@mui/material';
 
+import Cart from '@/components/UI/Icon/Cart';
 import { APP_SETTINGS } from '@/constants/app';
 import useProducts from '@/hooks/useProducts';
 import formatPrice from '@/utils/formatPrice';
 
 const ProductList = () => {
+  const [testId, setTestId] = useState('');
   const { products } = useProducts();
 
   const theme = useTheme();
+
+  const productsInCart = ['27626717-9713-4a4c-9244-2f01121f2701'];
+
+  const isInCart = (id: string) => {
+    return productsInCart.includes(id);
+  };
+
+  const addToCart = (id: string) => {
+    setTestId(testId);
+    setTestId(id);
+  };
 
   return (
     <Grid
@@ -32,7 +48,8 @@ const ProductList = () => {
           <Grid item key={product.id}>
             <Card
               sx={{
-                '& > *': { height: '100%' },
+                position: 'relative',
+                display: 'grid',
                 height: '100%',
               }}
             >
@@ -83,6 +100,15 @@ const ProductList = () => {
                   <Typography fontSize="0.9rem">{`${product.description![APP_SETTINGS.LOCALE].slice(0, 100)}...`}</Typography>
                 </CardContent>
               </CardActionArea>
+              <CardActions sx={{ position: 'absolute', top: 0, right: 0 }}>
+                <Button
+                  onClick={() => addToCart(product.id)}
+                  disabled={isInCart(product.id)}
+                  size="small"
+                >
+                  <Cart />
+                </Button>
+              </CardActions>
             </Card>
           </Grid>
         ))}
