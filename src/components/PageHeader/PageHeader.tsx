@@ -31,7 +31,6 @@ const PageHeader = () => {
             },
           }}
         >
-          <div>.</div>
           <Typography
             color={theme.palette.secondary.contrastText}
             variant="h1"
