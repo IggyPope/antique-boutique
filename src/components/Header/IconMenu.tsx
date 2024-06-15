@@ -6,6 +6,8 @@ import Profile from '@/components/UI/Icon/Profile';
 import { NavLink } from '@/components/UI/NavLink/NavLink';
 import { useAuth } from '@/hooks/useAuth';
 
+//import { data } from '@/hooks/useCart';
+
 const pages = [
   { icon: <Profile />, path: '/profile', auth: true },
   { icon: <Cart />, path: '/cart' },
@@ -17,6 +19,8 @@ const IconMenu = () => {
   const filteredPages = pages.filter((page) =>
     isAuthenticated ? page.auth !== false : page.auth !== true,
   );
+  const badgeContent = 4; //data.length
+
   return (
     <Stack
       direction="row"
@@ -32,7 +36,7 @@ const IconMenu = () => {
       {filteredPages.map((item) => (
         <IconButton key={item.path.slice(1)}>
           {item.path === '/cart' ? (
-            <Badge color="secondary" badgeContent={0}>
+            <Badge color="secondary" badgeContent={badgeContent}>
               <NavLink to={item.path}>{item.icon}</NavLink>
             </Badge>
           ) : (
