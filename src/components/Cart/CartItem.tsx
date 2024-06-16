@@ -37,7 +37,7 @@ const CartItem = ({ item, deleteItem, changeQuantity }: CartItemProps) => {
             <Typography variant="h6" sx={{ textDecoration: 'underline' }}>
               {item.name}
             </Typography>
-            <Typography sx={{ color: 'primary.main' }}>${formatPrice(item.price)}</Typography>
+            <Typography sx={{ color: 'primary.main' }}>{formatPrice(item.price)}</Typography>
             <Stack direction="row" gap={1} alignItems="center">
               <CartItemQuantity
                 id={item.id}
@@ -48,13 +48,13 @@ const CartItem = ({ item, deleteItem, changeQuantity }: CartItemProps) => {
             <Stack sx={{ '& p': { fontSize: '1.125rem', fontWeight: '600' }, mt: 1 }}>
               {item.discountedPrice ? (
                 <Stack direction="row" gap={1}>
-                  <Typography>${formatPrice(item.discountedPrice * item.quantity)}</Typography>
+                  <Typography>{formatPrice(item.discountedPrice * item.quantity)}</Typography>
                   <Typography sx={{ textDecoration: 'line-through', color: 'primary.main' }}>
-                    ${formatPrice(item.price * item.quantity)}
+                    {formatPrice(item.price * item.quantity)}
                   </Typography>
                 </Stack>
               ) : (
-                <Typography>${formatPrice(item.price * item.quantity)}</Typography>
+                <Typography>{formatPrice(item.price * item.quantity)}</Typography>
               )}
             </Stack>
           </Stack>
