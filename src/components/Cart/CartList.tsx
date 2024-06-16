@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import { Button, Stack } from '@mui/material';
 
 import { LineItem } from '@commercetools/platform-sdk';
@@ -8,12 +6,10 @@ import CartItem from '@/components/Cart/CartItem';
 import { useCart } from '@/hooks/useCart';
 
 const CartList = ({ cartItems }: { cartItems: LineItem[] }) => {
-  const [test, setTest] = useState('');
+  const { updateItemQuantity, clearCart } = useCart();
 
-  const { updateItemQuantity } = useCart();
-
-  const clearCart = () => {
-    setTest(test);
+  const handleClearCart = async () => {
+    await clearCart();
   };
 
   const changeQuantity = async (productId: string, quantity: number) => {
@@ -26,7 +22,7 @@ const CartList = ({ cartItems }: { cartItems: LineItem[] }) => {
         <CartItem key={item.id} item={item} changeQuantity={changeQuantity} />
       ))}
       <Button
-        onClick={() => clearCart()}
+        onClick={handleClearCart}
         color="error"
         variant="outlined"
         sx={{ marginLeft: 'auto' }}

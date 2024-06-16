@@ -10,7 +10,6 @@ interface CartItemQuantityInputProps {
 }
 
 export const CartItemQuantityInput: React.FC<CartItemQuantityInputProps> = ({
-  // id,
   value,
   onIncrement,
   onDecrement,

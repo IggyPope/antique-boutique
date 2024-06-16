@@ -262,7 +262,7 @@ export const commercetoolsApi = createApi({
                     .carts()
                     .post({
                       body: {
-                        currency: APP_SETTINGS.CURRENCY,
+                        currency: APP_SETTINGS.CURRENCY.ISO_CODE,
                       },
                     })
                     .execute()
@@ -304,7 +304,7 @@ export const commercetoolsApi = createApi({
                     .carts()
                     .post({
                       body: {
-                        currency: APP_SETTINGS.CURRENCY,
+                        currency: APP_SETTINGS.CURRENCY.ISO_CODE,
                       },
                     })
                     .execute()

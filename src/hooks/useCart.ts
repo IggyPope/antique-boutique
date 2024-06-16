@@ -37,5 +37,16 @@ export const useCart = () => {
     });
   };
 
-  return { data, error, isFetching, isProductInCart, updateItemQuantity };
+  const clearCart = async () => {
+    if (!data) return;
+    return await updateCartMutation({
+      version: data?.version || 1,
+      actions: data?.lineItems.map((item) => ({
+        action: 'removeLineItem',
+        lineItemId: item.id,
+      })),
+    });
+  };
+
+  return { data, error, isFetching, isProductInCart, updateItemQuantity, clearCart };
 };
