@@ -6,8 +6,8 @@ interface ProductQuantityInputProps {
   value: number;
   onIncrement: () => void;
   onDecrement: () => void;
-  isInCart: boolean;
-  isInStock: boolean;
+  isInCart?: boolean | undefined;
+  isInStock?: boolean | undefined;
 }
 
 export const ProductQuantityInput: React.FC<ProductQuantityInputProps> = ({

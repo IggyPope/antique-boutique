@@ -15,7 +15,7 @@ const CartList = ({ cartItems }: { cartItems: TestType[] }) => {
     setTest(id);
   };
 
-  const changeQuantity = (id: string, quantity: string) => {
+  const changeQuantity = (id: string, quantity: number) => {
     setTest(`${id}${quantity}`);
   };
 
