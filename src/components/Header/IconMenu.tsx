@@ -5,8 +5,7 @@ import Cart from '@/components/UI/Icon/Cart';
 import Profile from '@/components/UI/Icon/Profile';
 import { NavLink } from '@/components/UI/NavLink/NavLink';
 import { useAuth } from '@/hooks/useAuth';
-
-//import { data } from '@/hooks/useCart';
+import { useCart } from '@/hooks/useCart';
 
 const pages = [
   { icon: <Profile />, path: '/profile', auth: true },
@@ -19,7 +18,10 @@ const IconMenu = () => {
   const filteredPages = pages.filter((page) =>
     isAuthenticated ? page.auth !== false : page.auth !== true,
   );
-  const badgeContent = 4; //data.length
+
+  const { data: cartData } = useCart();
+
+  const badgeContent = cartData?.lineItems.length || 0;
 
   return (
     <Stack
