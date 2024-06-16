@@ -81,6 +81,7 @@ const ProductFilters = () => {
         <Button
           onClick={handleClearSearch}
           variant="outlined"
+          color="error"
           sx={{ padding: '5px', minWidth: '45px', height: '40px' }}
         >
           <CloseIcon />

@@ -10,11 +10,11 @@ import {
   Grid,
   useTheme,
   Stack,
-  CardActions,
   Button,
+  CardActions,
 } from '@mui/material';
 
-import Cart from '@/components/UI/Icon/Cart';
+import { isInStock } from '@/components/ProductInfo/ProductAvailability';
 import { APP_SETTINGS } from '@/constants/app';
 import useProducts from '@/hooks/useProducts';
 import formatPrice from '@/utils/formatPrice';
@@ -49,7 +49,9 @@ const ProductList = () => {
             <Card
               sx={{
                 position: 'relative',
-                display: 'grid',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
                 height: '100%',
               }}
             >
@@ -100,13 +102,24 @@ const ProductList = () => {
                   <Typography fontSize="0.9rem">{`${product.description![APP_SETTINGS.LOCALE].slice(0, 100)}...`}</Typography>
                 </CardContent>
               </CardActionArea>
-              <CardActions sx={{ position: 'absolute', top: 0, right: 0 }}>
+              <CardActions>
                 <Button
+                  type="button"
+                  variant={isInCart(product.id) ? 'outlined' : 'contained'}
+                  color={isInCart(product.id) ? 'error' : 'secondary'}
+                  disabled={!isInStock(product.masterVariant.attributes)}
+                  sx={{
+                    textTransform: 'none',
+                    fontWeight: '600',
+                    borderRadius: '5px',
+                    textDecoration: 'none',
+                    height: '40px',
+                    width: '100%',
+                  }}
                   onClick={() => addToCart(product.id)}
-                  disabled={isInCart(product.id)}
-                  size="small"
+                  data-testid="addToCart_button"
                 >
-                  <Cart />
+                  {isInCart(product.id) ? 'Remove from Cart' : 'Add to Cart'}
                 </Button>
               </CardActions>
             </Card>
