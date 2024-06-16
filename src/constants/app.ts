@@ -1,6 +1,5 @@
 export const APP_SETTINGS = {
   LOCALE: 'en-US',
-  CURRENCY: 'EUR',
   PRODUCTS_PER_PAGE: 12,
   API_PRICE_RATE: 100,
   CURRENCY: {

@@ -4,12 +4,13 @@ import { Stack, Typography } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 
 interface CartItemQuantityInputProps {
-  value: number;
+  value: number | undefined;
   onIncrement: () => void;
   onDecrement: () => void;
 }
 
 export const CartItemQuantityInput: React.FC<CartItemQuantityInputProps> = ({
+  // id,
   value,
   onIncrement,
   onDecrement,
@@ -26,7 +27,7 @@ export const CartItemQuantityInput: React.FC<CartItemQuantityInputProps> = ({
         <RemoveIcon />
       </IconButton>
       <Typography component="span" minWidth={16} textAlign={'center'}>
-        {value}
+        {value ?? 0}
       </Typography>
       <IconButton onClick={onIncrement}>
         <AddIcon />

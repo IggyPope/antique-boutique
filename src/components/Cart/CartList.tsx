@@ -2,32 +2,28 @@ import { useState } from 'react';
 
 import { Button, Stack } from '@mui/material';
 
-import CartItem from '@/components/Cart/CartItem';
-import { TestType } from '@/components/Cart/types';
+import { LineItem } from '@commercetools/platform-sdk';
 
-const CartList = ({ cartItems }: { cartItems: TestType[] }) => {
+import CartItem from '@/components/Cart/CartItem';
+import { useCart } from '@/hooks/useCart';
+
+const CartList = ({ cartItems }: { cartItems: LineItem[] }) => {
   const [test, setTest] = useState('');
+
+  const { updateItemQuantity } = useCart();
+
   const clearCart = () => {
     setTest(test);
   };
 
-  const deleteItem = (id: string) => {
-    setTest(id);
-  };
-
-  const changeQuantity = (id: string, quantity: number) => {
-    setTest(`${id}${quantity}`);
+  const changeQuantity = async (productId: string, quantity: number) => {
+    await updateItemQuantity({ productId, quantity });
   };
 
   return (
     <Stack gap={2}>
       {cartItems.map((item) => (
-        <CartItem
-          key={item.id}
-          item={item}
-          deleteItem={deleteItem}
-          changeQuantity={changeQuantity}
-        />
+        <CartItem key={item.id} item={item} changeQuantity={changeQuantity} />
       ))}
       <Button
         onClick={() => clearCart()}
