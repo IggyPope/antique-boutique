@@ -1,15 +1,6 @@
-import {
-  Card,
-  CardMedia,
-  FormControl,
-  Grid,
-  IconButton,
-  MenuItem,
-  Select,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Card, CardMedia, Grid, IconButton, Stack, Typography } from '@mui/material';
 
+import { CartItemQuantity } from '@/components/Cart/CartItemQuantity';
 import { TestType } from '@/components/Cart/types';
 import Delete from '@/components/UI/Icon/Delete';
 import theme from '@/theme';
@@ -18,7 +9,7 @@ import formatPrice from '@/utils/formatPrice';
 type CartItemProps = {
   item: TestType;
   deleteItem: (id: string) => void;
-  changeQuantity: (id: string, quantity: string) => void;
+  changeQuantity: (id: string, quantity: number) => void;
 };
 
 const CartItem = ({ item, deleteItem, changeQuantity }: CartItemProps) => {
@@ -48,20 +39,11 @@ const CartItem = ({ item, deleteItem, changeQuantity }: CartItemProps) => {
             </Typography>
             <Typography sx={{ color: 'primary.main' }}>${formatPrice(item.price)}</Typography>
             <Stack direction="row" gap={1} alignItems="center">
-              <Typography>Quantity</Typography>
-              <FormControl variant="standard" size="small">
-                <Select value={item.quantity}>
-                  {[1, 2, 3, 4, 5].map((num) => (
-                    <MenuItem
-                      value={num}
-                      key={num}
-                      onClick={() => changeQuantity(item.id, num.toString())}
-                    >
-                      {num}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <CartItemQuantity
+                id={item.id}
+                quantity={item.quantity}
+                changeQuantity={changeQuantity}
+              />
             </Stack>
             <Stack sx={{ '& p': { fontSize: '1.125rem', fontWeight: '600' }, mt: 1 }}>
               {item.discountedPrice ? (
