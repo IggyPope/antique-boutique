@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import {
@@ -10,31 +9,22 @@ import {
   Grid,
   useTheme,
   Stack,
-  Button,
   CardActions,
 } from '@mui/material';
 
-import { isInStock } from '@/components/ProductInfo/ProductAvailability';
+import { AddToCartButton } from '@/components/ProductInfo/AddToCartButton';
+import { isInStock } from '@/components/ProductInfo/utils';
 import { APP_SETTINGS } from '@/constants/app';
+import { useCart } from '@/hooks/useCart';
 import useProducts from '@/hooks/useProducts';
 import formatPrice from '@/utils/formatPrice';
 
 const ProductList = () => {
-  const [testId, setTestId] = useState('');
   const { products } = useProducts();
 
   const theme = useTheme();
 
-  const productsInCart = ['27626717-9713-4a4c-9244-2f01121f2701'];
-
-  const isInCart = (id: string) => {
-    return productsInCart.includes(id);
-  };
-
-  const addToCart = (id: string) => {
-    setTestId(testId);
-    setTestId(id);
-  };
+  const { isProductInCart } = useCart();
 
   return (
     <Grid
@@ -105,24 +95,11 @@ const ProductList = () => {
                 </CardContent>
               </CardActionArea>
               <CardActions>
-                <Button
-                  type="button"
-                  variant={isInCart(product.id) ? 'outlined' : 'contained'}
-                  color={isInCart(product.id) ? 'error' : 'secondary'}
-                  disabled={!isInStock(product.masterVariant.attributes)}
-                  sx={{
-                    textTransform: 'none',
-                    fontWeight: '600',
-                    borderRadius: '5px',
-                    textDecoration: 'none',
-                    height: '40px',
-                    width: '100%',
-                  }}
-                  onClick={() => addToCart(product.id)}
-                  data-testid="addToCart_button"
-                >
-                  {isInCart(product.id) ? 'Remove from Cart' : 'Add to Cart'}
-                </Button>
+                <AddToCartButton
+                  id={product.id}
+                  isInCart={isProductInCart(product.id)}
+                  isInStock={isInStock(product.masterVariant.attributes)}
+                />
               </CardActions>
             </Card>
           </Grid>

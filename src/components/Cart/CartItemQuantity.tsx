@@ -5,7 +5,7 @@ import { useCart } from '@/hooks/useCart';
 
 interface CartItemQuantityProps {
   id: string;
-  changeQuantity: (id: string, quantity: number) => void;
+  changeQuantity: (lineItemId: string, quantity: number) => void;
 }
 
 export const CartItemQuantity: React.FC<CartItemQuantityProps> = ({

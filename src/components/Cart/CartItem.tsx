@@ -10,7 +10,7 @@ import formatPrice from '@/utils/formatPrice';
 
 type CartItemProps = {
   item: LineItem;
-  changeQuantity: (productId: string, quantity: number) => void;
+  changeQuantity: (lineItemId: string, quantity: number) => void;
 };
 
 const CartItem = ({ item, changeQuantity }: CartItemProps) => {

@@ -12,8 +12,8 @@ const CartList = ({ cartItems }: { cartItems: LineItem[] }) => {
     await clearCart();
   };
 
-  const changeQuantity = async (productId: string, quantity: number) => {
-    await updateItemQuantity({ productId, quantity });
+  const changeQuantity = async (lineItemId: string, quantity: number) => {
+    await updateItemQuantity({ lineItemId, quantity });
   };
 
   return (

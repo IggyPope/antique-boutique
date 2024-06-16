@@ -24,6 +24,34 @@ const PromoCategories = () => {
   const theme = useTheme();
   return (
     <Grid container>
+      <Grid
+        item
+        xs={12}
+        sm={6}
+        md={8}
+        sx={{
+          padding: '36px 24px 24px 24px',
+          [theme.breakpoints.down('lg')]: {
+            padding: '24px 16px 16px 16px',
+          },
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '10px',
+          backgroundImage: `linear-gradient(rgba(33, 33, 33, 0.7), rgba(33, 33, 33, 0.7)), url(${radio})`,
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center 10%',
+          backgroundSize: 'cover',
+          color: theme.palette.primary.contrastText,
+          height: '180px',
+          border: `5px solid ${theme.palette.primary.contrastText}`,
+        }}
+      >
+        <Typography variant="h5">Buy at the best prices!</Typography>
+        <Typography>
+          Use code &quot;summer&quot; to get 15% off selected items and &quot;IloveVintage&quot; to
+          get 20% off vintage clothes price
+        </Typography>
+      </Grid>
       {promo.map((item) => (
         <Grid
           component={Link}
@@ -58,34 +86,6 @@ const PromoCategories = () => {
           <Typography>{item.name}</Typography>
         </Grid>
       ))}
-      <Grid
-        item
-        xs={12}
-        sm={6}
-        md={8}
-        sx={{
-          padding: '48px 24px 24px 24px',
-          [theme.breakpoints.down('md')]: {
-            padding: '24px 24px 24px 24px',
-          },
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '10px',
-          backgroundImage: `linear-gradient(rgba(33, 33, 33, 0.7), rgba(33, 33, 33, 0.7)), url(${radio})`,
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center 10%',
-          backgroundSize: 'cover',
-          color: theme.palette.primary.contrastText,
-          height: '180px',
-          border: `5px solid ${theme.palette.primary.contrastText}`,
-        }}
-      >
-        <Typography variant="h4">Buy at the best prices!</Typography>
-        <Typography>
-          Use the promo &quot;summer&quot; to get a 15% discount on selected items and
-          &quot;IloveVintage&quot; to get a 20% discount on vintage clothes
-        </Typography>
-      </Grid>
     </Grid>
   );
 };

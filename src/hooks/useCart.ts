@@ -18,11 +18,31 @@ export const useCart = () => {
     [data],
   );
 
-  const updateItemQuantity = async ({
+  const addItemToCart = async ({
     productId,
     quantity,
   }: {
     productId: string;
+    quantity: number;
+  }) => {
+    if (!data) return;
+    return await updateCartMutation({
+      version: data?.version || 1,
+      actions: [
+        {
+          action: 'addLineItem',
+          productId,
+          quantity,
+        },
+      ],
+    });
+  };
+
+  const updateItemQuantity = async ({
+    lineItemId,
+    quantity,
+  }: {
+    lineItemId: string;
     quantity: number;
   }) => {
     return await updateCartMutation({
@@ -30,7 +50,7 @@ export const useCart = () => {
       actions: [
         {
           action: 'changeLineItemQuantity',
-          lineItemId: productId,
+          lineItemId,
           quantity,
         },
       ],
@@ -48,5 +68,22 @@ export const useCart = () => {
     });
   };
 
-  return { data, error, isFetching, isProductInCart, updateItemQuantity, clearCart };
+  const getLineItemIdByProductId = useCallback(
+    (id: string) => {
+      if (!data) return;
+      return data.lineItems.find((item) => item.productId === id)?.id;
+    },
+    [data],
+  );
+
+  return {
+    data,
+    error,
+    isFetching,
+    addItemToCart,
+    isProductInCart,
+    updateItemQuantity,
+    clearCart,
+    getLineItemIdByProductId,
+  };
 };
