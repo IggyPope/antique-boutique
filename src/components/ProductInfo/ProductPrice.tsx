@@ -32,7 +32,7 @@ export const ProductPrice = ({ prices }: ProductPriceProps) => {
         {firstPrice?.discounted ? (
           <>
             <Typography fontSize="2rem" fontWeight="600">
-              {`$${formatPrice(firstPrice.discounted.value.centAmount)}`}
+              {formatPrice(firstPrice.discounted.value.centAmount)}
             </Typography>
             <Typography
               fontSize="1.5rem"
@@ -40,12 +40,12 @@ export const ProductPrice = ({ prices }: ProductPriceProps) => {
               color="primary.light"
               sx={{ textDecoration: 'line-through' }}
             >
-              {`$${formatPrice(firstPrice.value.centAmount)}`}
+              {formatPrice(firstPrice.value.centAmount)}
             </Typography>
           </>
         ) : (
           <Typography fontSize="2rem" fontWeight="600">
-            {`$${formatPrice(firstPrice?.value.centAmount || 0)}`}
+            {formatPrice(firstPrice?.value.centAmount || 0)}
           </Typography>
         )}
       </Stack>

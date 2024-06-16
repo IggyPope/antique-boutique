@@ -81,7 +81,10 @@ const PromoCategories = () => {
         }}
       >
         <Typography variant="h4">Buy at the best prices!</Typography>
-        <Typography>Use the promo SUMMER25 to get a discount on select items</Typography>
+        <Typography>
+          Use the promo &quot;summer&quot; to get a 15% discount on selected items and
+          &quot;IloveVintage&quot; to get a 20% discount on vintage clothes
+        </Typography>
       </Grid>
     </Grid>
   );

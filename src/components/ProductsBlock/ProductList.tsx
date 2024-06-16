@@ -80,7 +80,9 @@ const ProductList = () => {
                     {product.masterVariant.prices![0].discounted ? (
                       <>
                         <Typography fontSize="1rem" fontWeight="600">
-                          {`$${formatPrice(product.masterVariant.prices![0].discounted.value.centAmount)}`}
+                          {formatPrice(
+                            product.masterVariant.prices![0].discounted.value.centAmount,
+                          )}
                         </Typography>
                         <Typography
                           fontSize="0.9rem"
@@ -88,13 +90,13 @@ const ProductList = () => {
                           color="primary.light"
                           sx={{ textDecoration: 'line-through' }}
                         >
-                          {`$${formatPrice(product.masterVariant.prices![0].value.centAmount)}`}
+                          {formatPrice(product.masterVariant.prices![0].value.centAmount)}
                         </Typography>
                       </>
                     ) : (
                       <>
                         <Typography fontSize="1rem" fontWeight="600">
-                          {`$${formatPrice(product.masterVariant.prices![0].value.centAmount)}`}
+                          {formatPrice(product.masterVariant.prices![0].value.centAmount)}
                         </Typography>
                       </>
                     )}

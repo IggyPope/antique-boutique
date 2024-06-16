@@ -21,7 +21,7 @@ const TotalPriceSummary = ({ subtotalSummary, totalSummary }: TotalPriceSummaryP
         }}
       >
         <Typography>Subtotal</Typography>
-        <Typography>${formatPrice(subtotalSummary)}</Typography>
+        <Typography>{formatPrice(subtotalSummary)}</Typography>
       </Stack>
       <Stack
         direction="row"
@@ -30,7 +30,7 @@ const TotalPriceSummary = ({ subtotalSummary, totalSummary }: TotalPriceSummaryP
         sx={{ '& > *': { fontSize: '1.125rem', fontWeight: '600' } }}
       >
         <Typography>Order Total</Typography>
-        <Typography>${formatPrice(totalSummary)}</Typography>
+        <Typography>{formatPrice(totalSummary)}</Typography>
       </Stack>
     </Stack>
   );
