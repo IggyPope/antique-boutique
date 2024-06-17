@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import { Card, CardMedia, Grid, IconButton, Stack, Typography } from '@mui/material';
 
 import { LineItem } from '@commercetools/platform-sdk';
@@ -35,9 +37,14 @@ const CartItem = ({ item, changeQuantity }: CartItemProps) => {
         </Grid>
         <Grid item md={5.5} xs={10}>
           <Stack gap={1}>
-            <Typography variant="h6" sx={{ textDecoration: 'underline' }}>
-              {item.name[APP_SETTINGS.LOCALE]}
-            </Typography>
+            <Link
+              to={`/product/${item.productId}`}
+              style={{ textDecoration: 'none', color: 'inherit' }}
+            >
+              <Typography variant="h6" sx={{ textDecoration: 'underline' }}>
+                {item.name[APP_SETTINGS.LOCALE]}
+              </Typography>
+            </Link>
             <Typography sx={{ color: 'primary.main' }}>
               {formatPrice(item.price.value.centAmount)}
             </Typography>
