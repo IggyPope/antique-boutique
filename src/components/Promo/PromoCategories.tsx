@@ -1,4 +1,6 @@
-import { Grid, Link, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
+
+import { Grid, Typography } from '@mui/material';
 import { lighten, useTheme } from '@mui/material/styles';
 
 import accessories from '@/assets/img/promo/accessories.webp';
@@ -55,7 +57,7 @@ const PromoCategories = () => {
       {promo.map((item) => (
         <Grid
           component={Link}
-          href={item.href}
+          to={item.href}
           item
           key={item.name}
           xs={12}
@@ -63,6 +65,7 @@ const PromoCategories = () => {
           md={4}
           sx={{
             textDecoration: 'none',
+            color: 'inherit',
             display: 'flex',
             alignItems: 'end',
             justifyContent: 'end',
