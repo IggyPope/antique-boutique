@@ -61,7 +61,17 @@ export const ProductPage = () => {
         >
           <ProductTitle title={title} />
           <FakeRating id={id} />
-          <Stack flexDirection="row" justifyContent="space-between">
+          <Stack
+            justifyContent="space-between"
+            alignItems="start"
+            sx={{
+              flexDirection: {
+                xs: 'row',
+                sm: 'column',
+                md: 'column',
+              },
+            }}
+          >
             <ProductPrice prices={prices} />
             <ProductAvailability attributes={attributes} />
           </Stack>
