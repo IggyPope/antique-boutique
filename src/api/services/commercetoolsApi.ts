@@ -14,7 +14,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 import { StorageApi } from '@/api/Storage';
 import { AuthService } from '@/api/services/AuthService';
-import { isErrorWithMessage, isFetchBaseQueryError } from '@/api/services/utils';
+import { isErrorWithMessage, processQueryError } from '@/api/services/utils';
 import { APP_SETTINGS, SEARCH_PARAM_NAME, STORAGE_KEYS } from '@/constants/app';
 import { PasswordFlowTokenStore } from '@/store/PasswordStore';
 import { ProductFilters } from '@/store/slices/filtersSlice';
@@ -34,15 +34,7 @@ export const commercetoolsApi = createApi({
 
           return { data: user.body };
         } catch (err) {
-          if (isErrorWithMessage(err)) {
-            return { error: { status: 500, data: err.message } };
-          } else if (isFetchBaseQueryError(err)) {
-            const errMsg = 'error' in err ? err.error : JSON.stringify(err.data);
-
-            return { error: { status: +err.status, data: errMsg } };
-          }
-
-          return { error: { status: 500, data: 'An unknown error occurred' } };
+          return processQueryError(err);
         }
       },
     }),
@@ -61,15 +53,7 @@ export const commercetoolsApi = createApi({
 
           return { data: customerUpdate.body };
         } catch (err) {
-          if (isErrorWithMessage(err)) {
-            return { error: { status: 500, data: err.message } };
-          } else if (isFetchBaseQueryError(err)) {
-            const errMsg = 'error' in err ? err.error : JSON.stringify(err.data);
-
-            return { error: { status: +err.status, data: errMsg } };
-          }
-
-          return { error: { status: 500, data: 'An unknown error occurred' } };
+          return processQueryError(err);
         }
       },
     }),
@@ -101,14 +85,9 @@ export const commercetoolsApi = createApi({
         } catch (err) {
           if (isErrorWithMessage(err)) {
             toast.error(`Error changing password: ${err.message}`);
-            return { error: { status: 500, data: err.message } };
-          } else if (isFetchBaseQueryError(err)) {
-            const errMsg = 'error' in err ? err.error : JSON.stringify(err.data);
-
-            return { error: { status: +err.status, data: errMsg } };
           }
 
-          return { error: { status: 500, data: 'An unknown error occurred' } };
+          return processQueryError(err);
         }
       },
     }),
@@ -124,15 +103,7 @@ export const commercetoolsApi = createApi({
 
           return { data: categories.body };
         } catch (err) {
-          if (isErrorWithMessage(err)) {
-            return { error: { status: 500, data: err.message } };
-          } else if (isFetchBaseQueryError(err)) {
-            const errMsg = 'error' in err ? err.error : JSON.stringify(err.data);
-
-            return { error: { status: +err.status, data: errMsg } };
-          }
-
-          return { error: { status: 500, data: 'An unknown error occurred' } };
+          return processQueryError(err);
         }
       },
     }),
@@ -145,15 +116,7 @@ export const commercetoolsApi = createApi({
 
           return { data: product.body };
         } catch (err) {
-          if (isErrorWithMessage(err)) {
-            return { error: { status: 500, data: err.message } };
-          } else if (isFetchBaseQueryError(err)) {
-            const errMsg = 'error' in err ? err.error : JSON.stringify(err.data);
-
-            return { error: { status: +err.status, data: errMsg } };
-          }
-
-          return { error: { status: 500, data: 'An unknown error occurred' } };
+          return processQueryError(err);
         }
       },
     }),
@@ -224,15 +187,7 @@ export const commercetoolsApi = createApi({
 
           return { data: products.body };
         } catch (err) {
-          if (isErrorWithMessage(err)) {
-            return { error: { status: 500, data: err.message } };
-          } else if (isFetchBaseQueryError(err)) {
-            const errMsg = 'error' in err ? err.error : JSON.stringify(err.data);
-
-            return { error: { status: +err.status, data: errMsg } };
-          }
-
-          return { error: { status: 500, data: 'An unknown error occurred' } };
+          return processQueryError(err);
         }
       },
     }),
@@ -255,34 +210,23 @@ export const commercetoolsApi = createApi({
 
                 return { data: res.body };
               })
-              .catch(
-                async () =>
-                  await apiRoot
-                    .me()
-                    .carts()
-                    .post({
-                      body: {
-                        currency: APP_SETTINGS.CURRENCY.ISO_CODE,
-                      },
-                    })
-                    .execute()
-                    .then((res) => {
-                      const cartId = res.body.id;
-                      cartIdCache.saveData(cartId);
+              .catch(() =>
+                apiRoot
+                  .me()
+                  .carts()
+                  .post({
+                    body: {
+                      currency: APP_SETTINGS.CURRENCY.ISO_CODE,
+                    },
+                  })
+                  .execute()
+                  .then((res) => {
+                    const cartId = res.body.id;
+                    cartIdCache.saveData(cartId);
 
-                      return { data: res.body };
-                    })
-                    .catch((err) => {
-                      if (isErrorWithMessage(err)) {
-                        return { error: { status: 500, data: err.message } };
-                      } else if (isFetchBaseQueryError(err)) {
-                        const errMsg = 'error' in err ? err.error : JSON.stringify(err.data);
-
-                        return { error: { status: +err.status, data: errMsg } };
-                      }
-
-                      return { error: { status: 500, data: 'Could not create a cart' } };
-                    }),
+                    return { data: res.body };
+                  })
+                  .catch(processQueryError),
               )
           : apiRoot
               .me()
@@ -299,7 +243,7 @@ export const commercetoolsApi = createApi({
 
                   return { data: cart };
                 } else {
-                  return await apiRoot
+                  return apiRoot
                     .me()
                     .carts()
                     .post({
@@ -314,17 +258,7 @@ export const commercetoolsApi = createApi({
 
                       return { data: res.body };
                     })
-                    .catch((err) => {
-                      if (isErrorWithMessage(err)) {
-                        return { error: { status: 500, data: err.message } };
-                      } else if (isFetchBaseQueryError(err)) {
-                        const errMsg = 'error' in err ? err.error : JSON.stringify(err.data);
-
-                        return { error: { status: +err.status, data: errMsg } };
-                      }
-
-                      return { error: { status: 500, data: 'Could not create a cart' } };
-                    });
+                    .catch(processQueryError);
                 }
               });
       },
@@ -350,17 +284,7 @@ export const commercetoolsApi = createApi({
           })
           .execute()
           .then((res) => ({ data: res.body }))
-          .catch((err) => {
-            if (isErrorWithMessage(err)) {
-              return { error: { status: 500, data: err.message } };
-            } else if (isFetchBaseQueryError(err)) {
-              const errMsg = 'error' in err ? err.error : JSON.stringify(err.data);
-
-              return { error: { status: +err.status, data: errMsg } };
-            }
-
-            return { error: { status: 500, data: 'Could not add line item' } };
-          });
+          .catch(processQueryError);
       },
     }),
   }),
