@@ -4,6 +4,7 @@ import {
   Cart,
   CategoryPagedQueryResponse,
   Customer,
+  DiscountCodePagedQueryResponse,
   MyCartUpdate,
   MyCustomerChangePassword,
   MyCustomerUpdate,
@@ -26,16 +27,15 @@ export const commercetoolsApi = createApi({
   endpoints: (builder) => ({
     getCustomer: builder.query<Customer, void>({
       providesTags: ['Customer'],
-      queryFn: async () => {
+      queryFn: () => {
         const { apiRoot } = AuthService.getInstance();
 
-        try {
-          const user = await apiRoot.me().get().execute();
-
-          return { data: user.body };
-        } catch (err) {
-          return processQueryError(err);
-        }
+        return apiRoot
+          .me()
+          .get()
+          .execute()
+          .then((res) => ({ data: res.body }))
+          .catch(processQueryError);
       },
     }),
     updateCustomer: builder.mutation<Customer, MyCustomerUpdate>({
@@ -233,7 +233,7 @@ export const commercetoolsApi = createApi({
               .carts()
               .get()
               .execute()
-              .then(async (res) => {
+              .then((res) => {
                 const carts = res.body.results;
 
                 if (carts.length > 0) {
@@ -275,16 +275,50 @@ export const commercetoolsApi = createApi({
           return { error: { status: 404, data: 'Active cart ID not found' } };
         }
 
+        return (
+          apiRoot
+            // .me()
+            .carts()
+            .withId({ ID: cartId })
+            .post({
+              body: payload,
+            })
+            .execute()
+            .then((res) => ({ data: res.body }))
+            .catch(processQueryError)
+        );
+      },
+    }),
+    getDiscountCodes: builder.query<DiscountCodePagedQueryResponse, void>({
+      queryFn: async () => {
+        const { apiRoot } = AuthService.getInstance();
+
         return apiRoot
-          .me()
-          .carts()
-          .withId({ ID: cartId })
-          .post({
-            body: payload,
-          })
+          .discountCodes()
+          .get()
           .execute()
           .then((res) => ({ data: res.body }))
           .catch(processQueryError);
+      },
+    }),
+    logoutUser: builder.mutation<void, void>({
+      invalidatesTags: ['Cart'],
+      queryFn: (_, { dispatch }) => {
+        try {
+          const cartIdCache = new StorageApi<string>(sessionStorage, STORAGE_KEYS.CART_ID);
+          cartIdCache.removeData();
+          PasswordFlowTokenStore.removeData();
+
+          const service = AuthService.getInstance();
+          service.signOut();
+
+          dispatch({ type: 'user/signOut' });
+          toast.success('You have successfully signed out!');
+
+          return { data: undefined };
+        } catch (err) {
+          return { error: { status: 500, data: 'An unknown error occurred' } };
+        }
       },
     }),
   }),
@@ -299,4 +333,6 @@ export const {
   useGetFilteredProductsQuery,
   useGetCartQuery,
   useUpdateCartMutation,
+  useGetDiscountCodesQuery,
+  useLogoutUserMutation,
 } = commercetoolsApi;

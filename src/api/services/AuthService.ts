@@ -26,8 +26,6 @@ export class AuthService {
     username: string,
     password: string,
   ): Promise<ClientResponse<CustomerSignInResult>> {
-    this.apiRoot = this.apiBuilder.getApiRoot({ username, password });
-
     return this.apiRoot
       .me()
       .login()
@@ -35,18 +33,12 @@ export class AuthService {
         body: {
           email: username,
           password: password,
-          // TODO:
-          // Add anonymous cart to be merged with the active customer cart, when we have cart functionality
-          // activeCartSignInMode: 'mergeWithExistingCustomerCart',
-          // anonymousCart: {
-          //   typeId: 'cart',
-          //   id: '<anonymous-cart-id>',
-          // }
+          activeCartSignInMode: 'MergeWithExistingCustomerCart',
         },
       })
       .execute()
       .then((res) => {
-        this.apiRoot = this.apiBuilder.getApiRoot();
+        this.apiRoot = this.apiBuilder.getApiRoot({ username, password });
 
         return res;
       });
@@ -78,5 +70,7 @@ export class AuthService {
 
   public signOut() {
     this.apiRoot = this.apiBuilder.getApiRoot();
+
+    void this.apiRoot.get().execute();
   }
 }

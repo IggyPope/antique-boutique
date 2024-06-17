@@ -10,15 +10,21 @@ class TokenCacheClass implements TokenCache {
   get() {
     const cacheToken = this.store.getData();
 
-    return {
-      token: cacheToken?.token ? `Bearer ${cacheToken?.token}` : '',
-      expirationTime: 0,
+    const tokenObject = {
+      token: cacheToken?.token ? `${cacheToken?.token}` : '',
+      expirationTime: cacheToken?.expirationTime ?? 0,
       refreshToken: cacheToken?.refreshToken ?? '',
     };
+
+    return tokenObject;
   }
 
   set(cache: TokenStore) {
-    this.store.saveData(cache);
+    this.store.saveData({
+      token: `${cache.token}`,
+      expirationTime: cache.expirationTime,
+      refreshToken: cache.refreshToken,
+    });
   }
 }
 
