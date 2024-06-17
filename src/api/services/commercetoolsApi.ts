@@ -285,7 +285,11 @@ export const commercetoolsApi = createApi({
             })
             .execute()
             .then((res) => ({ data: res.body }))
-            .catch(processQueryError)
+            .catch((err) => {
+              const errorObj = processQueryError(err);
+              toast.error(`Cart update failed. Try again later.`);
+              return errorObj;
+            })
         );
       },
     }),
@@ -317,6 +321,7 @@ export const commercetoolsApi = createApi({
 
           return { data: undefined };
         } catch (err) {
+          toast.error(`Sign out failed. Try again later.`);
           return { error: { status: 500, data: 'An unknown error occurred' } };
         }
       },
