@@ -1,12 +1,13 @@
 import { Stack, Typography, lighten, Button } from '@mui/material';
 
+import { AppliedCodes } from '@/components/Cart/AppliedCodes';
 import DiscountCode from '@/components/Cart/DiscountCode';
 import TotalPriceSummary from '@/components/Cart/TotalPriceSummary';
 import { useCart } from '@/hooks/useCart';
 import theme from '@/theme';
 
 const CartSummary = () => {
-  const { data: cartData } = useCart();
+  const { cartData, subtotal, total, discount } = useCart();
 
   return (
     <Stack
@@ -30,11 +31,9 @@ const CartSummary = () => {
         Summary
       </Typography>
       <DiscountCode disabled={!cartData?.totalPrice.centAmount} />
-      <TotalPriceSummary
-        subtotalSummary={cartData?.totalPrice.centAmount ?? 0}
-        totalSummary={cartData?.totalPrice.centAmount ?? 0}
-      />
-      <Button onClick={() => {}} disabled={!cartData?.totalPrice.centAmount}>
+      <AppliedCodes />
+      <TotalPriceSummary subtotalSummary={subtotal} totalSummary={total} discount={discount} />
+      <Button onClick={() => {}} disabled={!total}>
         Proceed to Checkout
       </Button>
     </Stack>

@@ -16,6 +16,7 @@ export const NavLink = ({ children, to }: NavLinkProps) => {
         <Typography
           sx={{
             textDecoration: 'none',
+            display: 'flex',
             color: isActive ? theme.palette.secondary.main : theme.palette.primary.contrastText,
           }}
         >

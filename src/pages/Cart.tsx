@@ -7,7 +7,7 @@ import { useCart } from '@/hooks/useCart';
 import theme from '@/theme';
 
 const Cart = () => {
-  const { data: cartData } = useCart();
+  const { cartData } = useCart();
 
   return (
     <Grid

@@ -12,7 +12,7 @@ export const CartItemQuantity: React.FC<CartItemQuantityProps> = ({
   id,
   changeQuantity,
 }: CartItemQuantityProps) => {
-  const { data: cartData } = useCart();
+  const { cartData } = useCart();
 
   const itemQuantity = cartData?.lineItems.find((item) => item.id === id)?.quantity;
 
