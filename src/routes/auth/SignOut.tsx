@@ -1,14 +1,14 @@
 import { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 
-import { useAuth } from '@/hooks/useAuth';
+import { useLogoutUserMutation } from '@/api/services/commercetoolsApi';
 
 const SignOut = () => {
-  const { signOut } = useAuth();
+  const [logoutUser] = useLogoutUserMutation();
 
   useEffect(() => {
-    signOut();
-  }, [signOut]);
+    void logoutUser();
+  }, [logoutUser]);
 
   return <Navigate to="/" />;
 };

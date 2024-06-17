@@ -1,18 +1,21 @@
+import { Link } from 'react-router-dom';
+
 import { Card, CardMedia, Grid, IconButton, Stack, Typography } from '@mui/material';
 
+import { LineItem } from '@commercetools/platform-sdk';
+
 import { CartItemQuantity } from '@/components/Cart/CartItemQuantity';
-import { TestType } from '@/components/Cart/types';
 import Delete from '@/components/UI/Icon/Delete';
+import { APP_SETTINGS } from '@/constants/app';
 import theme from '@/theme';
 import formatPrice from '@/utils/formatPrice';
 
 type CartItemProps = {
-  item: TestType;
-  deleteItem: (id: string) => void;
-  changeQuantity: (id: string, quantity: number) => void;
+  item: LineItem;
+  changeQuantity: (lineItemId: string, quantity: number) => void;
 };
 
-const CartItem = ({ item, deleteItem, changeQuantity }: CartItemProps) => {
+const CartItem = ({ item, changeQuantity }: CartItemProps) => {
   return (
     <Card
       key={item.id}
@@ -27,34 +30,39 @@ const CartItem = ({ item, deleteItem, changeQuantity }: CartItemProps) => {
       <Grid container spacing={2}>
         <Grid item md="auto" xs={12} sx={{ display: 'flex', alignItems: 'center' }}>
           <CardMedia
-            image={item.imageUrl}
-            title={item.name}
+            image={item.variant.images ? item.variant.images[0].url : ''}
+            title={item.name[APP_SETTINGS.LOCALE]}
             sx={{ width: '170px', height: '170px' }}
           />
         </Grid>
         <Grid item md={5.5} xs={10}>
           <Stack gap={1}>
-            <Typography variant="h6" sx={{ textDecoration: 'underline' }}>
-              {item.name}
+            <Link
+              to={`/product/${item.productId}`}
+              style={{ textDecoration: 'none', color: 'inherit' }}
+            >
+              <Typography variant="h6" sx={{ textDecoration: 'underline' }}>
+                {item.name[APP_SETTINGS.LOCALE]}
+              </Typography>
+            </Link>
+            <Typography sx={{ color: 'primary.main' }}>
+              {formatPrice(item.price.value.centAmount)}
             </Typography>
-            <Typography sx={{ color: 'primary.main' }}>{formatPrice(item.price)}</Typography>
             <Stack direction="row" gap={1} alignItems="center">
-              <CartItemQuantity
-                id={item.id}
-                quantity={item.quantity}
-                changeQuantity={changeQuantity}
-              />
+              <CartItemQuantity id={item.id} changeQuantity={changeQuantity} />
             </Stack>
             <Stack sx={{ '& p': { fontSize: '1.125rem', fontWeight: '600' }, mt: 1 }}>
-              {item.discountedPrice ? (
+              {item.price.discounted?.value.centAmount ? (
                 <Stack direction="row" gap={1}>
-                  <Typography>{formatPrice(item.discountedPrice * item.quantity)}</Typography>
+                  <Typography>
+                    {formatPrice(item.price.discounted.value.centAmount * item.quantity)}
+                  </Typography>
                   <Typography sx={{ textDecoration: 'line-through', color: 'primary.main' }}>
-                    {formatPrice(item.price * item.quantity)}
+                    {formatPrice(item.price.value.centAmount * item.quantity)}
                   </Typography>
                 </Stack>
               ) : (
-                <Typography>{formatPrice(item.price * item.quantity)}</Typography>
+                <Typography>{formatPrice(item.price.value.centAmount * item.quantity)}</Typography>
               )}
             </Stack>
           </Stack>
@@ -65,7 +73,7 @@ const CartItem = ({ item, deleteItem, changeQuantity }: CartItemProps) => {
               '&:hover path': { transition: 'fill 0.3s' },
               '@media (any-hover: hover)': { '&:hover path': { fill: theme.palette.error.main } },
             }}
-            onClick={() => deleteItem(item.id)}
+            onClick={() => changeQuantity(item.id, 0)}
           >
             <Delete />
           </IconButton>

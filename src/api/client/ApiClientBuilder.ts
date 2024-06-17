@@ -36,8 +36,6 @@ export class ApiClientBuilder {
 
   private readonly clientSecret: string;
 
-  public reset = false;
-
   constructor() {
     if (
       !VITE_CTP_AUTH_URL ||
@@ -57,9 +55,7 @@ export class ApiClientBuilder {
   }
 
   getApiRoot(credentials?: { username: string; password: string }): ByProjectKeyRequestBuilder {
-    return createApiBuilderFromCtpClient(
-      this.getApiClient(this.reset ? undefined : credentials),
-    ).withProjectKey({
+    return createApiBuilderFromCtpClient(this.getApiClient(credentials)).withProjectKey({
       projectKey: this.projectKey,
     });
   }
@@ -79,7 +75,7 @@ export class ApiClientBuilder {
   private getExistingTokenFlowClient(): Client {
     return new ClientBuilder()
       .withProjectKey(this.projectKey)
-      .withExistingTokenFlow(getAuthorizationToken(), options)
+      .withExistingTokenFlow(`Bearer ${getAuthorizationToken()}`, options)
       .withHttpMiddleware(this.getHttpMiddlewareOptions())
       .build();
   }

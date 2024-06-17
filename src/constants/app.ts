@@ -8,6 +8,12 @@ export const APP_SETTINGS = {
   },
 } as const;
 
+export const STORAGE_KEYS = {
+  ANONYMOUS_FLOW_TOKEN: 'ABAnonymousFlowToken',
+  PASSWORD_FLOW_TOKEN: 'ABPasswordFlowToken',
+  CART_ID: 'ABCartId',
+} as const;
+
 export const SEARCH_PARAM_NAME = 'text.en-US';
 
 export const SORT_OPTIONS = [

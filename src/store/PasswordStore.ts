@@ -1,5 +1,9 @@
 import { type TokenStore } from '@commercetools/sdk-client-v2';
 
-import { LocalStorageApi } from '@/api/Storage';
+import { StorageApi } from '@/api/Storage';
+import { STORAGE_KEYS } from '@/constants/app';
 
-export const PasswordFlowTokenStore = new LocalStorageApi<TokenStore>('ABPasswordFlowToken');
+export const PasswordFlowTokenStore = new StorageApi<TokenStore>(
+  localStorage,
+  STORAGE_KEYS.PASSWORD_FLOW_TOKEN,
+);

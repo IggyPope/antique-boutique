@@ -1,22 +1,23 @@
-export class LocalStorageApi<D> implements IStore<D> {
-  private readonly key: string;
+import { STORAGE_KEYS } from '@/constants/app';
 
-  constructor(key: string) {
-    this.key = key;
-  }
+export class StorageApi<D> implements IStore<D> {
+  constructor(
+    private readonly storage: Storage,
+    private readonly key: (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS],
+  ) {}
 
   public saveData(data: unknown) {
-    localStorage.setItem(this.key, JSON.stringify(data));
+    this.storage.setItem(this.key, JSON.stringify(data));
   }
 
   public getData(): D | null {
-    const data: string | null = localStorage.getItem(this.key);
+    const data: string | null = this.storage.getItem(this.key);
 
     return data ? (JSON.parse(data) as D) : null;
   }
 
   public removeData(): void {
-    localStorage.removeItem(this.key);
+    this.storage.removeItem(this.key);
   }
 }
 

@@ -1,8 +1,8 @@
 import { TokenStore } from '@commercetools/sdk-client-v2';
 
-import { LocalStorageApi } from '@/api/Storage';
+import { StorageApi } from '@/api/Storage';
 
-export function isTokenValid(flowTokenStore: LocalStorageApi<TokenStore>): boolean {
+export function isTokenValid(flowTokenStore: StorageApi<TokenStore>): boolean {
   const tokenData = flowTokenStore.getData();
   const tokenExpiration = tokenData?.expirationTime ?? 0;
   const currentTime = new Date().getTime();

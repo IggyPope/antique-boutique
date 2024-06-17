@@ -1,36 +1,28 @@
-import { useState } from 'react';
-
 import { Button, Stack } from '@mui/material';
 
+import { LineItem } from '@commercetools/platform-sdk';
+
 import CartItem from '@/components/Cart/CartItem';
-import { TestType } from '@/components/Cart/types';
+import { useCart } from '@/hooks/useCart';
 
-const CartList = ({ cartItems }: { cartItems: TestType[] }) => {
-  const [test, setTest] = useState('');
-  const clearCart = () => {
-    setTest(test);
+const CartList = ({ cartItems }: { cartItems: LineItem[] }) => {
+  const { updateItemQuantity, clearCart } = useCart();
+
+  const handleClearCart = async () => {
+    await clearCart();
   };
 
-  const deleteItem = (id: string) => {
-    setTest(id);
-  };
-
-  const changeQuantity = (id: string, quantity: number) => {
-    setTest(`${id}${quantity}`);
+  const changeQuantity = async (lineItemId: string, quantity: number) => {
+    await updateItemQuantity({ lineItemId, quantity });
   };
 
   return (
     <Stack gap={2}>
       {cartItems.map((item) => (
-        <CartItem
-          key={item.id}
-          item={item}
-          deleteItem={deleteItem}
-          changeQuantity={changeQuantity}
-        />
+        <CartItem key={item.id} item={item} changeQuantity={changeQuantity} />
       ))}
       <Button
-        onClick={() => clearCart()}
+        onClick={handleClearCart}
         color="error"
         variant="outlined"
         sx={{ marginLeft: 'auto' }}
