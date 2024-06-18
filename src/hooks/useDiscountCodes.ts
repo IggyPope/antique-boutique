@@ -15,7 +15,9 @@ export const useDiscountCodes = () => {
   const { data: cartData } = useGetCartQuery(isAuthenticated);
   const { data: codesData } = useGetDiscountCodesQuery();
 
-  const [updateCartMutation] = useUpdateCartMutation();
+  const [updateCartMutation] = useUpdateCartMutation({
+    fixedCacheKey: 'cartMutation',
+  });
 
   const [appliedCodes, setAppliedCodes] = useState<DiscountCode[]>([]);
 
