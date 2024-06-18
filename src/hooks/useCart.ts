@@ -13,7 +13,7 @@ export const useCart = () => {
     isFetching: cartIsFetching,
   } = useGetCartQuery(isAuthenticated);
 
-  const [updateCartMutation] = useUpdateCartMutation();
+  const [updateCartMutation, { isLoading: cartIsUpdating }] = useUpdateCartMutation();
 
   const [subtotal, setSubTotal] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
@@ -103,6 +103,7 @@ export const useCart = () => {
     cartData,
     cartError,
     cartIsFetching,
+    cartIsUpdating,
     subtotal,
     total,
     discount,

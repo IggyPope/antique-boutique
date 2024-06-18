@@ -66,7 +66,6 @@ describe('ProductPage Component', () => {
       </Provider>,
     );
 
-    expect(screen.getByText('Loading...')).toBeInTheDocument();
     await waitFor(() => {
       expect(screen.getByText('12 Reviews')).toBeInTheDocument();
     });

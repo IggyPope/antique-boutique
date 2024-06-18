@@ -20,7 +20,7 @@ import useProducts from '@/hooks/useProducts';
 import formatPrice from '@/utils/formatPrice';
 
 const ProductList = () => {
-  const { products } = useProducts();
+  const { productsData } = useProducts();
 
   const theme = useTheme();
 
@@ -33,8 +33,8 @@ const ProductList = () => {
       gap={2}
       sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}
     >
-      {products?.results.length &&
-        products.results.map((product) => (
+      {productsData?.results.length &&
+        productsData.results.map((product) => (
           <Grid item key={product.id}>
             <Card
               sx={{
