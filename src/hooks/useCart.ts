@@ -13,7 +13,9 @@ export const useCart = () => {
     isFetching: cartIsFetching,
   } = useGetCartQuery(isAuthenticated);
 
-  const [updateCartMutation, { isLoading: cartIsUpdating }] = useUpdateCartMutation();
+  const [updateCartMutation, { isLoading: cartIsUpdating }] = useUpdateCartMutation({
+    fixedCacheKey: 'cartMutation',
+  });
 
   const [subtotal, setSubTotal] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
@@ -41,15 +43,9 @@ export const useCart = () => {
     [cartData],
   );
 
-  const addItemToCart = async ({
-    productId,
-    quantity,
-  }: {
-    productId: string;
-    quantity: number;
-  }) => {
+  const addItemToCart = ({ productId, quantity }: { productId: string; quantity: number }) => {
     if (!cartData) return;
-    return await updateCartMutation({
+    void updateCartMutation({
       version: cartData?.version || 1,
       actions: [
         {
@@ -61,14 +57,14 @@ export const useCart = () => {
     });
   };
 
-  const updateItemQuantity = async ({
+  const updateItemQuantity = ({
     lineItemId,
     quantity,
   }: {
     lineItemId: string;
     quantity: number;
   }) => {
-    return await updateCartMutation({
+    void updateCartMutation({
       version: cartData?.version || 1,
       actions: [
         {
@@ -80,9 +76,9 @@ export const useCart = () => {
     });
   };
 
-  const clearCart = async () => {
+  const clearCart = () => {
     if (!cartData) return;
-    return await updateCartMutation({
+    void updateCartMutation({
       version: cartData?.version || 1,
       actions: cartData?.lineItems.map((item) => ({
         action: CART_ACTIONS.REMOVE_ITEM,

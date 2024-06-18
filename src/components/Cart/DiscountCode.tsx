@@ -15,7 +15,6 @@ const DiscountCode = ({ disabled }: { disabled: boolean }) => {
 
   return (
     <Stack gap={1}>
-      {/* <Typography fontSize="0.875rem">Apply Discount Code</Typography> */}
       <Stack direction="row" alignItems={'center'} gap={1}>
         <TextField
           disabled={disabled}
@@ -24,6 +23,7 @@ const DiscountCode = ({ disabled }: { disabled: boolean }) => {
           onChange={(e) => setPromo(e.target.value)}
           placeholder="Enter code"
           sx={{ backgroundColor: 'secondary.contrastText', height: '40px' }}
+          onKeyUp={(e) => e.key === 'Enter' && promo.length > 0 && applyPromo()}
         />
         <Button
           disabled={disabled}
