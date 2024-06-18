@@ -12,6 +12,7 @@ import {
 
 import JuliaImg from '@/assets/img/Julia.png';
 import AnastasiaImg from '@/assets/img/Nastia.png';
+import SchoolLogo from '@/assets/img/RsLogo.png';
 
 const teamMembers = [
   {
@@ -104,7 +105,7 @@ const About = () => {
               <Avatar
                 alt="RS School Logo"
                 title="RS School Logo"
-                src="src/assets/img/RsLogo.png"
+                src={SchoolLogo}
                 sx={{ width: 56, height: 56, mr: 2 }}
               />
             </a>
