@@ -6,7 +6,7 @@ import TotalPriceSummary from '@/components/Cart/TotalPriceSummary';
 import { useCart } from '@/hooks/useCart';
 import theme from '@/theme';
 
-const CartSummary = () => {
+const CartSummary = ({ isLoading }: { isLoading: boolean }) => {
   const { cartData, subtotal, total, discount } = useCart();
 
   return (
@@ -30,10 +30,10 @@ const CartSummary = () => {
       >
         Summary
       </Typography>
-      <DiscountCode disabled={!cartData?.totalPrice.centAmount} />
-      <AppliedCodes />
+      <DiscountCode disabled={!cartData?.totalPrice.centAmount || isLoading} />
+      <AppliedCodes isLoading={isLoading} />
       <TotalPriceSummary subtotalSummary={subtotal} totalSummary={total} discount={discount} />
-      <Button onClick={() => {}} disabled={!total}>
+      <Button onClick={() => {}} disabled={!total || isLoading}>
         Proceed to Checkout
       </Button>
     </Stack>

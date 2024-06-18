@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 import { Grid } from '@mui/material';
 
 import CartList from '@/components/Cart/CartList';
@@ -7,7 +9,13 @@ import { useCart } from '@/hooks/useCart';
 import theme from '@/theme';
 
 const Cart = () => {
-  const { cartData } = useCart();
+  const { cartData, cartIsFetching, cartIsUpdating } = useCart();
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(cartIsFetching || cartIsUpdating);
+  }, [cartIsFetching, cartIsUpdating]);
 
   return (
     <Grid
@@ -24,11 +32,15 @@ const Cart = () => {
     >
       {cartData && (
         <Grid item>
-          {cartData?.lineItems.length ? <CartList cartItems={cartData.lineItems} /> : <EmptyCart />}
+          {cartData?.lineItems.length ? (
+            <CartList isLoading={isLoading} cartItems={cartData.lineItems} />
+          ) : (
+            <EmptyCart />
+          )}
         </Grid>
       )}
       <Grid item>
-        <CartSummary />
+        <CartSummary isLoading={isLoading} />
       </Grid>
     </Grid>
   );

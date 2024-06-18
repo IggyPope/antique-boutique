@@ -4,11 +4,13 @@ import { CartItemQuantityInput } from '@/components/Cart/CartItemQuantityInput';
 import { useCart } from '@/hooks/useCart';
 
 interface CartItemQuantityProps {
+  isLoading: boolean;
   id: string;
   changeQuantity: (lineItemId: string, quantity: number) => void;
 }
 
 export const CartItemQuantity: React.FC<CartItemQuantityProps> = ({
+  isLoading,
   id,
   changeQuantity,
 }: CartItemQuantityProps) => {
@@ -32,6 +34,7 @@ export const CartItemQuantity: React.FC<CartItemQuantityProps> = ({
         Quantity
       </Typography>
       <CartItemQuantityInput
+        isLoading={isLoading}
         value={itemQuantity}
         onIncrement={handleIncrement}
         onDecrement={handleDecrement}

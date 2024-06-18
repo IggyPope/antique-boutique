@@ -3,7 +3,7 @@ import { Button, Stack, Typography } from '@mui/material';
 
 import { useDiscountCodes } from '@/hooks/useDiscountCodes';
 
-export const AppliedCodes = () => {
+export const AppliedCodes = ({ isLoading }: { isLoading: boolean }) => {
   const { appliedCodes, removeDiscountCode } = useDiscountCodes();
 
   return (
@@ -13,6 +13,7 @@ export const AppliedCodes = () => {
           <Typography>{code.code}</Typography>
           <Button
             onClick={() => removeDiscountCode(code.id)}
+            disabled={isLoading}
             variant="text"
             color="primary"
             size="small"
