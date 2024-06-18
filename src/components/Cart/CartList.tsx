@@ -5,7 +5,7 @@ import { LineItem } from '@commercetools/platform-sdk';
 import CartItem from '@/components/Cart/CartItem';
 import { useCart } from '@/hooks/useCart';
 
-const CartList = ({ cartItems }: { cartItems: LineItem[] }) => {
+const CartList = ({ isLoading, cartItems }: { isLoading: boolean; cartItems: LineItem[] }) => {
   const { updateItemQuantity, clearCart } = useCart();
 
   const handleClearCart = async () => {
@@ -19,10 +19,11 @@ const CartList = ({ cartItems }: { cartItems: LineItem[] }) => {
   return (
     <Stack gap={2}>
       {cartItems.map((item) => (
-        <CartItem key={item.id} item={item} changeQuantity={changeQuantity} />
+        <CartItem key={item.id} item={item} changeQuantity={changeQuantity} isLoading={isLoading} />
       ))}
       <Button
         onClick={handleClearCart}
+        disabled={isLoading}
         color="error"
         variant="outlined"
         sx={{ marginLeft: 'auto' }}

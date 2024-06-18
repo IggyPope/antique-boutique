@@ -11,11 +11,12 @@ import theme from '@/theme';
 import formatPrice from '@/utils/formatPrice';
 
 type CartItemProps = {
+  isLoading: boolean;
   item: LineItem;
   changeQuantity: (lineItemId: string, quantity: number) => void;
 };
 
-const CartItem = ({ item, changeQuantity }: CartItemProps) => {
+const CartItem = ({ isLoading, item, changeQuantity }: CartItemProps) => {
   return (
     <Card
       key={item.id}
@@ -49,7 +50,11 @@ const CartItem = ({ item, changeQuantity }: CartItemProps) => {
               {formatPrice(item.price.value.centAmount)}
             </Typography>
             <Stack direction="row" gap={1} alignItems="center">
-              <CartItemQuantity id={item.id} changeQuantity={changeQuantity} />
+              <CartItemQuantity
+                id={item.id}
+                changeQuantity={changeQuantity}
+                isLoading={isLoading}
+              />
             </Stack>
             <Stack sx={{ '& p': { fontSize: '1.125rem', fontWeight: '600' }, mt: 1 }}>
               {item.price.discounted?.value.centAmount ? (
@@ -69,6 +74,7 @@ const CartItem = ({ item, changeQuantity }: CartItemProps) => {
         </Grid>
         <Grid item md xs={2} sx={{ display: 'flex', justifyContent: 'end', alignItems: 'start' }}>
           <IconButton
+            disabled={isLoading}
             sx={{
               '&:hover path': { transition: 'fill 0.3s' },
               '@media (any-hover: hover)': { '&:hover path': { fill: theme.palette.error.main } },

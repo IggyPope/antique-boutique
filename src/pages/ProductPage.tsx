@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 
-import { Typography, Box, Stack } from '@mui/material';
+import { Box, Stack, CircularProgress } from '@mui/material';
 
 import { useGetProductByIdQuery } from '@/api/services/commercetoolsApi';
 import { AddToCartButton } from '@/components/ProductInfo/AddToCartButton';
@@ -24,7 +24,7 @@ export const ProductPage = () => {
   const title = product?.name.en;
 
   if (isFetching) {
-    return <Typography sx={{ textAlign: 'center' }}>Loading...</Typography>;
+    return <CircularProgress size={100} sx={{ alignSelf: 'center' }} />;
   }
 
   return (

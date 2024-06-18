@@ -6,11 +6,23 @@ import formatPrice from '@/utils/formatPrice';
 type TotalPriceSummaryProps = {
   subtotalSummary: number;
   totalSummary: number;
+  discount: number;
 };
 
-const TotalPriceSummary = ({ subtotalSummary, totalSummary }: TotalPriceSummaryProps) => {
+const TotalPriceSummary = ({ subtotalSummary, totalSummary, discount }: TotalPriceSummaryProps) => {
   return (
     <Stack mt={10} sx={{ [theme.breakpoints.down('md')]: { mt: 0 } }}>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        pb={2}
+        sx={{
+          '& > *': { fontSize: '0.875rem' },
+        }}
+      >
+        <Typography>Subtotal</Typography>
+        <Typography>{formatPrice(subtotalSummary)}</Typography>
+      </Stack>
       <Stack
         direction="row"
         justifyContent="space-between"
@@ -20,8 +32,8 @@ const TotalPriceSummary = ({ subtotalSummary, totalSummary }: TotalPriceSummaryP
           '& > *': { fontSize: '0.875rem' },
         }}
       >
-        <Typography>Subtotal</Typography>
-        <Typography>{formatPrice(subtotalSummary)}</Typography>
+        <Typography>Discount amount</Typography>
+        <Typography>{formatPrice(discount)}</Typography>
       </Stack>
       <Stack
         direction="row"

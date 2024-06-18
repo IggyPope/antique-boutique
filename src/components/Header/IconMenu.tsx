@@ -19,13 +19,14 @@ const IconMenu = () => {
     isAuthenticated ? page.auth !== false : page.auth !== true,
   );
 
-  const { data: cartData } = useCart();
+  const { cartData } = useCart();
 
   const badgeContent = cartData?.lineItems.length || 0;
 
   return (
     <Stack
       direction="row"
+      alignItems={'flex-start'}
       sx={{
         '@media (any-hover: hover)': {
           '& > *:hover *': {
@@ -38,9 +39,11 @@ const IconMenu = () => {
       {filteredPages.map((item) => (
         <IconButton key={item.path.slice(1)}>
           {item.path === '/cart' ? (
-            <Badge color="secondary" badgeContent={badgeContent}>
-              <NavLink to={item.path}>{item.icon}</NavLink>
-            </Badge>
+            <NavLink to={item.path}>
+              <Badge color="secondary" badgeContent={badgeContent}>
+                {item.icon}
+              </Badge>
+            </NavLink>
           ) : (
             <NavLink to={item.path}>{item.icon}</NavLink>
           )}

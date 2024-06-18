@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 
 import { useCart } from '@/hooks/useCart';
 
@@ -9,7 +9,13 @@ interface AddToCartButtonProps {
 }
 
 export const AddToCartButton = ({ id, isInStock, isInCart }: AddToCartButtonProps) => {
-  const { addItemToCart, updateItemQuantity, getLineItemIdByProductId } = useCart();
+  const {
+    cartIsFetching,
+    cartIsUpdating,
+    addItemToCart,
+    updateItemQuantity,
+    getLineItemIdByProductId,
+  } = useCart();
 
   const handleCartAction = async () => {
     if (isInCart) {
@@ -26,7 +32,7 @@ export const AddToCartButton = ({ id, isInStock, isInCart }: AddToCartButtonProp
       type="button"
       variant={isInCart ? 'outlined' : 'contained'}
       color={isInCart ? 'error' : 'secondary'}
-      disabled={!isInStock}
+      disabled={!isInStock || cartIsUpdating || cartIsFetching}
       sx={{
         textTransform: 'none',
         fontWeight: '600',
@@ -38,7 +44,15 @@ export const AddToCartButton = ({ id, isInStock, isInCart }: AddToCartButtonProp
       onClick={handleCartAction}
       data-testid="addToCart_button"
     >
-      {isInCart ? 'Remove from Cart' : isInStock ? 'Add to Cart' : 'Sold out'}
+      {!isInStock ? (
+        'Sold out'
+      ) : cartIsUpdating || cartIsFetching ? (
+        <CircularProgress size={20} />
+      ) : isInCart ? (
+        'Remove from Cart'
+      ) : (
+        'Add to Cart'
+      )}
     </Button>
   );
 };

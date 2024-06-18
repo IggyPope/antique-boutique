@@ -1,4 +1,6 @@
-import { Grid, Link, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
+
+import { Grid, Typography } from '@mui/material';
 import { lighten, useTheme } from '@mui/material/styles';
 
 import accessories from '@/assets/img/promo/accessories.webp';
@@ -48,14 +50,14 @@ const PromoCategories = () => {
       >
         <Typography variant="h5">Buy at the best prices!</Typography>
         <Typography>
-          Use code &quot;summer&quot; to get 15% off selected items and &quot;IloveVintage&quot; to
-          get 20% off vintage clothes price
+          Use code &quot;PROMO20&quot; to get 20% off all clothes and &quot;PROMO15&quot; to get 15%
+          off all items price
         </Typography>
       </Grid>
       {promo.map((item) => (
         <Grid
           component={Link}
-          href={item.href}
+          to={item.href}
           item
           key={item.name}
           xs={12}
@@ -63,6 +65,7 @@ const PromoCategories = () => {
           md={4}
           sx={{
             textDecoration: 'none',
+            color: 'inherit',
             display: 'flex',
             alignItems: 'end',
             justifyContent: 'end',

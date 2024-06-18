@@ -14,6 +14,14 @@ export const STORAGE_KEYS = {
   CART_ID: 'ABCartId',
 } as const;
 
+export const CART_ACTIONS = {
+  ADD_ITEM: 'addLineItem',
+  REMOVE_ITEM: 'removeLineItem',
+  CHANGE_ITEM_QUANTITY: 'changeLineItemQuantity',
+  ADD_DISCOUNT_CODE: 'addDiscountCode',
+  REMOVE_DISCOUNT_CODE: 'removeDiscountCode',
+} as const;
+
 export const SEARCH_PARAM_NAME = 'text.en-US';
 
 export const SORT_OPTIONS = [

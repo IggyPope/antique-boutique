@@ -1,4 +1,4 @@
-import { Pagination, Stack, Typography } from '@mui/material';
+import { CircularProgress, Pagination, Stack, Typography } from '@mui/material';
 
 import AppBreadcrumbs from '@/components/AppBreadcrumbs/AppBreadcrumbs';
 import ProductFilters from '@/components/ProductsBlock/ProductFilters';
@@ -12,22 +12,22 @@ const ProductsBlock = () => {
   const dispatch = useAppDispatch();
 
   const filters = useAppSelector((state) => state.filters);
-  const { products, isFetching } = useProducts();
+  const { productsData, productsIsFetching } = useProducts();
 
   return (
     <Stack direction="column" gap={2}>
       <AppBreadcrumbs />
       <ProductFilters />
-      {isFetching ? (
-        <Typography sx={{ textAlign: 'center' }}>Loading...</Typography>
-      ) : products?.results.length ? (
+      {productsIsFetching ? (
+        <CircularProgress size={100} sx={{ alignSelf: 'center' }} />
+      ) : productsData?.results.length ? (
         <>
           <ProductList />
           <Pagination
             page={filters.page}
             count={
-              products && !isFetching
-                ? Math.ceil((products.total || 1) / APP_SETTINGS.PRODUCTS_PER_PAGE)
+              productsData && !productsIsFetching
+                ? Math.ceil((productsData.total || 1) / APP_SETTINGS.PRODUCTS_PER_PAGE)
                 : 1
             }
             onChange={(_, page) => dispatch(setPage(page))}
