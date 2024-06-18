@@ -287,7 +287,8 @@ export const commercetoolsApi = createApi({
             .then((res) => ({ data: res.body }))
             .catch((err) => {
               const errorObj = processQueryError(err);
-              toast.error(`Cart update failed. Try again later.`);
+              const toastMessage = errorObj.error.data;
+              toast.error(toastMessage);
               return errorObj;
             })
         );

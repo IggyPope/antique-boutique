@@ -30,9 +30,9 @@ export const useDiscountCodes = () => {
     );
   }, [codesData, cartData]);
 
-  const addDiscountCode = async (code: string) => {
+  const addDiscountCode = (code: string) => {
     if (!cartData) return;
-    return await updateCartMutation({
+    void updateCartMutation({
       version: cartData?.version || 1,
       actions: [
         {
@@ -43,9 +43,9 @@ export const useDiscountCodes = () => {
     });
   };
 
-  const removeDiscountCode = async (id: string) => {
+  const removeDiscountCode = (id: string) => {
     if (!cartData) return;
-    return await updateCartMutation({
+    void updateCartMutation({
       version: cartData?.version || 1,
       actions: [
         {
