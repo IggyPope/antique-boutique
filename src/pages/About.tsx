@@ -10,12 +10,15 @@ import {
   Stack,
 } from '@mui/material';
 
+import JuliaImg from '@/assets/img/Julia.png';
+import AnastasiaImg from '@/assets/img/Nastia.png';
+
 const teamMembers = [
   {
     name: 'Julia',
     description:
       'Julia is a translator with a passion for all kinds of languages, including JavaScript. In the project, she was in charge of the front-end part and made the forms and the carousels.',
-    imageUrl: 'src/assets/img/Julia.png',
+    imageUrl: JuliaImg,
     githubUrl: 'https://github.com/JuliaBel5',
   },
   {
@@ -29,7 +32,7 @@ const teamMembers = [
     name: 'Anastasia',
     description:
       'Anastasia is a young student passionate about web development. In the project, she was involved in the front-end part, creating the main page, the catalog page, and the cart page layouts.',
-    imageUrl: 'src/assets/img/Nastia.png',
+    imageUrl: AnastasiaImg,
     githubUrl: 'https://github.com/kovalkl',
   },
 ];
