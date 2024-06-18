@@ -13,12 +13,12 @@ const CartList = ({ isLoading, cartItems }: { isLoading: boolean; cartItems: Lin
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleClearCart = async () => {
-    await clearCart();
+  const handleClearCart = () => {
+    clearCart();
   };
 
-  const changeQuantity = async (lineItemId: string, quantity: number) => {
-    await updateItemQuantity({ lineItemId, quantity });
+  const changeQuantity = (lineItemId: string, quantity: number) => {
+    updateItemQuantity({ lineItemId, quantity });
   };
 
   return (

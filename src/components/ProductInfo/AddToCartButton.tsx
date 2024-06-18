@@ -17,13 +17,13 @@ export const AddToCartButton = ({ id, isInStock, isInCart }: AddToCartButtonProp
     getLineItemIdByProductId,
   } = useCart();
 
-  const handleCartAction = async () => {
+  const handleCartAction = () => {
     if (isInCart) {
       const lineItemId = getLineItemIdByProductId(id);
       if (!lineItemId) return;
-      await updateItemQuantity({ lineItemId, quantity: 0 });
+      updateItemQuantity({ lineItemId, quantity: 0 });
     } else {
-      await addItemToCart({ productId: id, quantity: 1 });
+      addItemToCart({ productId: id, quantity: 1 });
     }
   };
 
