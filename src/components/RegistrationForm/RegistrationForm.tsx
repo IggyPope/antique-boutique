@@ -191,7 +191,6 @@ export function RegistrationForm() {
               fieldName="Last Name"
               dataTestId="registration-last-name"
             />
-            slotProps
             <Controller
               name="dateOfBirth"
               control={control}
