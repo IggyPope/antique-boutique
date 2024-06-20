@@ -1,4 +1,3 @@
-import { useRef } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
@@ -33,10 +32,9 @@ export function AddUserAddressComponent({ version }: AddUserAddressFormProps) {
     defaultValues: DEFAULT_FORM_VALUES,
   });
 
-  const refHandleResetFlags = useRef<() => void>();
   const [updateCustomer] = useUpdateCustomerMutation();
 
-  const onSubmit = async (data: AddressesFormValues) => {
+  const onSubmit = async (data: AddressesFormValues, clearFlagsHandler: () => void) => {
     let payload: MyCustomerUpdate = {
       version: version || 1,
       actions: [
@@ -112,7 +110,7 @@ export function AddUserAddressComponent({ version }: AddUserAddressFormProps) {
       }
       const message = 'Address added successfully';
       methods.reset();
-      refHandleResetFlags.current?.();
+      clearFlagsHandler();
       toast.success(message);
     } catch (error) {
       toast.error(
@@ -123,9 +121,7 @@ export function AddUserAddressComponent({ version }: AddUserAddressFormProps) {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)}>
-        <AddUserAddressForm handleResetFlags={refHandleResetFlags} />
-      </form>
+      <AddUserAddressForm onSubmit={onSubmit} />
     </FormProvider>
   );
 }
