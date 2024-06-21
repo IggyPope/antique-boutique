@@ -1,14 +1,12 @@
-import { useRef } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
-import { MyCustomerUpdate } from '@commercetools/platform-sdk';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { useUpdateCustomerMutation } from '@/api/services/commercetoolsApi';
 import { AddUserAddressForm } from '@/components/Profile/Tabs/AddUserAddressForm';
+import { createPayload } from '@/components/Profile/Tabs/AddUserAddressPayloadHelper';
 import { AddressesFormValues, addressSchema } from '@/components/Profile/Tabs/addressSchema';
-import { getCountryCode } from '@/components/RegistrationForm/utils';
 
 interface AddUserAddressFormProps {
   version?: number;
@@ -33,26 +31,11 @@ export function AddUserAddressComponent({ version }: AddUserAddressFormProps) {
     defaultValues: DEFAULT_FORM_VALUES,
   });
 
-  const refHandleResetFlags = useRef<() => void>();
   const [updateCustomer] = useUpdateCustomerMutation();
 
-  const onSubmit = async (data: AddressesFormValues) => {
-    let payload: MyCustomerUpdate = {
-      version: version || 1,
-      actions: [
-        {
-          action: 'addAddress',
-          address: {
-            streetName: data.street,
-            postalCode: data.zipCode,
-            city: data.city,
-            country: getCountryCode(data.country) ?? '',
-          },
-        },
-      ],
-    };
-
+  const onSubmit = async (data: AddressesFormValues, clearFlagsHandler: () => void) => {
     try {
+      let payload = createPayload(data, version || 1);
       const userDetails = await updateCustomer(payload).unwrap();
 
       if (
@@ -63,56 +46,14 @@ export function AddUserAddressComponent({ version }: AddUserAddressFormProps) {
       ) {
         if (!userDetails?.addresses) return;
         const addressesList = userDetails?.addresses;
-        const version = userDetails?.version || 1;
-        const id = userDetails?.addresses[addressesList.length - 1].id;
-        payload = {
-          version: version,
-          actions: [
-            {
-              action: 'changeAddress',
-              addressId: id,
-              address: {
-                streetName: data.street,
-                postalCode: data.zipCode,
-                city: data.city,
-                country: getCountryCode(data.country) ?? '',
-              },
-            },
-          ],
-        };
-
-        if (data.useAsDefaultShippingAddress) {
-          payload.actions.push({
-            action: 'setDefaultShippingAddress',
-            addressId: id,
-          });
-        }
-
-        if (data.useAsDefaultBillingAddress) {
-          payload.actions.push({
-            action: 'setDefaultBillingAddress',
-            addressId: id,
-          });
-        }
-
-        if (data.useAsShippingAddress) {
-          payload.actions.push({
-            action: 'addShippingAddressId',
-            addressId: id,
-          });
-        }
-        if (data.useAsBillingAddress) {
-          payload.actions.push({
-            action: 'addBillingAddressId',
-            addressId: id,
-          });
-        }
+        const id = addressesList[addressesList.length - 1].id;
+        payload = createPayload(data, userDetails?.version || 1, id);
 
         await updateCustomer(payload);
       }
       const message = 'Address added successfully';
       methods.reset();
-      refHandleResetFlags.current?.();
+      clearFlagsHandler();
       toast.success(message);
     } catch (error) {
       toast.error(
@@ -123,9 +64,7 @@ export function AddUserAddressComponent({ version }: AddUserAddressFormProps) {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)}>
-        <AddUserAddressForm handleResetFlags={refHandleResetFlags} />
-      </form>
+      <AddUserAddressForm onSubmit={onSubmit} />
     </FormProvider>
   );
 }
