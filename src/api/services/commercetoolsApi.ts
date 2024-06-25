@@ -1,8 +1,11 @@
 import { toast } from 'react-toastify';
 
 import {
+  Cart,
   CategoryPagedQueryResponse,
   Customer,
+  DiscountCodePagedQueryResponse,
+  MyCartUpdate,
   MyCustomerChangePassword,
   MyCustomerUpdate,
   ProductProjection,
@@ -10,37 +13,29 @@ import {
 } from '@commercetools/platform-sdk';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
+import { StorageApi } from '@/api/Storage';
 import { AuthService } from '@/api/services/AuthService';
-import { isErrorWithMessage, isFetchBaseQueryError } from '@/api/services/utils';
-import { APP_SETTINGS, SEARCH_PARAM_NAME } from '@/constants/app';
+import { isErrorWithMessage, processQueryError } from '@/api/services/utils';
+import { APP_SETTINGS, SEARCH_PARAM_NAME, STORAGE_KEYS } from '@/constants/app';
 import { PasswordFlowTokenStore } from '@/store/PasswordStore';
 import { ProductFilters } from '@/store/slices/filtersSlice';
 
 export const commercetoolsApi = createApi({
   reducerPath: 'commercetoolsApi',
   baseQuery: fetchBaseQuery({ baseUrl: '/' }),
-  tagTypes: ['Customer'],
+  tagTypes: ['Customer', 'Cart'],
   endpoints: (builder) => ({
     getCustomer: builder.query<Customer, void>({
       providesTags: ['Customer'],
-      queryFn: async () => {
+      queryFn: () => {
         const { apiRoot } = AuthService.getInstance();
 
-        try {
-          const user = await apiRoot.me().get().execute();
-
-          return { data: user.body };
-        } catch (err) {
-          if (isErrorWithMessage(err)) {
-            return { error: { status: 500, data: err.message } };
-          } else if (isFetchBaseQueryError(err)) {
-            const errMsg = 'error' in err ? err.error : JSON.stringify(err.data);
-
-            return { error: { status: +err.status, data: errMsg } };
-          }
-
-          return { error: { status: 500, data: 'An unknown error occurred' } };
-        }
+        return apiRoot
+          .me()
+          .get()
+          .execute()
+          .then((res) => ({ data: res.body }))
+          .catch(processQueryError);
       },
     }),
     updateCustomer: builder.mutation<Customer, MyCustomerUpdate>({
@@ -58,15 +53,7 @@ export const commercetoolsApi = createApi({
 
           return { data: customerUpdate.body };
         } catch (err) {
-          if (isErrorWithMessage(err)) {
-            return { error: { status: 500, data: err.message } };
-          } else if (isFetchBaseQueryError(err)) {
-            const errMsg = 'error' in err ? err.error : JSON.stringify(err.data);
-
-            return { error: { status: +err.status, data: errMsg } };
-          }
-
-          return { error: { status: 500, data: 'An unknown error occurred' } };
+          return processQueryError(err);
         }
       },
     }),
@@ -98,14 +85,9 @@ export const commercetoolsApi = createApi({
         } catch (err) {
           if (isErrorWithMessage(err)) {
             toast.error(`Error changing password: ${err.message}`);
-            return { error: { status: 500, data: err.message } };
-          } else if (isFetchBaseQueryError(err)) {
-            const errMsg = 'error' in err ? err.error : JSON.stringify(err.data);
-
-            return { error: { status: +err.status, data: errMsg } };
           }
 
-          return { error: { status: 500, data: 'An unknown error occurred' } };
+          return processQueryError(err);
         }
       },
     }),
@@ -121,15 +103,7 @@ export const commercetoolsApi = createApi({
 
           return { data: categories.body };
         } catch (err) {
-          if (isErrorWithMessage(err)) {
-            return { error: { status: 500, data: err.message } };
-          } else if (isFetchBaseQueryError(err)) {
-            const errMsg = 'error' in err ? err.error : JSON.stringify(err.data);
-
-            return { error: { status: +err.status, data: errMsg } };
-          }
-
-          return { error: { status: 500, data: 'An unknown error occurred' } };
+          return processQueryError(err);
         }
       },
     }),
@@ -142,15 +116,7 @@ export const commercetoolsApi = createApi({
 
           return { data: product.body };
         } catch (err) {
-          if (isErrorWithMessage(err)) {
-            return { error: { status: 500, data: err.message } };
-          } else if (isFetchBaseQueryError(err)) {
-            const errMsg = 'error' in err ? err.error : JSON.stringify(err.data);
-
-            return { error: { status: +err.status, data: errMsg } };
-          }
-
-          return { error: { status: 500, data: 'An unknown error occurred' } };
+          return processQueryError(err);
         }
       },
     }),
@@ -221,14 +187,142 @@ export const commercetoolsApi = createApi({
 
           return { data: products.body };
         } catch (err) {
-          if (isErrorWithMessage(err)) {
-            return { error: { status: 500, data: err.message } };
-          } else if (isFetchBaseQueryError(err)) {
-            const errMsg = 'error' in err ? err.error : JSON.stringify(err.data);
+          return processQueryError(err);
+        }
+      },
+    }),
+    getCart: builder.query<Cart, boolean>({
+      providesTags: ['Cart'],
+      queryFn: (isAuthenticated: boolean) => {
+        const { apiRoot } = AuthService.getInstance();
 
-            return { error: { status: +err.status, data: errMsg } };
-          }
+        const cartIdCache = new StorageApi<string>(sessionStorage, STORAGE_KEYS.CART_ID);
 
+        return isAuthenticated
+          ? apiRoot
+              .me()
+              .activeCart()
+              .get()
+              .execute()
+              .then((res) => {
+                const cartId = res.body.id;
+                cartIdCache.saveData(cartId);
+
+                return { data: res.body };
+              })
+              .catch(() =>
+                apiRoot
+                  .me()
+                  .carts()
+                  .post({
+                    body: {
+                      currency: APP_SETTINGS.CURRENCY.ISO_CODE,
+                    },
+                  })
+                  .execute()
+                  .then((res) => {
+                    const cartId = res.body.id;
+                    cartIdCache.saveData(cartId);
+
+                    return { data: res.body };
+                  })
+                  .catch(processQueryError),
+              )
+          : apiRoot
+              .me()
+              .carts()
+              .get()
+              .execute()
+              .then((res) => {
+                const carts = res.body.results;
+
+                if (carts.length > 0) {
+                  const cart = carts[0];
+                  const cartId = cart.id;
+                  cartIdCache.saveData(cartId);
+
+                  return { data: cart };
+                } else {
+                  return apiRoot
+                    .me()
+                    .carts()
+                    .post({
+                      body: {
+                        currency: APP_SETTINGS.CURRENCY.ISO_CODE,
+                      },
+                    })
+                    .execute()
+                    .then((res) => {
+                      const cartId = res.body.id;
+                      cartIdCache.saveData(cartId);
+
+                      return { data: res.body };
+                    })
+                    .catch(processQueryError);
+                }
+              });
+      },
+    }),
+    updateCart: builder.mutation<Cart, MyCartUpdate>({
+      invalidatesTags: ['Cart'],
+      queryFn: async (payload) => {
+        const { apiRoot } = AuthService.getInstance();
+
+        const cartIdCache = new StorageApi<string>(sessionStorage, STORAGE_KEYS.CART_ID);
+        const cartId = cartIdCache.getData();
+
+        if (!cartId) {
+          return { error: { status: 404, data: 'Active cart ID not found' } };
+        }
+
+        return (
+          apiRoot
+            // .me()
+            .carts()
+            .withId({ ID: cartId })
+            .post({
+              body: payload,
+            })
+            .execute()
+            .then((res) => ({ data: res.body }))
+            .catch((err) => {
+              const errorObj = processQueryError(err);
+              const toastMessage = errorObj.error.data;
+              toast.error(toastMessage);
+              return errorObj;
+            })
+        );
+      },
+    }),
+    getDiscountCodes: builder.query<DiscountCodePagedQueryResponse, void>({
+      queryFn: async () => {
+        const { apiRoot } = AuthService.getInstance();
+
+        return apiRoot
+          .discountCodes()
+          .get()
+          .execute()
+          .then((res) => ({ data: res.body }))
+          .catch(processQueryError);
+      },
+    }),
+    logoutUser: builder.mutation<void, void>({
+      invalidatesTags: ['Cart'],
+      queryFn: (_, { dispatch }) => {
+        try {
+          const cartIdCache = new StorageApi<string>(sessionStorage, STORAGE_KEYS.CART_ID);
+          cartIdCache.removeData();
+          PasswordFlowTokenStore.removeData();
+
+          const service = AuthService.getInstance();
+          service.signOut();
+
+          dispatch({ type: 'user/signOut' });
+          toast.success('You have successfully signed out!');
+
+          return { data: undefined };
+        } catch (err) {
+          toast.error(`Sign out failed. Try again later.`);
           return { error: { status: 500, data: 'An unknown error occurred' } };
         }
       },
@@ -243,4 +337,8 @@ export const {
   useUpdateCustomerMutation,
   useGetProductByIdQuery,
   useGetFilteredProductsQuery,
+  useGetCartQuery,
+  useUpdateCartMutation,
+  useGetDiscountCodesQuery,
+  useLogoutUserMutation,
 } = commercetoolsApi;

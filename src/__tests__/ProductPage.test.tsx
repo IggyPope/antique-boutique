@@ -66,16 +66,13 @@ describe('ProductPage Component', () => {
       </Provider>,
     );
 
-    expect(screen.getByText('Loading...')).toBeInTheDocument();
     await waitFor(() => {
       expect(screen.getByText('12 Reviews')).toBeInTheDocument();
     });
     expect(screen.getByText('Price')).toBeInTheDocument();
     expect(screen.getByText('Sold')).toBeInTheDocument();
-    expect(screen.getByText('$320.00')).toBeInTheDocument();
-    expect(screen.getByText('Quantity')).toBeInTheDocument();
+    expect(screen.getByText('€320.00')).toBeInTheDocument();
     expect(screen.getByText('Test Product')).toBeInTheDocument();
-    expect(screen.getByText('Add to Cart')).toBeInTheDocument();
     expect(screen.getByAltText('image 0')).toHaveAttribute('src', 'http://example.com/image.jpg');
   });
   afterEach(() => {

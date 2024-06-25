@@ -1,5 +1,9 @@
 import { type TokenStore } from '@commercetools/sdk-client-v2';
 
-import { LocalStorageApi } from '@/api/Storage';
+import { StorageApi } from '@/api/Storage';
+import { STORAGE_KEYS } from '@/constants/app';
 
-export const AnonymousFlowTokenStore = new LocalStorageApi<TokenStore>('ABAnonymousFlowToken');
+export const AnonymousFlowTokenStore = new StorageApi<TokenStore>(
+  localStorage,
+  STORAGE_KEYS.ANONYMOUS_FLOW_TOKEN,
+);

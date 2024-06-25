@@ -1,138 +1,46 @@
 import { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
+import { Controller, useFormContext } from 'react-hook-form';
 
-import { Button, Stack, Autocomplete, Checkbox, FormControlLabel, Box } from '@mui/material';
-import TextField from '@mui/material/TextField';
+import {
+  Autocomplete,
+  Checkbox,
+  FormControlLabel,
+  Box,
+  Stack,
+  TextField,
+  Button,
+} from '@mui/material';
 
-import { MyCustomerUpdate } from '@commercetools/platform-sdk';
-import { yupResolver } from '@hookform/resolvers/yup';
-
-import { useUpdateCustomerMutation } from '@/api/services/commercetoolsApi';
 import { NotEditableTextField } from '@/components/Profile/Tabs/NotEditableTextField';
-import { addressSchema, AddressesFormValues } from '@/components/Profile/Tabs/addressSchema';
+import { AddressesFormValues } from '@/components/Profile/Tabs/addressSchema';
 import { COUNTRY_LIST } from '@/components/RegistrationForm/countries';
-import { getCountryCode } from '@/components/RegistrationForm/utils';
 
 interface AddUserAddressFormProps {
-  version?: number;
+  onSubmit: (data: AddressesFormValues, clearFlagsHandler: () => void) => Promise<void>;
 }
-const DEFAULT_FORM_VALUES = {
-  zipCode: '',
-  city: '',
-  country: '',
-  street: '',
-  useAsDefaultShippingAddress: false,
-  useAsDefaultBillingAddress: false,
-  useAsBillingAddress: false,
-  useAsShippingAddress: false,
+
+const initialAddressFlagsState = {
+  useAsDefaultShipping: false,
+  useAsDefaultBilling: false,
+  useAsBilling: false,
+  useAsShipping: false,
 };
 
-export function AddUserAddressForm({ version }: AddUserAddressFormProps) {
+export function AddUserAddressForm({ onSubmit }: AddUserAddressFormProps) {
+  const [addressFlags, setAddressFlags] = useState(initialAddressFlagsState);
+  const clearFlagsHandler = () => {
+    setAddressFlags(initialAddressFlagsState);
+  };
+
   const {
     handleSubmit,
     control,
     trigger,
-    reset,
     formState: { errors, isValid },
-  } = useForm<AddressesFormValues>({
-    resolver: yupResolver(addressSchema),
-    mode: 'onChange',
-    reValidateMode: 'onChange',
-    defaultValues: DEFAULT_FORM_VALUES,
-  });
-
-  const [useAsDefaultShipping, setUseAsDefaultShipping] = useState(false);
-  const [useAsDefaultBilling, setUseAsDefaultBilling] = useState(false);
-  const [useAsBilling, setUseAsBilling] = useState(false);
-  const [useAsShipping, setUseAsShipping] = useState(false);
-  const [updateCustomer] = useUpdateCustomerMutation();
-
-  const onSubmit = async (data: AddressesFormValues) => {
-    let payload: MyCustomerUpdate = {
-      version: version || 1,
-      actions: [
-        {
-          action: 'addAddress',
-          address: {
-            streetName: data.street,
-            postalCode: data.zipCode,
-            city: data.city,
-            country: getCountryCode(data.country) ?? '',
-          },
-        },
-      ],
-    };
-
-    try {
-      const userDetails = await updateCustomer(payload).unwrap();
-
-      if (useAsDefaultShipping || useAsDefaultShipping || useAsShipping || useAsBilling) {
-        if (!userDetails?.addresses) return;
-        const addressesList = userDetails?.addresses;
-        const version = userDetails?.version || 1;
-        const id = userDetails?.addresses[addressesList.length - 1].id;
-        payload = {
-          version: version,
-          actions: [
-            {
-              action: 'changeAddress',
-              addressId: id,
-              address: {
-                streetName: data.street,
-                postalCode: data.zipCode,
-                city: data.city,
-                country: getCountryCode(data.country) ?? '',
-              },
-            },
-          ],
-        };
-
-        if (useAsDefaultShipping) {
-          payload.actions.push({
-            action: 'setDefaultShippingAddress',
-            addressId: id,
-          });
-        }
-
-        if (useAsDefaultBilling) {
-          payload.actions.push({
-            action: 'setDefaultBillingAddress',
-            addressId: id,
-          });
-        }
-
-        if (useAsShipping) {
-          payload.actions.push({
-            action: 'addShippingAddressId',
-            addressId: id,
-          });
-        }
-        if (useAsBilling) {
-          payload.actions.push({
-            action: 'addBillingAddressId',
-            addressId: id,
-          });
-        }
-
-        await updateCustomer(payload);
-      }
-      const message = 'Address added successfully';
-      reset();
-      setUseAsBilling(false);
-      setUseAsShipping(false);
-      setUseAsDefaultBilling(false);
-      setUseAsDefaultShipping(false);
-      toast.success(message);
-    } catch (error) {
-      toast.error(
-        `Address updating failed: ${error instanceof Error ? error.message : String(error)}`,
-      );
-    }
-  };
+  } = useFormContext<AddressesFormValues>();
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit((data) => onSubmit(data, clearFlagsHandler))}>
       <Stack
         direction="column"
         justifyContent="center"
@@ -170,9 +78,7 @@ export function AddUserAddressForm({ version }: AddUserAddressFormProps) {
               )}
               onChange={async (_, newValue) => {
                 field.onChange(newValue ?? '');
-                if (!useAsBilling) {
-                  await trigger(`zipCode`);
-                }
+                await trigger(`zipCode`);
               }}
               isOptionEqualToValue={(option, value) => option === value}
             />
@@ -186,7 +92,6 @@ export function AddUserAddressForm({ version }: AddUserAddressFormProps) {
           fieldName="Zip Code"
           dataTestId="editing-zip-code"
         />
-
         <NotEditableTextField
           name="street"
           control={control}
@@ -195,7 +100,6 @@ export function AddUserAddressForm({ version }: AddUserAddressFormProps) {
           fieldName="Street"
           dataTestId="editing-street"
         />
-
         <NotEditableTextField
           name="city"
           control={control}
@@ -204,7 +108,6 @@ export function AddUserAddressForm({ version }: AddUserAddressFormProps) {
           fieldName="City"
           dataTestId="editing-billing-city"
         />
-
         <Box
           gap={2}
           width="100%"
@@ -224,10 +127,13 @@ export function AddUserAddressForm({ version }: AddUserAddressFormProps) {
                   control={
                     <Checkbox
                       {...field}
-                      checked={useAsDefaultShipping}
+                      checked={addressFlags.useAsDefaultShipping}
                       onChange={() => {
-                        setUseAsDefaultShipping(!useAsDefaultShipping);
-                        field.onChange(!useAsDefaultShipping);
+                        setAddressFlags((prev) => ({
+                          ...prev,
+                          useAsDefaultShipping: !addressFlags.useAsDefaultShipping,
+                        }));
+                        field.onChange(!addressFlags.useAsDefaultShipping);
                       }}
                     />
                   }
@@ -244,10 +150,13 @@ export function AddUserAddressForm({ version }: AddUserAddressFormProps) {
                   control={
                     <Checkbox
                       {...field}
-                      checked={useAsDefaultBilling}
+                      checked={addressFlags.useAsDefaultBilling}
                       onChange={() => {
-                        setUseAsDefaultBilling(!useAsDefaultBilling);
-                        field.onChange(!useAsDefaultBilling);
+                        setAddressFlags((prev) => ({
+                          ...prev,
+                          useAsDefaultBilling: !addressFlags.useAsDefaultBilling,
+                        }));
+                        field.onChange(!addressFlags.useAsDefaultBilling);
                       }}
                     />
                   }
@@ -266,10 +175,13 @@ export function AddUserAddressForm({ version }: AddUserAddressFormProps) {
                   control={
                     <Checkbox
                       {...field}
-                      checked={useAsBilling}
+                      checked={addressFlags.useAsBilling}
                       onChange={() => {
-                        setUseAsBilling(!useAsBilling);
-                        field.onChange(!useAsBilling);
+                        setAddressFlags((prev) => ({
+                          ...prev,
+                          useAsBilling: !addressFlags.useAsBilling,
+                        }));
+                        field.onChange(!addressFlags.useAsBilling);
                       }}
                     />
                   }
@@ -286,10 +198,13 @@ export function AddUserAddressForm({ version }: AddUserAddressFormProps) {
                   control={
                     <Checkbox
                       {...field}
-                      checked={useAsShipping}
+                      checked={addressFlags.useAsShipping}
                       onChange={() => {
-                        setUseAsShipping(!useAsShipping);
-                        field.onChange(!useAsShipping);
+                        setAddressFlags((prev) => ({
+                          ...prev,
+                          useAsShipping: !addressFlags.useAsShipping,
+                        }));
+                        field.onChange(!addressFlags.useAsShipping);
                       }}
                     />
                   }
@@ -299,20 +214,8 @@ export function AddUserAddressForm({ version }: AddUserAddressFormProps) {
             />
           </Stack>
         </Box>
-        <Button
-          type="submit"
-          disabled={!isValid}
-          variant="contained"
-          color="secondary"
-          sx={{
-            textTransform: 'none',
-            fontWeight: '600',
-            borderRadius: '5px',
-            textDecoration: 'none',
-          }}
-          data-testid="addAddress_submit-button"
-        >
-          Add address
+        <Button type="submit" disabled={!isValid} variant="contained" color="secondary">
+          Save
         </Button>
       </Stack>
     </form>

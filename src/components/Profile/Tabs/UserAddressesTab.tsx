@@ -16,8 +16,9 @@ import Chip from '@mui/material/Chip';
 import { MyCustomerUpdate } from '@commercetools/platform-sdk';
 
 import { useGetCustomerQuery, useUpdateCustomerMutation } from '@/api/services/commercetoolsApi';
-import { AddUserAddressForm } from '@/components/Profile/Tabs/AddUserAddressForm';
+import { AddUserAddressComponent } from '@/components/Profile/Tabs/AddUserAddressComponent';
 import { UserAddressForm } from '@/components/Profile/Tabs/UserAddressForm';
+import { getAddressLabels } from '@/components/Profile/Tabs/addressHelpers';
 import { processAddresses } from '@/components/Profile/Tabs/utils';
 
 export interface AddressInfo {
@@ -73,19 +74,8 @@ export function UserAddressesTab() {
       }}
     >
       {addresses.map((address) => {
-        let addressTypeLabelShipping;
-        let addressTypeLabelBilling;
-        const addressTypeMessage = 'Your address';
-
-        if (address.useAsDefaultShipping) {
-          addressTypeLabelShipping = 'Default Shipping';
-        }
-
-        if (address.useAsDefaultBilling) {
-          addressTypeLabelBilling = 'Default Billing';
-        }
-
-        const addressTypeName = address.addressType;
+        const { shippingLabel, billingLabel, addressTypeName, addressTypeMessage } =
+          getAddressLabels(address);
 
         return (
           <Stack
@@ -106,7 +96,6 @@ export function UserAddressesTab() {
                 width: '100%',
               }}
             >
-              {' '}
               <Typography component={'p'}>{addressTypeMessage}</Typography>
               <DeleteOutlineIcon
                 sx={{ color: '#e46d6d', cursor: 'pointer' }}
@@ -121,14 +110,11 @@ export function UserAddressesTab() {
                 width: '100%',
               }}
             >
-              {' '}
-              {addressTypeLabelShipping && (
-                <Chip label={addressTypeLabelShipping} color="secondary" variant="outlined" />
+              {shippingLabel && <Chip label={shippingLabel} color="secondary" variant="outlined" />}
+              {billingLabel && (
+                <Chip label={billingLabel} sx={{ color: 'blue' }} variant="outlined" />
               )}
-              {addressTypeLabelBilling && (
-                <Chip label={addressTypeLabelBilling} sx={{ color: 'blue' }} variant="outlined" />
-              )}
-              {!addressTypeLabelShipping && !addressTypeLabelBilling && (
+              {!shippingLabel && !billingLabel && (
                 <Chip label="Not a Default address" color="error" variant="outlined" />
               )}
             </Box>
@@ -140,7 +126,6 @@ export function UserAddressesTab() {
                 width: '100%',
               }}
             >
-              {' '}
               {addressTypeName && (
                 <Chip label={addressTypeName} variant="outlined" sx={{ color: 'orange' }} />
               )}
@@ -169,7 +154,7 @@ export function UserAddressesTab() {
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <AddUserAddressForm version={userDetails?.version || 1} />
+            <AddUserAddressComponent version={userDetails?.version || 1} />
           </AccordionDetails>
         </Accordion>
       </Stack>

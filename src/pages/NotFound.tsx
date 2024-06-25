@@ -1,9 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 
-import { Container, Stack, Typography } from '@mui/material';
+import { Container, Stack, Typography, Button } from '@mui/material';
 
 import notFoundSrc from '@/assets/img/not-found.webp';
-import CustomButton from '@/components/UI/Button/CustomButton';
 
 const NotFound = () => {
   const navigate = useNavigate();
@@ -28,7 +27,7 @@ const NotFound = () => {
           <Typography variant="body1">
             Oops! Page not found. Do not worry, we are on it! Feel free to explore other pages.
           </Typography>
-          <CustomButton onClick={() => navigate('/')}>Home</CustomButton>
+          <Button onClick={() => navigate('/')}>Home</Button>
         </Stack>
       </Stack>
     </Container>

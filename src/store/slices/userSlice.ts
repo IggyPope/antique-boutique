@@ -35,7 +35,6 @@ export const userSlice = createSlice({
     signOut: (state) => {
       state.isAuthenticated = false;
     },
-
     setIsInitialRender: (state, action: PayloadAction<boolean>) => {
       state.isInitialRender = action.payload;
     },

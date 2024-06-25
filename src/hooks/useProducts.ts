@@ -15,7 +15,11 @@ const useProducts = () => {
     sortBy,
     sortDirection,
   } = useAppSelector((state) => state.filters);
-  const { data, error, isFetching } = useGetFilteredProductsQuery({
+  const {
+    data: productsData,
+    error: productsError,
+    isFetching: productsIsFetching,
+  } = useGetFilteredProductsQuery({
     category,
     subcategory,
     brand,
@@ -29,7 +33,7 @@ const useProducts = () => {
     sortDirection,
   });
 
-  return { products: data, error, isFetching };
+  return { productsData, productsError, productsIsFetching };
 };
 
 export default useProducts;

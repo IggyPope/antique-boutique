@@ -17,6 +17,8 @@ export const useAuth = () => {
 
   const dispatch = useAppDispatch();
 
+  // const { refetchCart } = useCart();
+
   const { isAuthenticated, isLoading, errorMessage, isInitialRender } = useAppSelector(
     (state) => state.user,
   );
@@ -31,9 +33,9 @@ export const useAuth = () => {
         dispatch(setIsInitialRender(false));
         // TODO implement logic of using the cached token for anonymous session
       } else {
-        dispatch(setIsInitialRender(false));
         // TODO implement logic to obtain an access token for anonymous session
       }
+      dispatch(setIsInitialRender(false));
     },
 
     signIn: (username: string, password: string) => {
@@ -66,12 +68,6 @@ export const useAuth = () => {
           dispatch({ type: 'user/signInError', payload: error.message });
           toast.error(error.message);
         });
-    },
-    signOut: () => {
-      authService.signOut();
-      PasswordFlowTokenStore.removeData();
-      dispatch({ type: 'user/signOut' });
-      toast.success('You have successfully signed out!');
     },
     isAuthenticated,
     isLoading,

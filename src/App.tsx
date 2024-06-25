@@ -8,6 +8,7 @@ import router from '@/routes/Router';
 
 export function App() {
   const { getToken } = useAuth();
+
   useEffect(() => {
     getToken();
   }, [getToken]);

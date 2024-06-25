@@ -1,24 +1,30 @@
 import { TokenStore, type TokenCache } from '@commercetools/sdk-client-v2';
 
-import { type LocalStorageApi } from '@/api/Storage';
+import { type StorageApi } from '@/api/Storage';
 import { AnonymousFlowTokenStore } from '@/store/AnonymousStore';
 import { PasswordFlowTokenStore } from '@/store/PasswordStore';
 
 class TokenCacheClass implements TokenCache {
-  constructor(private store: LocalStorageApi<TokenStore>) {}
+  constructor(private store: StorageApi<TokenStore>) {}
 
   get() {
     const cacheToken = this.store.getData();
 
-    return {
-      token: cacheToken?.token ? `Bearer ${cacheToken?.token}` : '',
-      expirationTime: 0,
+    const tokenObject = {
+      token: cacheToken?.token ? `${cacheToken?.token}` : '',
+      expirationTime: cacheToken?.expirationTime ?? 0,
       refreshToken: cacheToken?.refreshToken ?? '',
     };
+
+    return tokenObject;
   }
 
   set(cache: TokenStore) {
-    this.store.saveData(cache);
+    this.store.saveData({
+      token: `${cache.token}`,
+      expirationTime: cache.expirationTime,
+      refreshToken: cache.refreshToken,
+    });
   }
 }
 

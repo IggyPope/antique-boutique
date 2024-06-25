@@ -5,6 +5,7 @@ import Cart from '@/components/UI/Icon/Cart';
 import Profile from '@/components/UI/Icon/Profile';
 import { NavLink } from '@/components/UI/NavLink/NavLink';
 import { useAuth } from '@/hooks/useAuth';
+import { useCart } from '@/hooks/useCart';
 
 const pages = [
   { icon: <Profile />, path: '/profile', auth: true },
@@ -17,9 +18,15 @@ const IconMenu = () => {
   const filteredPages = pages.filter((page) =>
     isAuthenticated ? page.auth !== false : page.auth !== true,
   );
+
+  const { cartData } = useCart();
+
+  const badgeContent = cartData?.lineItems.length || 0;
+
   return (
     <Stack
       direction="row"
+      alignItems={'flex-start'}
       sx={{
         '@media (any-hover: hover)': {
           '& > *:hover *': {
@@ -32,9 +39,11 @@ const IconMenu = () => {
       {filteredPages.map((item) => (
         <IconButton key={item.path.slice(1)}>
           {item.path === '/cart' ? (
-            <Badge color="secondary" badgeContent={0}>
-              <NavLink to={item.path}>{item.icon}</NavLink>
-            </Badge>
+            <NavLink to={item.path}>
+              <Badge color="secondary" badgeContent={badgeContent}>
+                {item.icon}
+              </Badge>
+            </NavLink>
           ) : (
             <NavLink to={item.path}>{item.icon}</NavLink>
           )}

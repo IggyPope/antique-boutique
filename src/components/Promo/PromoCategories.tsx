@@ -1,4 +1,6 @@
-import { Grid, Link, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
+
+import { Grid, Typography } from '@mui/material';
 import { lighten, useTheme } from '@mui/material/styles';
 
 import accessories from '@/assets/img/promo/accessories.webp';
@@ -24,10 +26,38 @@ const PromoCategories = () => {
   const theme = useTheme();
   return (
     <Grid container>
+      <Grid
+        item
+        xs={12}
+        sm={6}
+        md={8}
+        sx={{
+          padding: '36px 24px 24px 24px',
+          [theme.breakpoints.down('lg')]: {
+            padding: '24px 16px 16px 16px',
+          },
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '10px',
+          backgroundImage: `linear-gradient(rgba(33, 33, 33, 0.7), rgba(33, 33, 33, 0.7)), url(${radio})`,
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center 10%',
+          backgroundSize: 'cover',
+          color: theme.palette.primary.contrastText,
+          height: '180px',
+          border: `5px solid ${theme.palette.primary.contrastText}`,
+        }}
+      >
+        <Typography variant="h5">Buy at the best prices!</Typography>
+        <Typography>
+          Use code &quot;PROMO20&quot; to get 20% off all clothes and &quot;PROMO15&quot; to get 15%
+          off all items price
+        </Typography>
+      </Grid>
       {promo.map((item) => (
         <Grid
           component={Link}
-          href={item.href}
+          to={item.href}
           item
           key={item.name}
           xs={12}
@@ -35,6 +65,7 @@ const PromoCategories = () => {
           md={4}
           sx={{
             textDecoration: 'none',
+            color: 'inherit',
             display: 'flex',
             alignItems: 'end',
             justifyContent: 'end',
@@ -58,31 +89,6 @@ const PromoCategories = () => {
           <Typography>{item.name}</Typography>
         </Grid>
       ))}
-      <Grid
-        item
-        xs={12}
-        sm={6}
-        md={8}
-        sx={{
-          padding: '48px 24px 24px 24px',
-          [theme.breakpoints.down('md')]: {
-            padding: '24px 24px 24px 24px',
-          },
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '10px',
-          backgroundImage: `linear-gradient(rgba(33, 33, 33, 0.7), rgba(33, 33, 33, 0.7)), url(${radio})`,
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center 10%',
-          backgroundSize: 'cover',
-          color: theme.palette.primary.contrastText,
-          height: '180px',
-          border: `5px solid ${theme.palette.primary.contrastText}`,
-        }}
-      >
-        <Typography variant="h4">Buy at the best prices!</Typography>
-        <Typography>Use the promo SUMMER25 to get a discount on select items</Typography>
-      </Grid>
     </Grid>
   );
 };

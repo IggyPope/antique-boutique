@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Checkbox,
+  CircularProgress,
   FormControl,
   FormControlLabel,
   InputLabel,
@@ -42,7 +43,7 @@ const INITIAL_PRICE_RANGE = [0, 100000] as const as [number, number];
 const Filters = ({ initialCategoryId, initialSubcategoryId }: FiltersProps) => {
   const navigate = useNavigate();
 
-  const { products } = useProducts();
+  const { productsData, productsIsFetching } = useProducts();
   const dispatch = useAppDispatch();
 
   const { getMainCategories, getSubcategories, getCategorySlugById } = categories();
@@ -82,41 +83,41 @@ const Filters = ({ initialCategoryId, initialSubcategoryId }: FiltersProps) => {
   }, [selectedCategory, getSubcategories]);
 
   useEffect(() => {
-    if (!products || products.facets.prices.type !== 'range') {
+    if (!productsData || productsData.facets.prices.type !== 'range') {
       return;
     }
 
-    setMinPrice(products.facets.prices.ranges[0].min / APP_SETTINGS.API_PRICE_RATE);
-    setMaxPrice(products.facets.prices.ranges[0].max / APP_SETTINGS.API_PRICE_RATE);
-  }, [products]);
+    setMinPrice(productsData.facets.prices.ranges[0].min / APP_SETTINGS.API_PRICE_RATE);
+    setMaxPrice(productsData.facets.prices.ranges[0].max / APP_SETTINGS.API_PRICE_RATE);
+  }, [productsData]);
 
   useEffect(() => {
     setSelectedPrice([minPrice, maxPrice]);
   }, [minPrice, maxPrice]);
 
   useEffect(() => {
-    if (!products || products.facets.brands.type !== 'terms') {
+    if (!productsData || productsData.facets.brands.type !== 'terms') {
       return;
     }
 
-    setBrandsData(products.facets.brands.terms.map((brand) => brand.term as string));
-  }, [products]);
+    setBrandsData(productsData.facets.brands.terms.map((brand) => brand.term as string));
+  }, [productsData]);
 
   useEffect(() => {
-    if (!products || products.facets.sizes.type !== 'terms') {
+    if (!productsData || productsData.facets.sizes.type !== 'terms') {
       return;
     }
 
-    setSizesData(products.facets.sizes.terms.map((size) => size.term as string));
-  }, [products]);
+    setSizesData(productsData.facets.sizes.terms.map((size) => size.term as string));
+  }, [productsData]);
 
   useEffect(() => {
-    if (!products || products.facets.colors.type !== 'terms') {
+    if (!productsData || productsData.facets.colors.type !== 'terms') {
       return;
     }
 
-    setColorsData(products.facets.colors.terms.map((color) => color.term as string));
-  }, [products]);
+    setColorsData(productsData.facets.colors.terms.map((color) => color.term as string));
+  }, [productsData]);
 
   const handleApplyFilters = () => {
     selectedCategory === 'all'
@@ -239,11 +240,21 @@ const Filters = ({ initialCategoryId, initialSubcategoryId }: FiltersProps) => {
         label="In Stock"
       />
       <Stack direction="row" gap={2}>
-        <Button variant="contained" color="secondary" onClick={handleApplyFilters}>
-          Apply Filters
+        <Button
+          variant="contained"
+          disabled={productsIsFetching}
+          color="secondary"
+          onClick={handleApplyFilters}
+        >
+          {productsIsFetching ? <CircularProgress size={20} /> : 'Apply Filters'}
         </Button>
-        <Button variant="outlined" color="error" onClick={handleResetFilters}>
-          Reset
+        <Button
+          variant="outlined"
+          disabled={productsIsFetching}
+          color="error"
+          onClick={handleResetFilters}
+        >
+          {productsIsFetching ? <CircularProgress size={20} /> : 'Reset'}
         </Button>
       </Stack>
     </Stack>

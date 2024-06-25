@@ -37,13 +37,3 @@ export const ProductAvailability = ({ attributes }: ProductAvailabilityProps) =>
     </Box>
   );
 };
-
-export const isiInStock = (attributes: Attribute[] | undefined): boolean => {
-  return (
-    attributes?.some(
-      (attr) =>
-        (attr.name === 'In-Stock' && Array.isArray(attr.value) && attr.value.includes(true)) ||
-        (attr.name === 'Availability' && Array.isArray(attr.value) && attr.value.includes(true)),
-    ) ?? false
-  );
-};

@@ -9,16 +9,22 @@ import {
   Grid,
   useTheme,
   Stack,
+  CardActions,
 } from '@mui/material';
 
+import { AddToCartButton } from '@/components/ProductInfo/AddToCartButton';
+import { isInStock } from '@/components/ProductInfo/utils';
 import { APP_SETTINGS } from '@/constants/app';
+import { useCart } from '@/hooks/useCart';
 import useProducts from '@/hooks/useProducts';
 import formatPrice from '@/utils/formatPrice';
 
 const ProductList = () => {
-  const { products } = useProducts();
+  const { productsData } = useProducts();
 
   const theme = useTheme();
+
+  const { isProductInCart } = useCart();
 
   return (
     <Grid
@@ -27,12 +33,15 @@ const ProductList = () => {
       gap={2}
       sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}
     >
-      {products?.results.length &&
-        products.results.map((product) => (
+      {productsData?.results.length &&
+        productsData.results.map((product) => (
           <Grid item key={product.id}>
             <Card
               sx={{
-                '& > *': { height: '100%' },
+                position: 'relative',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
                 height: '100%',
               }}
             >
@@ -61,7 +70,9 @@ const ProductList = () => {
                     {product.masterVariant.prices![0].discounted ? (
                       <>
                         <Typography fontSize="1rem" fontWeight="600">
-                          {`$${formatPrice(product.masterVariant.prices![0].discounted.value.centAmount)}`}
+                          {formatPrice(
+                            product.masterVariant.prices![0].discounted.value.centAmount,
+                          )}
                         </Typography>
                         <Typography
                           fontSize="0.9rem"
@@ -69,13 +80,13 @@ const ProductList = () => {
                           color="primary.light"
                           sx={{ textDecoration: 'line-through' }}
                         >
-                          {`$${formatPrice(product.masterVariant.prices![0].value.centAmount)}`}
+                          {formatPrice(product.masterVariant.prices![0].value.centAmount)}
                         </Typography>
                       </>
                     ) : (
                       <>
                         <Typography fontSize="1rem" fontWeight="600">
-                          {`$${formatPrice(product.masterVariant.prices![0].value.centAmount)}`}
+                          {formatPrice(product.masterVariant.prices![0].value.centAmount)}
                         </Typography>
                       </>
                     )}
@@ -83,6 +94,13 @@ const ProductList = () => {
                   <Typography fontSize="0.9rem">{`${product.description![APP_SETTINGS.LOCALE].slice(0, 100)}...`}</Typography>
                 </CardContent>
               </CardActionArea>
+              <CardActions>
+                <AddToCartButton
+                  id={product.id}
+                  isInCart={isProductInCart(product.id)}
+                  isInStock={isInStock(product.masterVariant.attributes)}
+                />
+              </CardActions>
             </Card>
           </Grid>
         ))}

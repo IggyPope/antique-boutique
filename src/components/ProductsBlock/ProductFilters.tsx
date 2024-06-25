@@ -5,6 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import {
   Button,
+  CircularProgress,
   FormControl,
   IconButton,
   InputLabel,
@@ -16,6 +17,7 @@ import {
 import { useTheme } from '@mui/material/styles';
 
 import { SORT_DIRECTION, SORT_OPTIONS, SortOption } from '@/constants/app';
+import useProducts from '@/hooks/useProducts';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { setSearch, setSortBy, setSortDirection } from '@/store/slices/filtersSlice';
 
@@ -26,6 +28,8 @@ const ProductFilters = () => {
 
   const { sortBy, sortDirection, search: searchFilter } = useAppSelector((state) => state.filters);
   const [searchWord, setSearchWord] = useState('');
+
+  const { productsIsFetching } = useProducts();
 
   useEffect(() => {
     if (!searchFilter) {
@@ -73,17 +77,19 @@ const ProductFilters = () => {
         <Button
           onClick={handleSearch}
           variant="outlined"
-          disabled={searchWord.length < 3}
+          disabled={searchWord.length < 3 || productsIsFetching}
           sx={{ padding: '5px', minWidth: '45px', height: '40px' }}
         >
-          <SearchIcon />
+          {productsIsFetching ? <CircularProgress size={20} /> : <SearchIcon />}
         </Button>
         <Button
           onClick={handleClearSearch}
           variant="outlined"
+          color="error"
+          disabled={!searchWord.length || productsIsFetching}
           sx={{ padding: '5px', minWidth: '45px', height: '40px' }}
         >
-          <CloseIcon />
+          {productsIsFetching ? <CircularProgress size={20} /> : <CloseIcon />}
         </Button>
       </Stack>
       <Stack direction="row" alignItems="center">
@@ -92,6 +98,7 @@ const ProductFilters = () => {
           <Select
             labelId="sort-label"
             label="Sort By"
+            disabled={productsIsFetching}
             value={sortBy}
             onChange={(e) => dispatch(setSortBy(e.target.value as SortOption))}
           >
@@ -103,6 +110,7 @@ const ProductFilters = () => {
           </Select>
         </FormControl>
         <IconButton
+          disabled={productsIsFetching}
           onClick={() =>
             dispatch(
               setSortDirection(

@@ -22,19 +22,6 @@ const Main = () => {
 
   return (
     <Stack py={2} direction="column" gap={2}>
-      {/* Temporarily commented out for the cross-check
-      <Box
-        sx={{
-          marginTop: 1,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 2,
-          justifyContent: 'flex-end',
-          width: '100%',
-        }}
-      >
-        <MainNavLinks />
-      </Box> */}
       <PromoCategories />
       <PromoSlogan />
       <PromoBlog />
