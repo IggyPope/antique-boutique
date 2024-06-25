@@ -1,0 +1,10 @@
+*.js
+*.cjs
+*.mjs
+*.d.ts
+*.d.mts
+vite.config.ts
+vitest.config.ts
+node_modules/
+coverage/
+dist/
