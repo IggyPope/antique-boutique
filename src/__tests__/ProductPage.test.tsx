@@ -19,7 +19,7 @@ beforeEach(() => {
     };
   });
 
-  nock('https://api.europe-west1.gcp.commercetools.com/antique-boutique')
+  nock('https://api.europe-west1.gcp.commercetools.com/antique-boutique2')
     .defaultReplyHeaders({
       'access-control-allow-origin': '*',
     })

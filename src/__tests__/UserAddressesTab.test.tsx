@@ -9,7 +9,7 @@ import { UserAddressesTab } from '@/components/Profile/Tabs/UserAddressesTab';
 import { store } from '@/store/store';
 
 beforeEach(() => {
-  nock('https://api.europe-west1.gcp.commercetools.com/antique-boutique')
+  nock('https://api.europe-west1.gcp.commercetools.com/antique-boutique2')
     .defaultReplyHeaders({
       'access-control-allow-origin': '*',
     })
