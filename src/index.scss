@@ -1,0 +1,42 @@
+@import '@fontsource/poppins/300.css';
+@import '@fontsource/poppins/400.css';
+@import '@fontsource/poppins/600.css';
+@import '@fontsource/poppins/700.css';
+@import '@fontsource/roboto/latin-ext.css';
+@import '@fontsource/roboto/latin-italic.css';
+@import '@fontsource/roboto/latin.css';
+
+:root {
+  font-family: Poppins, Helvetica, Arial, sans-serif;
+
+  @media (width <=768px) {
+    font-size: 14px;
+  }
+}
+
+body {
+  display: flex;
+  place-items: center;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  min-height: 100vh;
+}
+
+.carousel [draggable] > div > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
