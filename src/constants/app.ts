@@ -1,5 +1,5 @@
 export const APP_SETTINGS = {
-  LOCALE: 'en-US',
+  LOCALE: 'en',
   PRODUCTS_PER_PAGE: 12,
   API_PRICE_RATE: 100,
   CURRENCY: {
@@ -22,11 +22,11 @@ export const CART_ACTIONS = {
   REMOVE_DISCOUNT_CODE: 'removeDiscountCode',
 } as const;
 
-export const SEARCH_PARAM_NAME = 'text.en-US';
+export const SEARCH_PARAM_NAME = 'text.en';
 
 export const SORT_OPTIONS = [
   { value: 'price', label: 'Price' },
-  { value: 'name.en-US', label: 'Name' },
+  { value: 'name.en', label: 'Name' },
 ] as const;
 
 export const SORT_DIRECTION = {
